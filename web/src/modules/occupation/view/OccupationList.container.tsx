@@ -1,125 +1,97 @@
-import Avatar, { AvatarItem } from "@atlaskit/avatar";
-import { FunctionComponent } from "react";
+import Avatar, { AvatarItem, Skeleton } from "@atlaskit/avatar";
+import { FunctionComponent, SyntheticEvent, useEffect, useState } from "react";
 import styled from "styled-components";
 import ListContainerLayout from "../../../components/layout/ListContainerLayout";
 import Pagination from '@atlaskit/pagination';
 import { useHistory } from "react-router";
+import { Occupation, OccupationService } from "../../../services/occupation/occupation.service";
+import { Page, Pageable } from "../../../services/util/page";
+import { SkeletonItem } from "@atlaskit/side-navigation";
 
 export interface OccupationListContainerProps {
 }
 
 const OccupationListContainer: FunctionComponent<OccupationListContainerProps> = () => {
 
-    const ocuppations = [{
-        id: 1,
-        name: 'Gestor'
-    },
-    {
-        id: 2,
-        name: 'Gestor'
-    },
-    {
-        id: 3,
-        name: 'Gestor'
-    },
-    {
-        id: 4,
-        name: 'Gestor'
-    },
-    {
-        id: 5,
-        name: 'Gestor'
-    },
-    {
-        id: 6,
-        name: 'Gestor'
-    },
-    {
-        id: 7,
-        name: 'Gestor'
-    },
-    {
-        id: 8,
-        name: 'Gestor'
-    },
-    {
-        id: 9,
-        name: 'Gestor'
-    },
-    {
-        id: 10,
-        name: 'Gestor'
-    },
-    {
-        id: 11,
-        name: 'Gestor'
-    },
-    {
-        id: 12,
-        name: 'Gestor'
-    },
-    {
-        id: 13,
-        name: 'Gestor'
-    },
-    {
-        id: 13,
-        name: 'Gestor'
-    },
-    {
-        id: 13,
-        name: 'Gestor'
-    },
-    {
-        id: 13,
-        name: 'Gestor'
-    },
-    {
-        id: 13,
-        name: 'Gestor'
-    },
-    {
-        id: 13,
-        name: 'Gestor'
-    },
-    {
-        id: 13,
-        name: 'Gestor'
-    },
-    {
-        id: 13,
-        name: 'Gestor'
-    },
-    {
-        id: 13,
-        name: 'Gestor'
-    },
-    {
-        id: 13,
-        name: 'Gestor'
-    },
-
-    ];
-
     const history = useHistory();
+
+    const service = new OccupationService();
+
+    const [contentPage, setContentPage] = useState<Pageable<Occupation>>();
+    const [page, setPage] = useState<Page>({ size: 10, page: 0 })
+
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<any>(null);
+
+    const [filter, setFilter] = useState<string>('');
+
+    useEffect(() => {
+        loadItens();
+    }, [page, filter]);
+
+    const loadItens = async () => {
+
+        setLoading(true);
+
+        try {
+            console.log(page);
+            var content = await service.list(filter, page);
+            setContentPage(content);
+        }
+        catch (err) {
+            setError(err);
+        }
+        finally {
+            setLoading(false);
+        }
+
+    };
+
+    const onChangePage = (event: SyntheticEvent<any>, _page: any) => {
+        setPage({ page: _page - 1, size: 10 });
+    }
 
     const onRowClick = (row: any) => {
         history.push(`/occupation/form/${row.id}`)
     }
 
-    const goToNew = () => history.push('/occupation/form')
+    const goToNew = () => history.push('/occupation/form');
+
+    const getPagesArray = () => {
+
+        if (!contentPage) {
+            return [];
+        }
+
+        let pages = [];
+
+        for (let i = 0; i < contentPage?.totalPages; i++) {
+            pages.push(i + 1);
+        }
+
+        return pages;
+    }
 
     return (
         <ListContainerLayout
             title="Listagem de ocupações"
             breadcrumbs={["Ocupações", "Listagem"]}
+            onSearchAction={setFilter}
             onNewAction={goToNew}>
 
             <Content>
-                <Items>
-                    {ocuppations.map(e => (<ListItem onClick={() => onRowClick(e)}><AvatarItem primaryText={e.name} avatar={<Avatar />} /></ListItem>))}
-                </Items>
-                <Pagination innerStyles={{ margin: '0 auto' }} pages={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]} />
+                <ItemsContent>
+                    <Items>
+                        {loading ?
+                            [1, 1, 1, 1, 1, 1, 1, 1, 1].map(e => (<ListItem onClick={() => onRowClick(e)}><AvatarItem primaryText={<SkeletonItem />} avatar={<Skeleton />} /></ListItem>)) :
+                            contentPage?.content.map(e => (<ListItem onClick={() => onRowClick(e)}><AvatarItem primaryText={e.name} avatar={<Avatar />} /></ListItem>))
+                        }
+                    </Items>
+                </ItemsContent>
+                {
+                    contentPage && contentPage.totalPages > 0 &&
+                    <Pagination selectedIndex={page.page} onChange={onChangePage} innerStyles={{ margin: '0 auto' }} pages={getPagesArray()} />
+                }
             </Content>
         </ListContainerLayout>
     );
@@ -133,12 +105,15 @@ const Content = styled.div`
     flex: 1;
 `;
 
-const Items = styled.div`
+const ItemsContent = styled.div`
     flex: 1;
     overflow: auto;
+`;
+
+const Items = styled.div`
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(45%, 1fr));
-    
+
     & > div:nth-child(1) {
         margin-top: 32px
     }
@@ -146,15 +121,6 @@ const Items = styled.div`
     & > div:nth-child(2) {
         margin-top: 32px
     }
-
-    & > div:nth-last-child(1) {
-        margin-bottom: 32px
-    }
-
-    & > div:nth-last-child(2) {
-        margin-bottom: 32px
-    }
-
 `;
 
 const ListItem = styled.div`
@@ -179,4 +145,5 @@ const ListItem = styled.div`
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     width: 90%;
     cursor: pointer;
+    height: 60px
 `;

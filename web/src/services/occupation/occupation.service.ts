@@ -1,4 +1,6 @@
+import { AxiosResponse } from "axios";
 import { api } from "../util/Api"
+import { Page, Pageable } from "../util/page";
 
 export interface Occupation {
     name: string
@@ -9,7 +11,7 @@ export class OccupationService {
     create = async (entity: Occupation): Promise<Occupation> => {
 
         try {
-            const { data, status } = await api().post<Occupation>('/api/occupation/v1', entity);
+            const { data, status } = await api().post<Occupation>('/api/v1/occupation', entity);
 
             if (status != 200) {
                 throw new Error(`Erro ${status} ao salvar a ocupação`);
@@ -24,7 +26,7 @@ export class OccupationService {
 
     update = async (id: number, entity: Occupation): Promise<Occupation> => {
         try {
-            const { data, status } = await api().put<Occupation>(`/api/occupation/v1/${id}`, entity);
+            const { data, status } = await api().put<Occupation>(`/api/v1/occupation/${id}`, entity);
 
             if (status != 200) {
                 throw new Error(`Erro ${status} ao atualizar a ocupação`);
@@ -39,9 +41,9 @@ export class OccupationService {
 
     getById = async (id: number): Promise<Occupation> => {
         try {
-            const { data, status } = await api().get<Occupation>(`/api/occupation/v1/${id}`);
+            const { data, status } = await api().get<Occupation>(`/api/v1/occupation/${id}`);
 
-            if(status == 404) {
+            if (status == 404) {
                 throw new Error(`Ocupação não encontrada!`);
             }
 
@@ -56,9 +58,9 @@ export class OccupationService {
         }
     }
 
-    list = async (page: number, size: number) => {
+    list = async (filter: string, page: Page): Promise<Pageable<Occupation>> => {
         try {
-            const { data, status } = await api().get<Occupation>(`/api/occupation/v1/list?page=${page}&size=${size}`);
+            const { data, status } = await api().get<Pageable<Occupation>>(`/api/v1/occupation/list?filter=${filter}&page=${page.page}&size=${page.size}`);
 
             if (status != 200) {
                 throw new Error(`Erro ${status} ao buscar as ocupações`);
@@ -67,6 +69,21 @@ export class OccupationService {
             return data;
         }
         catch (err) {
+            throw err;
+        }
+    }
+
+    disable = async (id: number): Promise<void> => {
+
+        try{
+            const {status} = await api().post<AxiosResponse>(`/api/v1/occupation/disable/${id}`)
+
+            if(status != 200) {
+                throw new Error(`Erro ${status} ao desabilitar a ocupação`)
+            }
+
+        }
+        catch(err) {
             throw err;
         }
     }

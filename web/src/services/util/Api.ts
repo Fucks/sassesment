@@ -13,7 +13,7 @@ const headers = () => {
 
 const createApi = () => axios.create({
     baseURL: process.env.REACT_APP_BASE_URL,
-    timeout: 1000,
+    timeout: 60000,
     headers: headers()
 });
 

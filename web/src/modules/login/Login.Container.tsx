@@ -13,7 +13,7 @@ const LoginContainer: FunctionComponent = () => {
 
     const loginService = new LoginService();
     const [submiting, setSubmiting] = useState(false);
-    const [error, setError] : any | null = useState(null);
+    const [error, setError]: any | null = useState(null);
     const history = useHistory();
 
     const handleSubmit = async (values: any) => {
@@ -22,14 +22,17 @@ const LoginContainer: FunctionComponent = () => {
 
         try {
             await loginService.singIn(values);
-            history.push('/');
+            await setTimeout(() => {
+                history.push('/');
+            }, 3000)
+
         }
         catch (err) {
             console.error(`Erro ao tentar logar. Erro: ${err}`)
             setError(err);
         }
         finally {
-            setSubmiting(false);
+            
         }
 
     }
@@ -39,7 +42,7 @@ const LoginContainer: FunctionComponent = () => {
             {({ formProps }) => (
                 <form {...formProps}>
                     <LoginContent>
-                        {error != null && 
+                        {error != null &&
                             <Banner
                                 appearance="error"
                                 icon={<ErrorIcon label="" secondaryColor="inherit" />}

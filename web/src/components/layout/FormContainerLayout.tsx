@@ -3,6 +3,7 @@ import Button, { ButtonGroup } from "@atlaskit/button";
 import { FunctionComponent, ReactElement, useMemo } from "react";
 import styled from "styled-components";
 import PageHeader from "../page-header/PageHeader";
+import { ModalTransition } from '@atlaskit/modal-dialog';
 
 export interface FormContainerLayoutProps {
     title: string;
@@ -24,11 +25,11 @@ const FormContainerLayout: FunctionComponent<FormContainerLayoutProps> = ({ titl
             <Button onClick={onBackAction}>{'Voltar'}</Button>
             {saveButton}
         </ButtonGroup>
-    ), []);
+    ), [saveButton]);
 
 
     return (
-        <>
+        <ModalTransition>
             <PageHeader
                 breadcrumbs={breadcrumbsContent}
                 actions={actionsContent}>
@@ -37,7 +38,7 @@ const FormContainerLayout: FunctionComponent<FormContainerLayoutProps> = ({ titl
             <Content>
                 {children}
             </Content>
-        </>
+        </ModalTransition>
     );
 }
 
