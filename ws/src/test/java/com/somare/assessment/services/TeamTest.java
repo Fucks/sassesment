@@ -40,7 +40,7 @@ public class TeamTest {
 
         Assert.notNull(team.getId(), "O id deve ser obtido automaticamente");
 
-        Page<Team> page = teamService.list(PageRequest.of(0, 1));
+        Page<Team> page = teamService.list("", PageRequest.of(0, 1));
 
         Assert.notEmpty(page.getContent(), "Deve existir pelo menos 1 equipe cadastrada");
     }
@@ -109,7 +109,7 @@ public class TeamTest {
 
         this.teamService.disable(dbTeam);
 
-        Assert.isTrue(this.teamService.list(PageRequest.of(0, 99)).get().noneMatch(e -> e.getId().equals(dbTeam.getId())), "A equipe desabilitada nao deve ser listada");
+        Assert.isTrue(this.teamService.list("", PageRequest.of(0, 99)).get().noneMatch(e -> e.getId().equals(dbTeam.getId())), "A equipe desabilitada nao deve ser listada");
 
     }
 }

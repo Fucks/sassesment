@@ -1,8 +1,10 @@
 package com.somare.assessment.config;
 
+import com.somare.assessment.entity.Occupation;
 import com.somare.assessment.entity.Professional;
 import com.somare.assessment.entity.authentication.Profile;
 import com.somare.assessment.entity.authentication.Role;
+import com.somare.assessment.repository.OccupationRepository;
 import com.somare.assessment.repository.ProfessionalRepository;
 import com.somare.assessment.repository.ProfileRepository;
 import com.somare.assessment.repository.RoleRepository;
@@ -25,6 +27,9 @@ public class Bootstrap implements InitializingBean {
     private ProfileRepository profileRepository;
 
     @Autowired
+    private OccupationRepository occupationRepository;
+
+    @Autowired
     @Qualifier("passwordEncoder")
     private PasswordEncoder passwordEncoder;
 
@@ -33,6 +38,7 @@ public class Bootstrap implements InitializingBean {
         bootstrapRoles();
         bootstrapManagerProfile();
         bootstrapAdmUser();
+        bootstrapOccupations();
     }
 
     public void bootstrapRoles() {
@@ -74,5 +80,19 @@ public class Bootstrap implements InitializingBean {
         professional.setProfile(this.profileRepository.getOne(1L));
 
         this.professionalRepository.save(professional);
+    }
+
+    public void bootstrapOccupations() {
+
+        if(this.occupationRepository.count() > 0) {
+            return;
+        }
+
+        this.occupationRepository.save(new Occupation("Gestor"));
+        this.occupationRepository.save(new Occupation("Fonoaudiologo"));
+        this.occupationRepository.save(new Occupation("Psicologo"));
+        this.occupationRepository.save(new Occupation("Terapeuta ocupacional"));
+        this.occupationRepository.save(new Occupation("Psicopedagogo"));
+
     }
 }

@@ -30,7 +30,7 @@ public class PatientService extends DefaultService<Patient> {
     private ProfessionalRepository professionalRepository;
 
     @Override
-    public Page<Patient> list(Pageable page) {
+    public Page<Patient> list(String filter, Pageable page) {
 
         var user = SecurityContextHolder.getContext().getAuthentication();
 

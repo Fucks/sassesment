@@ -5,5 +5,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DefaultRepository<T> extends JpaRepository<T, Long> {
-    Page<T> findAllByDisabledIsNull(Pageable page);
+    Page<T> findAllByDisabledIsNullAndNameLike(String name, Pageable page);
+
 }

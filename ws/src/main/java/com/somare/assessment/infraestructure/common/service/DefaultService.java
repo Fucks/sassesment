@@ -28,7 +28,7 @@ public abstract class DefaultService<T extends Entity & DefaultEntity<T>> {
 
         var existsRow = this.getById(id);
 
-        if(existsRow.isEmpty()){
+        if (existsRow.isEmpty()) {
             throw new IllegalArgumentException("Registro não encontrado!");
         }
 
@@ -41,8 +41,8 @@ public abstract class DefaultService<T extends Entity & DefaultEntity<T>> {
         return dbEntity;
     }
 
-    public Page<T> list(Pageable page) {
-        return this.repository.findAllByDisabledIsNull(page);
+    public Page<T> list(String filter, Pageable page) {
+        return this.repository.findAllByDisabledIsNullAndNameLike("%" + filter + "%", page);
     }
 
     public void disable(Long id) {

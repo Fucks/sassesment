@@ -24,7 +24,7 @@ public abstract class DefaultController<T extends Entity & DefaultEntity<T>> {
                 .ok(response);
     }
 
-    @PutMapping("/:id")
+    @PutMapping("/{id}")
     public ResponseEntity<T> update(@PathVariable Long id, @RequestBody T entity) {
 
         var response = this.service.update(id, entity);
@@ -33,7 +33,7 @@ public abstract class DefaultController<T extends Entity & DefaultEntity<T>> {
                 .ok(response);
     }
 
-    @GetMapping("/:id")
+    @GetMapping("/{id}")
     public ResponseEntity<T> getById(@PathVariable Long id) {
 
         var hasEntity = this.service.getById(id);
@@ -48,7 +48,7 @@ public abstract class DefaultController<T extends Entity & DefaultEntity<T>> {
                 .ok(hasEntity.get());
     }
 
-    @PostMapping("/disable/:id")
+    @PostMapping("/disable/{id}")
     public ResponseEntity<T> disable(@PathVariable Long id) {
         this.service.disable(id);
 
@@ -58,9 +58,9 @@ public abstract class DefaultController<T extends Entity & DefaultEntity<T>> {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<Page<T>> list(@PageableDefault Pageable page) {
+    public ResponseEntity<Page<T>> list(@RequestParam String filter, @PageableDefault Pageable page) {
         return ResponseEntity
-                .ok(this.service.list(page));
+                .ok(this.service.list(filter, page));
     }
 
 }

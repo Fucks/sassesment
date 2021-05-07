@@ -41,7 +41,7 @@ public class OccupationTest {
 
         Assert.notNull(occupation.getId(), "O id não pode estar vazio");
 
-        Page<Occupation> page = occupationService.list(PageRequest.of(0, 1));
+        Page<Occupation> page = occupationService.list("", PageRequest.of(0, 1));
 
         Assert.notEmpty(page.getContent(), "O conteudo da pagina nao pode estar vazio");
     }
@@ -55,7 +55,7 @@ public class OccupationTest {
             occupationService.insert(new Occupation(occupations[i]));
         }
 
-        Page<Occupation> page = occupationService.list(PageRequest.of(0, 4));
+        Page<Occupation> page = occupationService.list("", PageRequest.of(0, 4));
 
         Assert.notEmpty(page.getContent(), "O conteudo da pagina nao pode estar vazio");
         Assert.isTrue(page.getTotalPages() > 1, "O numero de paginas deve ser igual a 2");
@@ -71,7 +71,7 @@ public class OccupationTest {
 
         this.occupationService.disable(dbOccupation);
 
-        var page = this.occupationService.list(PageRequest.of(0, 99));
+        var page = this.occupationService.list("", PageRequest.of(0, 99));
 
         Assert.isTrue(page.getContent()
                 .stream()

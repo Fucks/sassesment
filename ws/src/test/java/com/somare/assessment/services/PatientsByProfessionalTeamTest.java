@@ -66,7 +66,7 @@ public class PatientsByProfessionalTeamTest {
     @Test
     @WithUserDetails("professionalToViewAll")
     public void listPatientsWithRoleViewAll() throws Exception {
-        var page = patientService.list(PageRequest.of(0, 99));
+        var page = patientService.list("", PageRequest.of(0, 99));
 
         Assert.isTrue(page.getContent().size() == 20, "Numero incorreto de pacientes");
     }
@@ -74,7 +74,7 @@ public class PatientsByProfessionalTeamTest {
     @Test
     @WithUserDetails("professionalWithTeam")
     public void listPatientWithTeam() throws Exception {
-        var page = patientService.list(PageRequest.of(0, 99));
+        var page = patientService.list("", PageRequest.of(0, 99));
 
         Assert.isTrue(page.getContent().size() == 10, "Numero incorreto de pacientes");
     }
@@ -82,7 +82,7 @@ public class PatientsByProfessionalTeamTest {
     @Test
     @WithUserDetails("professionalWithoutTeam")
     public void listPatientWithRoleViewAndWithoutTeam() throws Exception {
-        var page = patientService.list(PageRequest.of(0, 99));
+        var page = patientService.list("", PageRequest.of(0, 99));
 
         Assert.isTrue(page.getContent().size() == 20, "Numero incorreto de pacientes");
     }
