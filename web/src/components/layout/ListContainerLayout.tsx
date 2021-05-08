@@ -22,8 +22,6 @@ const ListContainerLayout: FunctionComponent<ListContainerLayoutProps> = ({ titl
         },
         onSubmit: (values) => {
 
-            console.log(values);
-
             if (onSearchAction) {
                 return onSearchAction(values.filter);
             }
@@ -38,8 +36,8 @@ const ListContainerLayout: FunctionComponent<ListContainerLayoutProps> = ({ titl
     ), [])
 
     const searchBar = useMemo(() => (
-        <form {...form} onSubmit={form.handleSubmit} >
-            <Textfield name="filter" style={{background: '#fff'}} autoComplete="off" onChange={form.handleChange} placeholder="Pesquisar" />
+        <form onSubmit={form.handleSubmit} >
+            <Textfield name="filter" style={{ background: '#fff' }} autoComplete="off" onChange={form.handleChange} placeholder="Pesquisar" />
             <input type="submit" style={{ display: 'none' }} />
         </form>
     ), []);
@@ -51,7 +49,6 @@ const ListContainerLayout: FunctionComponent<ListContainerLayoutProps> = ({ titl
         </ButtonGroup>
     ), []);
 
-
     return (
         <>
             <PageHeader
@@ -59,18 +56,67 @@ const ListContainerLayout: FunctionComponent<ListContainerLayoutProps> = ({ titl
                 actions={actionsContent}>
                 {title}
             </PageHeader>
-            <Content>
+            <ListContainer>
                 {children}
-            </Content>
+            </ListContainer>
         </>
     );
 }
 
 export default ListContainerLayout;
 
-const Content = styled.div`
+export const ListContainer = styled.div`
     padding: 0 0 16px 32px;
     overflow-y: hidden;
     display: flex;
     flex: 1;
+`;
+
+export const Content = styled.div`
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+`;
+
+export const ItemsContent = styled.div`
+    flex: 1;
+    overflow: auto;
+`;
+
+export const Items = styled.div`
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(45%, 1fr));
+
+    & > div:nth-child(1) {
+        margin-top: 32px
+    }
+
+    & > div:nth-child(2) {
+        margin-top: 32px
+    }
+`;
+
+export const ListItem = styled.div`
+    margin: 4px;
+    flex: 0.5;
+    align-items: center;
+    background-color: transparent;
+    border-radius: 3px;
+    border: 2px solid transparent;
+    box-sizing: border-box;
+    color: inherit;
+    display: flex;
+    font-size: inherit;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    outline: none;
+    padding: 4px;
+    text-align: left;
+    text-decoration: none;
+    width: 35%;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    width: 90%;
+    cursor: pointer;
+    height: 60px
 `;

@@ -3,6 +3,7 @@ import PersonIcon from '@atlaskit/icon/glyph/person';
 import PeopleGroupIcon from '@atlaskit/icon/glyph/people-group';
 import UserAvatarCircleIcon from '@atlaskit/icon/glyph/user-avatar-circle';
 import PeopleIcon from '@atlaskit/icon/glyph/people';
+import UnlockCircleIcon from '@atlaskit/icon/glyph/unlock-circle';
 
 export const MenuOptions = [
     {
@@ -30,8 +31,8 @@ export const MenuOptions = [
         url: '/team'
     },
     {
-        title: 'Meu perfil',
-        icon: <UserAvatarCircleIcon label="" />,
+        title: 'Perfis de acesso',
+        icon: <UnlockCircleIcon label="" />,
         url: '/profile'
     }
 ]

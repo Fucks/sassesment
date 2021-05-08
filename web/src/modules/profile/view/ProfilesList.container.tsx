@@ -1,29 +1,26 @@
 import Avatar, { AvatarItem } from "@atlaskit/avatar";
-import ListContainerLayout, { Items, ItemsContent, ListItem, Content } from "../../../components/layout/ListContainerLayout";
 import { FunctionComponent, useEffect, useState } from "react";
 import { useHistory } from "react-router";
-import { Occupation, OccupationService } from "../../../services/occupation/occupation.service";
-import { Page, Pageable } from "../../../services/util/page";
-import { getPagesArray, onChangePage } from "../../../services/util/helpers";
-import Pagination from '@atlaskit/pagination';
+import ListContainerLayout, { Content, Items, ItemsContent, ListItem } from "../../../components/layout/ListContainerLayout";
 import ListLoading from "../../../components/loading/ListLoading";
+import { Page, Pageable } from "../../../services/util/page";
+import Pagination from '@atlaskit/pagination';
+import { getPagesArray, onChangePage } from "../../../services/util/helpers";
+import { ProfileService } from "../../../services/profile/profile.service";
 
-export interface OccupationListContainerProps {
+export interface ProfilesListContainerProps {
 }
 
-const OccupationListContainer: FunctionComponent<OccupationListContainerProps> = () => {
+const ProfilesListContainer: FunctionComponent<ProfilesListContainerProps> = () => {
 
+    const service = new ProfileService();
     const history = useHistory();
 
-    const service = new OccupationService();
-
-    const [contentPage, setContentPage] = useState<Pageable<Occupation>>();
-    const [page, setPage] = useState<Page>({ size: 10, page: 0 })
-
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<any>(null);
-
-    const [filter, setFilter] = useState<string>('');
+    const [filter, setFilter] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [contentPage, setContentPage] = useState<Pageable<any>>();
+    const [page, setPage] = useState<Page>({ size: 10, page: 0 });
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         loadItens();
@@ -34,7 +31,6 @@ const OccupationListContainer: FunctionComponent<OccupationListContainerProps> =
         setLoading(true);
 
         try {
-            console.log(page);
             var content = await service.list(filter, page);
             setContentPage(content);
         }
@@ -47,16 +43,18 @@ const OccupationListContainer: FunctionComponent<OccupationListContainerProps> =
 
     };
 
-    const onRowClick = (row: any) => {
-        history.push(`/occupation/form/${row.id}`)
+    const goToNew = () => {
+        history.push('/profile/form');
     }
 
-    const goToNew = () => history.push('/occupation/form');
+    const onRowClick = (profile: any) => {
+        history.push(`/profile/form/${profile.id}`)
+    }
 
     return (
         <ListContainerLayout
-            title="Listagem de ocupações"
-            breadcrumbs={["Ocupações", "Listagem"]}
+            title="Listagem de perfis de acesso"
+            breadcrumbs={["Perfil de acesso", "Listagem"]}
             onSearchAction={setFilter}
             onNewAction={goToNew}>
 
@@ -64,7 +62,7 @@ const OccupationListContainer: FunctionComponent<OccupationListContainerProps> =
                 <ItemsContent>
                     <Items>
                         {loading ? <ListLoading />
-                            : contentPage?.content.map(e => (<ListItem onClick={() => onRowClick(e)}><AvatarItem primaryText={e.name} avatar={<Avatar />} /></ListItem>))
+                            : contentPage?.content.map(e => (<ListItem key={e.id} onClick={() => onRowClick(e)}><AvatarItem primaryText={e.name} avatar={<Avatar />} /></ListItem>))
                         }
                     </Items>
                 </ItemsContent>
@@ -77,4 +75,4 @@ const OccupationListContainer: FunctionComponent<OccupationListContainerProps> =
     );
 }
 
-export default OccupationListContainer;
+export default ProfilesListContainer;

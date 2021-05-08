@@ -32,7 +32,7 @@ const LoginContainer: FunctionComponent = () => {
             setError(err);
         }
         finally {
-            
+            setSubmiting(false);
         }
 
     }

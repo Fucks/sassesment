@@ -2,6 +2,7 @@ import { FunctionComponent } from "react";
 import { BrowserRouter, Route } from "react-router-dom";
 import Layout from "./components/layout/PageLayout";
 import { Routes as OccupationRoutes } from "./modules/occupation/Routes";
+import { Routes as ProfileRoutes } from "./modules/profile/Routes";
 
 const Routes: FunctionComponent = () => {
     return (<Layout>
@@ -19,7 +20,7 @@ const Routes: FunctionComponent = () => {
                 <span>Team</span>
             </Route>
             <Route path="/profile">
-                <span>Profile</span>
+                <ProfileRoutes />
             </Route>
         </BrowserRouter>
     </Layout>);

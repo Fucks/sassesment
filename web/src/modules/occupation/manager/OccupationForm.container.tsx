@@ -1,18 +1,15 @@
-import { Fragment, FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import FormContainerLayout from "../../../components/layout/FormContainerLayout";
 import OccupationSchema from "./Occupation.schema";
 import styled from "styled-components";
-import Button, { ButtonGroup, LoadingButton } from "@atlaskit/button";
+import Button, { LoadingButton } from "@atlaskit/button";
 import { Occupation, OccupationService } from "../../../services/occupation/occupation.service";
 import ErrorIcon from '@atlaskit/icon/glyph/error';
 import Banner from "@atlaskit/banner";
 import FormField from "../../../components/form-field/FormField";
 import ConfirmDisableDialog from "../../../components/confirm-disable-dialog/ConfirmDisableDialog";
-import Form, { Field, FormFooter } from "@atlaskit/form";
-import TextField from '@atlaskit/textfield';
-import { Formik, FormikProps, useFormikContext } from "formik";
-
+import { Formik } from "formik";
 export interface OccupationFormContainerProps {
 }
 
@@ -82,7 +79,7 @@ const OccupationFormContainer: FunctionComponent<OccupationFormContainerProps> =
 
         try {
             await service.disable(id);
-            await setTimeout(() => history.push('/occupation'), 1000)
+            await new Promise((resolve) => setTimeout(() => { history.push('/occupation'); resolve(null) }, 1000))
         }
         catch (err) {
             setError(err);

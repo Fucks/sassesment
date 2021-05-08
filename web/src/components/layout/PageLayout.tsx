@@ -77,7 +77,7 @@ const Layout: FunctionComponent = (props) => {
                                 <Section>
                                     {MenuOptions.map(option => (
                                         isUserAuthorizedToAccessMenu(option) &&
-                                        <LinkItem href={option.url} iconBefore={option.icon}>
+                                        <LinkItem key={option.url} href={option.url} iconBefore={option.icon}>
                                             {option.title}
                                         </LinkItem>
                                     ))}
