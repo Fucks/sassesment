@@ -42,7 +42,7 @@ public abstract class DefaultService<T extends Entity & DefaultEntity<T>> {
     }
 
     public Page<T> list(String filter, Pageable page) {
-        return this.repository.findAllByDisabledIsNullAndNameLike("%" + filter + "%", page);
+        return this.repository.findAllByDisabledIsNullAndNameLikeIgnoreCase("%" + filter + "%", page);
     }
 
     public void disable(Long id) {

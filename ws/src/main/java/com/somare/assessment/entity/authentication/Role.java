@@ -40,7 +40,7 @@ public class Role implements GrantedAuthority {
 
     public static final String ROLE_VIEW_ALL_PATIENT = "ROLE_VIEW_ALL_PATIENT";
     public static final String ROLE_VIEW_PATIENT = "ROLE_VIEW_PATIENT";
-    public static final String ROLE_MANAGER_PATIENT = "ROLE_VIEW_PATIENT";
+    public static final String ROLE_MANAGER_PATIENT = "ROLE_MANAGER_PATIENT";
 
     public static final String ROLE_VIEW_TEAM = "ROLE_VIEW_TEAM";
     public static final String ROLE_MANAGER_TEAM = "ROLE_MANAGER_TEAM";
