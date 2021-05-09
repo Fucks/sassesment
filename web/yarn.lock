@@ -128,6 +128,16 @@
     "@babel/runtime" "^7.0.0"
     react-beautiful-dnd "^12.1.1"
 
+"@atlaskit/empty-state@^7.1.5":
+  version "7.1.5"
+  resolved "https://registry.yarnpkg.com/@atlaskit/empty-state/-/empty-state-7.1.5.tgz#22bdf2d40642cb81626306cccc0cab8de43b8851"
+  integrity sha512-aFfUerEareXUYJwxXVrjiQPYNv/KLsWgIImgPlfGmdQU7ZChNf8xe8DhRqL9bSiAYcis6qLiwLxm2n62HG8kpA==
+  dependencies:
+    "@atlaskit/button" "^15.1.0"
+    "@atlaskit/spinner" "^15.0.0"
+    "@atlaskit/theme" "^11.0.0"
+    "@babel/runtime" "^7.0.0"
+
 "@atlaskit/flag@^14.2.3":
   version "14.2.3"
   resolved "https://registry.yarnpkg.com/@atlaskit/flag/-/flag-14.2.3.tgz#f1b6b1f1930e1fe1e91b36a11bdabdd03cf32274"

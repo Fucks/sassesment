@@ -7,7 +7,7 @@ import Banner from "@atlaskit/banner";
 import TextField from "@atlaskit/textfield";
 import ConfirmDisableDialog from "../../../components/confirm-disable-dialog/ConfirmDisableDialog";
 import { Profile, ProfileService } from "../../../services/profile/profile.service";
-import ProfileSchema from "./ProfileSchema";
+import ProfileSchema from "./Profile.Schema";
 import { Role } from "../../../services/Authentication.service";
 import { FastField, FieldArray, Formik, FormikProps } from "formik";
 import styled from "styled-components";

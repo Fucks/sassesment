@@ -33,6 +33,7 @@ export const MenuOptions = [
     {
         title: 'Perfis de acesso',
         icon: <UnlockCircleIcon label="" />,
+        role: ['ROLE_VIEW_PROFILES'],
         url: '/profile'
     }
 ]

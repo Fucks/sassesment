@@ -1,7 +1,7 @@
 import { FunctionComponent } from "react";
 import { BrowserRouter, Redirect, Route } from "react-router-dom";
-import OccupationFormContainer from "./manager/OccupationForm.container";
-import OccupationListContainer from "./view/OccupationList.container";
+import OccupationFormContainer from "./form/Occupation.Form.container";
+import OccupationListContainer from "./list/Occupation.List.Container";
 
 const Routes: FunctionComponent = () => {
 

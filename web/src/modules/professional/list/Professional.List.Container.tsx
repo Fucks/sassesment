@@ -6,19 +6,20 @@ import ListLoading from "../../../components/loading/ListLoading";
 import { Page, Pageable } from "../../../services/util/page";
 import Pagination from '@atlaskit/pagination';
 import { getPagesArray, onChangePage } from "../../../services/util/helpers";
-import { ProfileService } from "../../../services/profile/profile.service";
+import ProfessionalService, { Professional } from "../../../services/professional/professional.service";
+import EmptyState from "../../../components/empty-state/EmptyState";
 
-export interface ProfilesListContainerProps {
+export interface ProfessionalListContainerProps {
 }
 
-const ProfilesListContainer: FunctionComponent<ProfilesListContainerProps> = () => {
+const ProfessionalListContainer: FunctionComponent<ProfessionalListContainerProps> = () => {
 
-    const service = new ProfileService();
+    const service = new ProfessionalService();
     const history = useHistory();
 
     const [filter, setFilter] = useState('');
     const [loading, setLoading] = useState(false);
-    const [contentPage, setContentPage] = useState<Pageable<any>>();
+    const [contentPage, setContentPage] = useState<Pageable<Professional>>();
     const [page, setPage] = useState<Page>({ size: 10, page: 0 });
     const [error, setError] = useState(null);
 
@@ -44,35 +45,42 @@ const ProfilesListContainer: FunctionComponent<ProfilesListContainerProps> = () 
     };
 
     const goToNew = () => {
-        history.push('/profile/form');
+        history.push('/professional/form');
     }
 
     const onRowClick = (profile: any) => {
-        history.push(`/profile/form/${profile.id}`)
+        history.push(`/professional/form/${profile.id}`)
     }
 
     return (
         <ListContainerLayout
-            title="Listagem de perfis de acesso"
-            breadcrumbs={["Perfil de acesso", "Listagem"]}
+            title="Listagem de profissionais"
+            breadcrumbs={["Profissionais", "Listagem"]}
             onSearchAction={setFilter}
             onNewAction={goToNew}>
 
             <Content>
-                <ItemsContent>
-                    <Items>
-                        {loading ? <ListLoading />
-                            : contentPage?.content.map(e => (<ListItem key={e.id} onClick={() => onRowClick(e)}><AvatarItem primaryText={e.name} avatar={<Avatar />} /></ListItem>))
-                        }
-                    </Items>
-                </ItemsContent>
+                {
+                    contentPage && contentPage.totalElements > 0 &&
+                    <ItemsContent>
+                        <Items>
+                            {loading ? <ListLoading />
+                                : contentPage?.content.map(e => (<ListItem key={e.id} onClick={() => onRowClick(e)}><AvatarItem primaryText={e.name} secondaryText={e.occupation?.name || 'Nenhuma ocupação'} avatar={<Avatar />} /></ListItem>))
+                            }
+                        </Items>
+                    </ItemsContent>
+                }
                 {
                     contentPage && contentPage.totalPages > 0 &&
                     <Pagination selectedIndex={page.page} onChange={(ev, page) => onChangePage(ev, page, setPage)} innerStyles={{ margin: '0 auto' }} pages={getPagesArray(contentPage)} />
+                }
+                {
+                    contentPage && contentPage.totalElements == 0 &&
+                    <EmptyState onNewAction={goToNew} />
                 }
             </Content>
         </ListContainerLayout>
     );
 }
 
-export default ProfilesListContainer;
+export default ProfessionalListContainer;

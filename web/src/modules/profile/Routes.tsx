@@ -1,7 +1,7 @@
 import { FunctionComponent } from "react";
 import { BrowserRouter, Redirect, Route } from "react-router-dom";
-import ProfilesListContainer from "./view/ProfilesList.container";
-import ProfileFormContainer from "./manager/ProfileManager.container";
+import ProfilesListContainer from "./list/Profiles.List.Container";
+import ProfileFormContainer from "./form/Profile.Form.Container";
 
 const Routes: FunctionComponent = () => {
 

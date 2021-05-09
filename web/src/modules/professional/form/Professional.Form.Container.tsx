@@ -1,31 +1,38 @@
 import { FunctionComponent, useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import FormContainerLayout from "../../../components/layout/FormContainerLayout";
-import OccupationSchema from "./Occupation.schema";
 import styled from "styled-components";
 import Button, { LoadingButton } from "@atlaskit/button";
-import { Occupation, OccupationService } from "../../../services/occupation/occupation.service";
 import ErrorIcon from '@atlaskit/icon/glyph/error';
 import Banner from "@atlaskit/banner";
 import FormField from "../../../components/form-field/FormField";
 import ConfirmDisableDialog from "../../../components/confirm-disable-dialog/ConfirmDisableDialog";
 import { Formik } from "formik";
-export interface OccupationFormContainerProps {
+import ProfessionalService, { Professional } from "../../../services/professional/professional.service";
+import { FormSection } from "@atlaskit/form";
+import { OccupationService } from "../../../services/occupation/occupation.service";
+import AsyncSelect from "../../../components/async-select/AsyncSelect";
+import { ProfileService } from "../../../services/profile/profile.service";
+import ProfessionalSchema from "./Professional.Schema";
+
+export interface ProfessionalFormContainerProps {
 }
 
-const OccupationFormContainer: FunctionComponent<OccupationFormContainerProps> = (props) => {
+const ProfessionalFormContainer: FunctionComponent<ProfessionalFormContainerProps> = (props) => {
 
-    const service = new OccupationService();
+    const service = new ProfessionalService();
+    const occupationService = new OccupationService();
+    const profileService = new ProfileService();
 
     const { id } = useParams<any>();
 
-    const breacrumbs = ["Ocupações", "Formulário", id ? 'Editar' : 'Cadastrar'];
+    const breacrumbs = ["Profissionais", "Formulário", id ? 'Editar' : 'Cadastrar'];
 
     const FormTitle = (
-        id ? 'Editar ocupação' : 'Cadastrar nova ocupação'
+        id ? 'Editar profissional' : 'Cadastrar novo profissional'
     );
 
-    const [formValues, setFormValues] = useState<Occupation>({ name: '' });
+    const [formValues, setFormValues] = useState<Professional>({ name: '', email: '', });
     const [submiting, setSubmiting] = useState(false);
 
     const [error, setError] = useState<any | null>(null);
@@ -52,7 +59,7 @@ const OccupationFormContainer: FunctionComponent<OccupationFormContainerProps> =
         setSubmiting(false);
     }
 
-    const handleSave = async (values: Occupation) => {
+    const handleSave = async (values: Professional) => {
 
         setSubmiting(true);
 
@@ -65,7 +72,7 @@ const OccupationFormContainer: FunctionComponent<OccupationFormContainerProps> =
                 await service.create(values);
             }
 
-            await new Promise((resolve) => { setTimeout(() => { history.push('/occupation'); resolve(null) }, 3000) })
+            await new Promise((resolve) => { setTimeout(() => { history.push('/professional'); resolve(null) }, 3000) })
         }
         catch (err) {
             setError(err);
@@ -79,12 +86,41 @@ const OccupationFormContainer: FunctionComponent<OccupationFormContainerProps> =
 
         try {
             await service.disable(id);
-            await new Promise((resolve) => setTimeout(() => { history.push('/occupation'); resolve(null) }, 1000))
+            await new Promise((resolve) => setTimeout(() => { history.push('/professional'); resolve(null) }, 1000))
         }
         catch (err) {
             setError(err);
             setShowDisablePopup(false);
         }
+    }
+
+    const handleOccupations = async (filter: string) => {
+
+        let occupations;
+
+        try {
+            occupations = await occupationService.list(filter, { page: 0, size: 10 });
+        }
+        catch (err) {
+            setError(err);
+            return [];
+        }
+
+        return occupations.content.map(e => ({ label: e.name, value: e }))
+    }
+
+    const handleProfiles = async (filter: string) => {
+        let profiles;
+
+        try {
+            profiles = await profileService.list(filter, { page: 0, size: 10 });
+        }
+        catch (err) {
+            setError(err);
+            return []
+        }
+
+        return profiles.content.map(e => ({ label: e.name, value: e }));
     }
 
     const actions = (
@@ -96,14 +132,15 @@ const OccupationFormContainer: FunctionComponent<OccupationFormContainerProps> =
 
     const form = {
         initialValues: formValues,
-        validationSchema: OccupationSchema,
+        validationSchema: ProfessionalSchema,
+        enableReinitialize: true,
         onSubmit: handleSave
     }
 
     return (
-        <Formik {...form}>
-            {(props) => (
-                <form onSubmit={props.handleSubmit}>
+        <Formik {...form} >
+            {(formProps) => (
+                <form onSubmit={formProps.handleSubmit}>
                     <FormContainerLayout
                         title={FormTitle}
                         onBackAction={() => history.goBack()}
@@ -118,7 +155,21 @@ const OccupationFormContainer: FunctionComponent<OccupationFormContainerProps> =
                             </Banner>
                         }
                         <Content>
-                            <FormField name="name" value={formValues.name} label="Nome da ocupação" />
+                            <FormSection title="Dados pessoais">
+                                <FormField name="name" value={formValues.name} label="Nome do profissional" required />
+                            </FormSection>
+
+                            <FormSection title="Dados profissionais">
+                                <AsyncSelect fetch={handleOccupations} label="Ocupação" name="occupation" />
+                            </FormSection>
+
+                            <FormSection title="Dados de acesso" >
+                                <FormField name="email" value={formValues.email} label="Email" required />
+                                <AsyncSelect fetch={handleProfiles} label="Perfil de acesso" name="profile" />
+                                <FormField type="password" name="password" value="" label="Senha" />
+                                <FormField type="password" name="confirmPassword" value="" label="Confirmar senha" />
+                            </FormSection>
+
                         </Content>
                         <ConfirmDisableDialog isOpen={showDisablePopup} onClose={() => setShowDisablePopup(false)} onConfirm={handleDisableEntity} />
                     </FormContainerLayout>
@@ -129,7 +180,7 @@ const OccupationFormContainer: FunctionComponent<OccupationFormContainerProps> =
 
 }
 
-export default OccupationFormContainer;
+export default ProfessionalFormContainer;
 
 const Actions = styled.div`
     display: flex;

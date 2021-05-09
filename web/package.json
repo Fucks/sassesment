@@ -10,6 +10,7 @@
     "@atlaskit/button": "^15.1.5",
     "@atlaskit/checkbox": "^12.1.0",
     "@atlaskit/dynamic-table": "^14.2.1",
+    "@atlaskit/empty-state": "^7.1.5",
     "@atlaskit/flag": "^14.2.3",
     "@atlaskit/form": "^8.2.2",
     "@atlaskit/icon": "^21.5.0",

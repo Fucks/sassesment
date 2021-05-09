@@ -1,9 +1,7 @@
-import { AxiosResponse } from "axios";
-import { api } from "../util/Api"
 import { DefaultService } from "../util/default-service";
-import { Page, Pageable } from "../util/page";
 
 export interface Occupation {
+    id?: number;
     name: string
 }
 

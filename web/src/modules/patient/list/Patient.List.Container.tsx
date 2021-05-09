@@ -2,22 +2,23 @@ import Avatar, { AvatarItem } from "@atlaskit/avatar";
 import ListContainerLayout, { Items, ItemsContent, ListItem, Content } from "../../../components/layout/ListContainerLayout";
 import { FunctionComponent, useEffect, useState } from "react";
 import { useHistory } from "react-router";
-import { Occupation, OccupationService } from "../../../services/occupation/occupation.service";
 import { Page, Pageable } from "../../../services/util/page";
 import { getPagesArray, onChangePage } from "../../../services/util/helpers";
 import Pagination from '@atlaskit/pagination';
 import ListLoading from "../../../components/loading/ListLoading";
+import { Patient, PatientService } from "../../../services/patient/patient.service";
+import EmptyState from "../../../components/empty-state/EmptyState";
 
-export interface OccupationListContainerProps {
+export interface PatientListContainerProps {
 }
 
-const OccupationListContainer: FunctionComponent<OccupationListContainerProps> = () => {
+const PatientListContainer: FunctionComponent<PatientListContainerProps> = () => {
 
     const history = useHistory();
 
-    const service = new OccupationService();
+    const service = new PatientService();
 
-    const [contentPage, setContentPage] = useState<Pageable<Occupation>>();
+    const [contentPage, setContentPage] = useState<Pageable<Patient>>();
     const [page, setPage] = useState<Page>({ size: 10, page: 0 })
 
     const [loading, setLoading] = useState<boolean>(true);
@@ -34,7 +35,6 @@ const OccupationListContainer: FunctionComponent<OccupationListContainerProps> =
         setLoading(true);
 
         try {
-            console.log(page);
             var content = await service.list(filter, page);
             setContentPage(content);
         }
@@ -47,34 +47,41 @@ const OccupationListContainer: FunctionComponent<OccupationListContainerProps> =
 
     };
 
-    const onRowClick = (row: any) => {
-        history.push(`/occupation/form/${row.id}`)
+    const onRowClick = (row: Patient) => {
+        history.push(`/patient/form/${row.id}`)
     }
 
-    const goToNew = () => history.push('/occupation/form');
+    const goToNew = () => history.push('/patient/form');
 
     return (
         <ListContainerLayout
-            title="Listagem de ocupações"
-            breadcrumbs={["Ocupações", "Listagem"]}
+            title="Listagem de pacientes"
+            breadcrumbs={["Pacientes", "Listagem"]}
             onSearchAction={setFilter}
             onNewAction={goToNew}>
 
             <Content>
-                <ItemsContent>
-                    <Items>
-                        {loading ? <ListLoading />
-                            : contentPage?.content.map(e => (<ListItem onClick={() => onRowClick(e)}><AvatarItem primaryText={e.name} avatar={<Avatar />} /></ListItem>))
-                        }
-                    </Items>
-                </ItemsContent>
+                {
+                    contentPage && contentPage.totalElements > 0 &&
+                    <ItemsContent>
+                        <Items>
+                            {loading ? <ListLoading />
+                                : contentPage?.content.map(e => (<ListItem onClick={() => onRowClick(e)}><AvatarItem primaryText={e.name} avatar={<Avatar />} /></ListItem>))
+                            }
+                        </Items>
+                    </ItemsContent>
+                }
                 {
                     contentPage && contentPage.totalPages > 0 &&
                     <Pagination selectedIndex={page.page} onChange={(ev, page) => onChangePage(ev, page, setPage)} innerStyles={{ margin: '0 auto' }} pages={getPagesArray(contentPage)} />
+                }
+                {
+                    contentPage && contentPage.totalElements == 0 &&
+                    <EmptyState onNewAction={goToNew} />
                 }
             </Content>
         </ListContainerLayout>
     );
 }
 
-export default OccupationListContainer;
+export default PatientListContainer;

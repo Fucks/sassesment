@@ -7,10 +7,11 @@ export interface FormFieldProps {
     name: string;
     label: string;
     value: string;
+    type?: string;
     required?: boolean
 }
 
-const FormField: FunctionComponent<FormFieldProps> = ({ name, label, required, value }: FormFieldProps) => {
+const FormField: FunctionComponent<FormFieldProps> = ({ name, label, required, value, type }: FormFieldProps) => {
 
     const [field, meta, helpers] = useField(name);
 
@@ -23,7 +24,7 @@ const FormField: FunctionComponent<FormFieldProps> = ({ name, label, required, v
 
             {() => (
                 <Fragment>
-                    <TextField defaultValue={value} onChange={(ev) => helpers.setValue(ev.currentTarget.value)} />
+                    <TextField type={type || 'text'} defaultValue={value} onChange={(ev) => helpers.setValue(ev.currentTarget.value)} />
                     {meta.error && (
                         <ErrorMessage>
                             {meta.error}

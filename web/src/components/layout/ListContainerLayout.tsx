@@ -66,7 +66,7 @@ const ListContainerLayout: FunctionComponent<ListContainerLayoutProps> = ({ titl
 export default ListContainerLayout;
 
 export const ListContainer = styled.div`
-    padding: 0 0 16px 32px;
+    padding: 0 0 16px 0;
     overflow-y: hidden;
     display: flex;
     flex: 1;
@@ -75,6 +75,7 @@ export const ListContainer = styled.div`
 export const Content = styled.div`
     display: flex;
     flex-direction: column;
+    margin: 0 64px;
     flex: 1;
 `;
 
