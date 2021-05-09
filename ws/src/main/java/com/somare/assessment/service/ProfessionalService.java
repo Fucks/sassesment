@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class ProfessionalService extends DefaultService<Professional> {
@@ -30,6 +32,15 @@ public class ProfessionalService extends DefaultService<Professional> {
     }
 
     @Override
+    public Optional<Professional> getById(Long id) {
+        var hasProfessional = this.professionalRepository.findById(id);
+
+        hasProfessional.ifPresent(professional -> professional.setPassword(""));
+
+        return hasProfessional;
+    }
+
+    @Override
     public Professional update(@NotNull Long id, @Valid Professional professional) {
 
         var dbProfessional = this.professionalRepository.findById(id);
@@ -41,6 +52,12 @@ public class ProfessionalService extends DefaultService<Professional> {
         var _dbProfessional = dbProfessional.get();
 
         _dbProfessional.update(professional);
+
+        if (Objects.nonNull(professional.getPassword()) && !professional.getPassword().isEmpty()) {
+            _dbProfessional.setPassword(passwordEncoder.encode(professional.getPassword()));
+        }
+
+        this.professionalRepository.save(_dbProfessional);
 
         return _dbProfessional;
     }

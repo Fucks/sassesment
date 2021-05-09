@@ -45,4 +45,6 @@ public class Role implements GrantedAuthority {
     public static final String ROLE_VIEW_TEAM = "ROLE_VIEW_TEAM";
     public static final String ROLE_MANAGER_TEAM = "ROLE_MANAGER_TEAM";
 
+    public static final String ROLE_VIEW_PROFILES = "ROLE_VIEW_PROFILES";
+    public static final String ROLE_MANAGER_PROFILES = "ROLE_MANAGER_PROFILES";
 }

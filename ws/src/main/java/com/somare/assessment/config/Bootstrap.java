@@ -56,6 +56,8 @@ public class Bootstrap implements InitializingBean {
         this.roleRepository.save(new Role(Role.ROLE_VIEW_ALL_PATIENT));
         this.roleRepository.save(new Role(Role.ROLE_VIEW_PATIENT));
         this.roleRepository.save(new Role(Role.ROLE_MANAGER_PATIENT));
+        this.roleRepository.save(new Role(Role.ROLE_VIEW_PROFILES));
+        this.roleRepository.save(new Role(Role.ROLE_MANAGER_PROFILES));
     }
 
     public void bootstrapManagerProfile() {

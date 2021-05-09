@@ -32,7 +32,6 @@ public class Professional extends com.somare.assessment.infraestructure.common.e
     private String email;
 
     @NotBlank
-    @JsonIgnore
     @Column(name = "password")
     private String password;
 
