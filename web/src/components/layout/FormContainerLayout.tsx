@@ -10,9 +10,10 @@ export interface FormContainerLayoutProps {
     breadcrumbs?: string[]
     saveButton?: ReactElement,
     onBackAction: () => void,
+    bottomBar?: ReactElement
 }
 
-const FormContainerLayout: FunctionComponent<FormContainerLayoutProps> = ({ title, breadcrumbs, saveButton, onBackAction, children }) => {
+const FormContainerLayout: FunctionComponent<FormContainerLayoutProps> = ({ title, breadcrumbs, saveButton, onBackAction, bottomBar, children }) => {
 
     const breadcrumbsContent = useMemo(() => (
         <Breadcrumbs>
@@ -32,7 +33,8 @@ const FormContainerLayout: FunctionComponent<FormContainerLayoutProps> = ({ titl
         <ModalTransition>
             <PageHeader
                 breadcrumbs={breadcrumbsContent}
-                actions={actionsContent}>
+                actions={actionsContent}
+                bottomBar={bottomBar}>
                 {title}
             </PageHeader>
             <Content>

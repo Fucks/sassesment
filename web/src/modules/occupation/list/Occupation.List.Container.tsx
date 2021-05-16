@@ -8,6 +8,7 @@ import { getPagesArray, onChangePage } from "../../../services/util/helpers";
 import Pagination from '@atlaskit/pagination';
 import ListLoading from "../../../components/loading/ListLoading";
 import EmptyState from "../../../components/empty-state/EmptyState";
+import Initials from "../../../components/initials/Initials";
 
 export interface OccupationListContainerProps {
 }
@@ -66,7 +67,7 @@ const OccupationListContainer: FunctionComponent<OccupationListContainerProps> =
                     <ItemsContent>
                         <Items>
                             {loading ? <ListLoading />
-                                : contentPage?.content.map(e => (<ListItem onClick={() => onRowClick(e)}><AvatarItem primaryText={e.name} avatar={<Avatar />} /></ListItem>))
+                                : contentPage?.content.map(e => (<ListItem onClick={() => onRowClick(e)}><AvatarItem primaryText={e.name} avatar={<Initials text={e.name} />} /></ListItem>))
                             }
                         </Items>
                     </ItemsContent>

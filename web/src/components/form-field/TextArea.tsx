@@ -1,17 +1,17 @@
-import { ErrorMessage, Field, HelperMessage } from "@atlaskit/form";
-import { useField, useFormikContext } from "formik";
-import { Fragment, FunctionComponent, useEffect } from "react";
-import TextField from '@atlaskit/textfield';
+import { ErrorMessage, Field } from "@atlaskit/form";
+import { useField } from "formik";
+import { Fragment, FunctionComponent } from "react";
+import AtlaskitTextArea from '@atlaskit/textarea';
 
-export interface FormFieldProps {
+export interface TextAreaProps {
     name: string;
     label: string;
-    value: any;
+    value?: string;
     type?: string;
     required?: boolean
 }
 
-const FormField: FunctionComponent<FormFieldProps> = ({ name, label, required, value, type }: FormFieldProps) => {
+const TextArea: FunctionComponent<TextAreaProps> = ({ name, label, required, value, type }: TextAreaProps) => {
 
     const [field, meta, helpers] = useField(name);
 
@@ -24,7 +24,7 @@ const FormField: FunctionComponent<FormFieldProps> = ({ name, label, required, v
 
             {() => (
                 <Fragment>
-                    <TextField type={type || 'text'} defaultValue={value} onChange={(ev) => helpers.setValue(ev.currentTarget.value)} />
+                    <AtlaskitTextArea defaultValue={value} onChange={(ev) => helpers.setValue(ev.currentTarget.value)} />
                     {meta.error && (
                         <ErrorMessage>
                             {meta.error}
@@ -36,4 +36,4 @@ const FormField: FunctionComponent<FormFieldProps> = ({ name, label, required, v
     );
 }
 
-export default FormField;
+export default TextArea;

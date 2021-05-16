@@ -11,7 +11,7 @@ import { Formik } from "formik";
 import ProfessionalService, { Professional } from "../../../services/professional/professional.service";
 import { FormSection } from "@atlaskit/form";
 import { OccupationService } from "../../../services/occupation/occupation.service";
-import AsyncSelect from "../../../components/async-select/AsyncSelect";
+import AsyncSelect from "../../../components/select/AsyncSelect";
 import { ProfileService } from "../../../services/profile/profile.service";
 import ProfessionalSchema from "./Professional.Schema";
 

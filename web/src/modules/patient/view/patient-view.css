@@ -1,0 +1,7 @@
+div[role="tablist"] {
+    display: flex;
+    flex-direction: row;
+}
+div[role="tablist"] div[role="tab"]:not(:first-child) {
+    flex: 1;
+}

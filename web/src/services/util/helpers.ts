@@ -19,3 +19,15 @@ export const getPagesArray = (content: Pageable<any>) => {
 
     return pages;
 }
+
+export const EmptyPage = {
+    content: [],
+    last: true,
+    totalElements: 0,
+    totalPages: 0,
+    number: 0,
+    size: 10,
+    first: true,
+    numberOfElements: 0,
+    empty: true
+}

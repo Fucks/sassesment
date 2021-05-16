@@ -48,7 +48,7 @@ const PatientListContainer: FunctionComponent<PatientListContainerProps> = () =>
     };
 
     const onRowClick = (row: Patient) => {
-        history.push(`/patient/form/${row.id}`)
+        history.push(`/patient/view/${row.id}`)
     }
 
     const goToNew = () => history.push('/patient/form');

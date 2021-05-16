@@ -8,6 +8,7 @@ import Pagination from '@atlaskit/pagination';
 import { getPagesArray, onChangePage } from "../../../services/util/helpers";
 import { ProfileService } from "../../../services/profile/profile.service";
 import EmptyState from "../../../components/empty-state/EmptyState";
+import Initials from "../../../components/initials/Initials";
 
 export interface ProfilesListContainerProps {
 }
@@ -65,7 +66,7 @@ const ProfilesListContainer: FunctionComponent<ProfilesListContainerProps> = () 
                     <ItemsContent>
                         <Items>
                             {loading ? <ListLoading />
-                                : contentPage?.content.map(e => (<ListItem key={e.id} onClick={() => onRowClick(e)}><AvatarItem primaryText={e.name} avatar={<Avatar />} /></ListItem>))
+                                : contentPage?.content.map(e => (<ListItem key={e.id} onClick={() => onRowClick(e)}><AvatarItem primaryText={e.name} avatar={<Initials text={e.name} />} /></ListItem>))
                             }
                         </Items>
                     </ItemsContent>
