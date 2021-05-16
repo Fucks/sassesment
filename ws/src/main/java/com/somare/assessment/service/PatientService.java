@@ -1,10 +1,12 @@
 package com.somare.assessment.service;
 
+import com.somare.assessment.entity.Activity;
 import com.somare.assessment.entity.Patient;
 import com.somare.assessment.entity.Team;
 import com.somare.assessment.entity.authentication.Role;
 import com.somare.assessment.infraestructure.common.service.DefaultService;
 import com.somare.assessment.infraestructure.ProfessionalUserDetails;
+import com.somare.assessment.repository.ActivityRepository;
 import com.somare.assessment.repository.PatientRepository;
 import com.somare.assessment.repository.ProfessionalRepository;
 import com.somare.assessment.repository.TeamRepository;
@@ -29,15 +31,17 @@ public class PatientService extends DefaultService<Patient> {
     @Autowired
     private ProfessionalRepository professionalRepository;
 
+    @Autowired
+    private ActivityRepository activityRepository;
+
     @Override
     public Page<Patient> list(String filter, Pageable page) {
 
-        var user = SecurityContextHolder.getContext().getAuthentication();
-
-        if (isUserAuthorizedToViewAllPatients(user)) {
+        if (isUserAuthorizedToViewAllPatients()) {
             return this.patientRepository.findAll(page);
         }
 
+        var user = SecurityContextHolder.getContext().getAuthentication();
         var professional = this.professionalRepository.findByIdWithTeams(((ProfessionalUserDetails) user.getPrincipal()).getId());
 
         var teamIds = professional.getTeams().stream().map(Team::getId).collect(Collectors.toList());
@@ -49,7 +53,20 @@ public class PatientService extends DefaultService<Patient> {
         return this.patientRepository.findAllByTeams_IdIn(teamIds, page);
     }
 
-    private boolean isUserAuthorizedToViewAllPatients(Authentication user) {
+    public Page<Activity> listByPatientId(Long patientId, Pageable page) {
+
+        if(isUserAuthorizedToViewAllPatients()) {
+            return this.activityRepository.findAllByPatients_Id(patientId, page);
+        }
+
+        var user = SecurityContextHolder.getContext().getAuthentication();
+
+        return this.activityRepository.findAllByOwner_IdAndPatients_Id(((ProfessionalUserDetails) user.getPrincipal()).getId(), patientId, page);
+    }
+
+    private boolean isUserAuthorizedToViewAllPatients() {
+        var user = SecurityContextHolder.getContext().getAuthentication();
+
         return user
                 .getAuthorities()
                 .stream()

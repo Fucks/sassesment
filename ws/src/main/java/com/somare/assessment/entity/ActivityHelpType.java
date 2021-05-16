@@ -1,5 +1,6 @@
 package com.somare.assessment.entity;
 
+
 import com.somare.assessment.config.DefaultConfigs;
 import com.somare.assessment.infraestructure.common.entity.DefaultEntity;
 import lombok.AllArgsConstructor;
@@ -17,13 +18,13 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class ApplicationType extends com.somare.assessment.infraestructure.common.entity.Entity implements DefaultEntity<ApplicationType> {
+public class ActivityHelpType extends com.somare.assessment.infraestructure.common.entity.Entity implements DefaultEntity<ActivityHelpType> {
 
     @NotBlank
     private String name;
 
     @Override
-    public void update(ApplicationType entity) {
+    public void update(ActivityHelpType entity) {
         this.name = entity.name;
     }
 }

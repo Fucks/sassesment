@@ -2,14 +2,12 @@ package com.somare.assessment.entity;
 
 import com.somare.assessment.config.DefaultConfigs;
 import com.somare.assessment.infraestructure.common.entity.DefaultEntity;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +19,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@Builder
 public class Activity extends com.somare.assessment.infraestructure.common.entity.Entity implements DefaultEntity<Activity> {
 
     @NotBlank
@@ -30,16 +29,24 @@ public class Activity extends com.somare.assessment.infraestructure.common.entit
     private String description;
 
     @NotNull
-    private ApplicationType type;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private ActivityApplicationType activityApplicationType;
 
-    @NotBlank
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
+    private ActivityHelpType helpType;
+
+    @NotNull
     private Integer retryNumber;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Professional owner;
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<Objective> objectives;
+
+    @ManyToMany
+    private List<Patient> patients;
 
     private void addObjective(@NotBlank String objective) {
 
@@ -54,7 +61,8 @@ public class Activity extends com.somare.assessment.infraestructure.common.entit
     public void update(Activity entity) {
         this.name = entity.name;
         this.description = entity.description;
-        this.type = entity.type;
+        this.activityApplicationType = entity.activityApplicationType;
         this.retryNumber = entity.retryNumber;
+        this.helpType = entity.helpType;
     }
 }

@@ -1,13 +1,12 @@
 package com.somare.assessment.config;
 
+import com.somare.assessment.entity.ActivityApplicationType;
+import com.somare.assessment.entity.ActivityHelpType;
 import com.somare.assessment.entity.Occupation;
 import com.somare.assessment.entity.Professional;
 import com.somare.assessment.entity.authentication.Profile;
 import com.somare.assessment.entity.authentication.Role;
-import com.somare.assessment.repository.OccupationRepository;
-import com.somare.assessment.repository.ProfessionalRepository;
-import com.somare.assessment.repository.ProfileRepository;
-import com.somare.assessment.repository.RoleRepository;
+import com.somare.assessment.repository.*;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,6 +29,12 @@ public class Bootstrap implements InitializingBean {
     private OccupationRepository occupationRepository;
 
     @Autowired
+    private ActivityApplicationTypeRepository applicationTypeRepository;
+
+    @Autowired
+    private ActivityHelpTypeRepository helpTypeRepository;
+
+    @Autowired
     @Qualifier("passwordEncoder")
     private PasswordEncoder passwordEncoder;
 
@@ -39,6 +44,8 @@ public class Bootstrap implements InitializingBean {
         bootstrapManagerProfile();
         bootstrapAdmUser();
         bootstrapOccupations();
+        bootstrapApplicationTypes();
+        bootstrapHelpTypes();
     }
 
     public void bootstrapRoles() {
@@ -96,5 +103,31 @@ public class Bootstrap implements InitializingBean {
         this.occupationRepository.save(new Occupation("Terapeuta ocupacional"));
         this.occupationRepository.save(new Occupation("Psicopedagogo"));
 
+    }
+
+    public void bootstrapApplicationTypes() {
+
+        if(this.applicationTypeRepository.count() > 0) {
+            return;
+        }
+
+        this.applicationTypeRepository.save(new ActivityApplicationType("Linha de base"));
+        this.applicationTypeRepository.save(new ActivityApplicationType("Intervenção"));
+        this.applicationTypeRepository.save(new ActivityApplicationType("Manutenção"));
+        this.applicationTypeRepository.save(new ActivityApplicationType("Sonda"));
+    }
+
+    public void bootstrapHelpTypes() {
+
+        if(this.helpTypeRepository.count() > 0) {
+            return;
+        }
+
+        this.helpTypeRepository.save(new ActivityHelpType("Ajuda ecoica"));
+        this.helpTypeRepository.save(new ActivityHelpType("Ajuda física parcial"));
+        this.helpTypeRepository.save(new ActivityHelpType("Ajuda física total"));
+        this.helpTypeRepository.save(new ActivityHelpType("Ajuda gestual"));
+        this.helpTypeRepository.save(new ActivityHelpType("Independente (sem ajuda)"));
+        this.helpTypeRepository.save(new ActivityHelpType("Ajuda necessária"));
     }
 }

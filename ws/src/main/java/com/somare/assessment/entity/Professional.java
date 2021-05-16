@@ -53,6 +53,10 @@ public class Professional extends com.somare.assessment.infraestructure.common.e
         this.profile = professional.profile;
     }
 
+    public Professional(Long id){
+        super(id);
+    }
+
     public Professional(Professional professional) {
         super(professional.id);
         this.disabled = professional.disabled;
