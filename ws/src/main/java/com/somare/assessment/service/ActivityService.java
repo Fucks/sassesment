@@ -28,9 +28,9 @@ public class ActivityService extends DefaultService<Activity> {
         return this.repository.save(entity);
     }
 
-    public Activity createForPatientId(Long patientid, Activity activity){
+    public Activity saveActivityForPatientId(Long patientId, Activity activity){
 
-        var patient = this.patientRepository.findById(patientid);
+        var patient = this.patientRepository.findById(patientId);
 
         if(patient.isEmpty()) {
             throw new IllegalArgumentException("Patient not found");
@@ -40,7 +40,10 @@ public class ActivityService extends DefaultService<Activity> {
             activity.setPatients(new ArrayList<>());
         }
 
-        activity.getPatients().add(patient.get());
+        if(!activity.getPatients().stream().anyMatch(e -> e.getId().equals(patientId))) {
+            activity.getPatients().add(patient.get());
+        }
+
 
         return insert(activity);
     }

@@ -68,7 +68,6 @@ public class OAuth2ServerConfiguration {
         @Autowired
         private PasswordEncoder passwordEncoder;
 
-        @Override
         public void configure(AuthorizationServerEndpointsConfigurer endpoints)
                 throws Exception {
             endpoints
@@ -81,11 +80,11 @@ public class OAuth2ServerConfiguration {
         public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
             clients
                     .inMemory()
-                    .withClient("client")
+                    .withClient("somare-api")
                     .authorizedGrantTypes("password", "authorization_code", "refresh_token").scopes("all")
                     .refreshTokenValiditySeconds(300000)
                     .resourceIds(RESOURCE_ID)
-                    .secret(passwordEncoder.encode("123"))
+                    .secret(passwordEncoder.encode("r49KaTGr"))
                     .accessTokenValiditySeconds(50000);
 
         }

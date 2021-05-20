@@ -16,7 +16,12 @@ public class OAuthUserInfoController {
 
         var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        return ResponseEntity.ok((ProfessionalUserDetails)principal);
+        return ResponseEntity.ok((ProfessionalUserDetails) principal);
+    }
+
+    @GetMapping("/check-token")
+    public ResponseEntity checkToken() {
+        return ResponseEntity.ok().build();
     }
 
 }
