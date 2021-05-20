@@ -1,6 +1,6 @@
 import { Field } from "@atlaskit/form";
 import { FunctionComponent, useEffect, useState } from "react";
-import { CreatableSelect as AtlaskitSelect, OptionType } from '@atlaskit/select';
+import { CreatableSelect as AtlaskitSelect } from '@atlaskit/select';
 import { useField } from "formik";
 
 export interface SelectOption {
@@ -11,8 +11,8 @@ export interface SelectOption {
 export interface SelectProps {
     name: string;
     label: string;
-    value?: {name:string}[]
-    // fetch: (filter: string) => Promise<SelectOption[]>
+    value?: { name: string }[]
+    placeholder?: string;
 }
 
 interface SelectedEntity {
@@ -20,13 +20,13 @@ interface SelectedEntity {
     value: { name: string }
 }
 
-const Select: FunctionComponent<SelectProps> = ({ name, value, label }: SelectProps) => {
+const TagsInputSelec: FunctionComponent<SelectProps> = ({ name, value, label, placeholder }: SelectProps) => {
 
     const [field, meta, helpers] = useField(name);
     const [values, setValues] = useState<SelectedEntity[]>([]);
 
     useEffect(() => {
-        const _values = (value || []).map(e => ({label: e.name, value: e}));
+        const _values = (value || []).map(e => ({ label: e.name, value: e }));
         setValues(_values);
     }, [])
 
@@ -38,18 +38,26 @@ const Select: FunctionComponent<SelectProps> = ({ name, value, label }: SelectPr
         helpers.setValue(_values.map(e => e.value));
     }
 
+    const handlechange = (_values: any, actionMeta: any) => {
+        setValues((_values || []));
+        helpers.setValue((_values || []).map((e: any) => e.value));
+    }
+
     return (
         <Field name={name} label={label} >
             {(fieldProps) => <AtlaskitSelect
                 cacheOptions
                 defaultOptions
+                onChange={handlechange}
                 onCreateOption={handleCreate}
                 loadOptions={fetch}
+                noOptionsMessage={() => null}
                 value={values}
                 isMulti
+                placeholder={placeholder}
                 {...fieldProps} />}
         </Field>
     );
 }
 
-export default Select;
+export default TagsInputSelec;

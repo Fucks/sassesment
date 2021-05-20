@@ -15,6 +15,10 @@ export interface SingInResponse {
     scope: string;
 }
 
+export class Constants {
+    static TOKEN_EXPIRATION_SECONDS = 50000
+}
+
 export class LoginService {
     singIn = async (payload: SingInModel): Promise<SingInResponse> => {
 
@@ -36,16 +40,16 @@ export class LoginService {
             AuthenticationService.storeToken(data);
 
             const userInfo = await this.retrieveUserInfo();
-            
+
             AuthenticationService.storeUserInfo(userInfo);
 
             return data;
         }
         catch (err) {
 
-            if(err.response.data.error_description) {
+            if (err.response.data.error_description) {
 
-                switch(err.response.data.error_description) {
+                switch (err.response.data.error_description) {
                     case 'Bad credentials':
                         throw new Error('Usuário ou senha incorretos.')
                     case 'User is disabled':
@@ -57,18 +61,35 @@ export class LoginService {
         }
     }
 
-    retrieveUserInfo = async () : Promise<AuthenticationInfo> => {
-        
-        try{
-            const {data, status} = await api().get<AuthenticationInfo>('/oauth/userinfo');
+    retrieveUserInfo = async (): Promise<AuthenticationInfo> => {
 
-            if(status != 200) {
+        try {
+            const { data, status } = await api().get<AuthenticationInfo>('/oauth/userinfo');
+
+            if (status != 200) {
                 throw new Error();
             }
 
             return data;
         }
-        catch(err) {
+        catch (err) {
+            throw new Error('Erro ao obter dados do usuário');
+        }
+
+    }
+
+    checkToken = async (): Promise<void> => {
+
+        try {
+            const { data, status } = await api().get('/oauth/userinfo/check-token');
+
+            if (status != 200) {
+                throw new Error();
+            }
+
+            return;
+        }
+        catch (err) {
             throw new Error('Erro ao obter dados do usuário');
         }
 

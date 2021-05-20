@@ -4,10 +4,12 @@ import TextField from '@atlaskit/textfield';
 import Checkbox from "@atlaskit/checkbox";
 import { ButtonGroup, LoadingButton } from "@atlaskit/button";
 import styled from "styled-components";
-import { LoginService } from "../../services/login/login.service";
-import { useHistory } from "react-router";
+import { Constants, LoginService } from "../../services/login/login.service";
+import { Redirect, useHistory } from "react-router";
 import Banner from "@atlaskit/banner";
 import ErrorIcon from '@atlaskit/icon/glyph/error';
+import { Actions, useAuthentication } from "../../context/AutenticationContext";
+import AuthenticationService from "../../services/Authentication.service";
 
 const LoginContainer: FunctionComponent = () => {
 
@@ -15,6 +17,11 @@ const LoginContainer: FunctionComponent = () => {
     const [submiting, setSubmiting] = useState(false);
     const [error, setError]: any | null = useState(null);
     const history = useHistory();
+    const { state, dispatch } = useAuthentication();
+
+    const IsAuthenticationExpired = (loggedInDate: Date) => {
+        return Math.abs((new Date().getTime() - loggedInDate.getTime()) / 1000) > Constants.TOKEN_EXPIRATION_SECONDS
+    }
 
     const handleSubmit = async (values: any) => {
 
@@ -22,10 +29,8 @@ const LoginContainer: FunctionComponent = () => {
 
         try {
             await loginService.singIn(values);
-            await setTimeout(() => {
-                history.push('/');
-            }, 3000)
-
+            dispatch({ type: Actions.LOGIN, payload: AuthenticationService.getUserInfo() })
+            history.push('/');
         }
         catch (err) {
             console.error(`Erro ao tentar logar. Erro: ${err}`)
@@ -35,6 +40,15 @@ const LoginContainer: FunctionComponent = () => {
             setSubmiting(false);
         }
 
+    }
+
+    if (!state && AuthenticationService.isAuthenticated()) {
+
+        const localStorageAuthentication = AuthenticationService.getUserInfo();
+
+        if (!IsAuthenticationExpired(new Date(localStorageAuthentication.loggedIn))) {
+            dispatch({ type: Actions.LOGIN, payload: AuthenticationService.getUserInfo() });
+        }
     }
 
     return <Container>

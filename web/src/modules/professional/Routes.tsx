@@ -1,11 +1,11 @@
 import { FunctionComponent } from "react";
-import { BrowserRouter, Redirect, Route } from "react-router-dom";
+import { Switch, Redirect, Route } from "react-router-dom";
 import ProfessionalFormContainer from "./form/Professional.Form.Container";
 import ProfessionalListContainer from "./list/Professional.List.Container";
 
 const Routes: FunctionComponent = () => {
 
-    return (<BrowserRouter>
+    return (<Switch>
         <Route key={1} exact path="/professional/list">
             <ProfessionalListContainer />
         </Route>
@@ -18,7 +18,7 @@ const Routes: FunctionComponent = () => {
         <Route key={4} exact path="/professional">
             <Redirect to="/professional/list" />
         </Route>
-    </BrowserRouter>);
+    </Switch>);
 }
 
 export { Routes };

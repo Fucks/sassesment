@@ -7,11 +7,10 @@ export interface TextAreaProps {
     name: string;
     label: string;
     value?: string;
-    type?: string;
     required?: boolean
 }
 
-const TextArea: FunctionComponent<TextAreaProps> = ({ name, label, required, value, type }: TextAreaProps) => {
+const TextArea: FunctionComponent<TextAreaProps> = ({ name, label, required, value }: TextAreaProps) => {
 
     const [field, meta, helpers] = useField(name);
 

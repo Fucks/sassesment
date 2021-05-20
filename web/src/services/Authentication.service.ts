@@ -26,6 +26,7 @@ export default class AuthenticationService {
     }
 
     static storeUserInfo = (userInfo: AuthenticationInfo) => {
+        userInfo.loggedIn = new Date();
         window.localStorage.setItem(USERINFO_STORE_KEY, JSON.stringify(userInfo));
     }
 
@@ -51,6 +52,7 @@ export interface AuthenticationInfo {
     name: string;
     email: string;
     occupation: string;
+    loggedIn:Date
 }
 
 export interface Role {

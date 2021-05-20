@@ -8,15 +8,18 @@ import {
     TopNavigation
 } from '@atlaskit/page-layout';
 import { AtlassianNavigation, generateTheme, ProductHome } from "@atlaskit/atlassian-navigation";
-import { LinkItem, NavigationFooter, NavigationHeader, NestableNavigationContent, Section, SideNavigation } from "@atlaskit/side-navigation";
+import { ButtonItem, LinkItem, NavigationFooter, NavigationHeader, NestableNavigationContent, Section, SideNavigation } from "@atlaskit/side-navigation";
 import Authenticated from "../authenticated/Authenticated";
 import { MenuOptions } from "../../constants/menu.constants";
 import AuthenticationService, { AuthenticationInfo } from "../../services/Authentication.service";
 import { SignIn } from '@atlaskit/atlassian-navigation';
+import { Actions, useAuthentication } from "../../context/AutenticationContext";
+import { useHistory } from "react-router";
 
 const Layout: FunctionComponent = (props) => {
 
-    const auth = useMemo<AuthenticationInfo>(() => AuthenticationService.getUserInfo(), []);
+    const {state: auth, dispatch} = useAuthentication();
+    const history = useHistory();
 
     const isUserAuthorizedToAccessMenu = (menuOption: any) => {
 
@@ -24,7 +27,7 @@ const Layout: FunctionComponent = (props) => {
             return true;
         }
 
-        return menuOption.role.some((e: string) => auth.authorities.findIndex(ee => ee.authority === e) >= 0);
+        return menuOption.role.some((e: string) => auth!.authorities.findIndex(ee => ee.authority === e) >= 0);
     }
 
     const theme = generateTheme({
@@ -33,8 +36,13 @@ const Layout: FunctionComponent = (props) => {
         highlightColor: '#E94E34',
     });
 
+    const logout = () => {
+        AuthenticationService.clear();
+        dispatch({type: Actions.LOGOUT, payload: null})
+    }
+
     const signIn = () => (
-        <SignIn onClick={AuthenticationService.clear} href="/" tooltip="Sair" />
+        <SignIn onClick={logout} href="/" tooltip="Sair" />
     );
 
     return (
@@ -77,9 +85,9 @@ const Layout: FunctionComponent = (props) => {
                                 <Section>
                                     {MenuOptions.map(option => (
                                         isUserAuthorizedToAccessMenu(option) &&
-                                        <LinkItem key={option.url} href={option.url} iconBefore={option.icon}>
+                                        <ButtonItem key={option.url} onClick={() => history.push(option.url)} iconBefore={option.icon}>
                                             {option.title}
-                                        </LinkItem>
+                                        </ButtonItem>
                                     ))}
                                 </Section>
                             </NestableNavigationContent>

@@ -7,7 +7,7 @@ import FormField from "../../../../components/form-field/FormField";
 import AsyncSelect from "../../../../components/select/AsyncSelect";
 import { Patient } from "../../../../services/patient/patient.service";
 import TextArea from "../../../../components/form-field/TextArea";
-import Select from "../../../../components/select/Select";
+import TagsInputSelec from "../../../../components/select/TagsInputSelect";
 import Banner from "@atlaskit/banner";
 import ErrorIcon from '@atlaskit/icon/glyph/error';
 
@@ -99,8 +99,8 @@ const ActivityForm: FunctionComponent<ActivityFormProps> = ({ activity, patient,
                         <AsyncSelect fetch={handleApplicationType} label="Tipo de aplicação" name="activityApplicationType" />
                         <AsyncSelect fetch={handleHelpType} label="Tipo de ajuda" name="helpType" />
                         <FormField name="retryNumber" label="Total de tentativas" required value={form.initialValues.retryNumber} />
-                        <Select name="objectives" label="Alvos" value={form.initialValues.objectives} />
-                        <TextArea name="description" label="Procedimento" value={form.initialValues.description} />
+                        <TagsInputSelec name="objectives" label="Alvos" placeholder="Digite um de cada vez e pressione ENTER" value={form.initialValues.objectives} />
+                        <TextArea name="description" label="Procedimento" value={form.initialValues.description} required={true} />
                     </form>
                 )}
             </Formik>

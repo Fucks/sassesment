@@ -1,12 +1,12 @@
 import { FunctionComponent } from "react";
-import { BrowserRouter, Redirect, Route } from "react-router-dom";
+import { Switch, Redirect, Route } from "react-router-dom";
 import PatientFormContainer from "./form/Patient.Form.Container";
 import PatientListContainer from "./list/Patient.List.Container";
 import PatientViewContainer from "./view/Patient.View.Container";
 
 const Routes: FunctionComponent = () => {
 
-    return (<BrowserRouter>
+    return (<Switch>
         <Route key={1} exact path="/patient/list">
             <PatientListContainer />
         </Route>
@@ -22,7 +22,7 @@ const Routes: FunctionComponent = () => {
         <Route key={5} exact path="/patient">
             <Redirect to="/patient/list" />
         </Route>
-    </BrowserRouter>);
+    </Switch>);
 }
 
 export { Routes };
