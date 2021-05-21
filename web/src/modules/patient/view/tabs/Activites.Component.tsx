@@ -9,6 +9,9 @@ import { Page, Pageable } from "../../../../services/util/page";
 import Pagination from '@atlaskit/pagination';
 import EmptyState from "../../../../components/empty-state/EmptyState";
 import ActivityForm from "../components/ActivityForm";
+import styled from "styled-components";
+import Initials from "../../../../components/initials/Initials";
+import Button from "@atlaskit/button";
 
 export interface ActivitiesTabComponentProps {
     patient: Patient
@@ -45,19 +48,25 @@ const ActivitiesTabComponent: FunctionComponent<ActivitiesTabComponentProps> = (
         }
     }
 
-    const goToForm = (activity?: Activity) => {
+    const handleShowForm = (activity?: Activity) => {
         setSelectedActivity(activity);
         setShowForm(true);
     }
 
+    const onFormClose = () => {
+        setShowForm(false)
+        fetchActivities();
+    }
+
     return (
-        <>
+        <Container>
             {
                 contentPage && contentPage.totalElements > 0 &&
-                <ItemsContent>
+                <ItemsContent style={{ flex: 1 }}>
+                    <Button onClick={() => handleShowForm()}>Criar nova atividade</Button>
                     <Items>
                         {loading ? <ListLoading />
-                            : contentPage?.content.map(e => (<ListItem onClick={() => goToForm(e)}><AvatarItem primaryText={e.name} avatar={<Avatar />} /></ListItem>))
+                            : contentPage?.content.map(e => (<ListItem onClick={() => handleShowForm(e)}><AvatarItem primaryText={e.name} avatar={<Initials text={e.name} />} /></ListItem>))
                         }
                     </Items>
                 </ItemsContent>
@@ -68,12 +77,19 @@ const ActivitiesTabComponent: FunctionComponent<ActivitiesTabComponentProps> = (
             }
             {
                 contentPage && contentPage.totalElements == 0 &&
-                <EmptyState onNewAction={() => goToForm()} />
+                <EmptyState onNewAction={() => handleShowForm()} />
             }
             {
-                showForm && <ActivityForm activity={activitySelected} patient={patient} onClose={() => setShowForm(false)} />
+                showForm && <ActivityForm activity={activitySelected} patient={patient} onClose={onFormClose} />
             }
-        </>);
+        </Container>);
 }
 
 export default ActivitiesTabComponent;
+
+const Container = styled.div`
+    padding: 16px 64px;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+`;

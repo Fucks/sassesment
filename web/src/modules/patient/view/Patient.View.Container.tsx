@@ -75,10 +75,12 @@ const PatientViewContainer: FunctionComponent<PatientViewContainerProps> = () =>
                 bottomBar={tagsMenu}
                 breadcrumbs={breacrumbs}>
                 {!loading && <ErrorBoundary>
-                    {
-                        selected == 1 &&
-                        <ActivitiesTabComponent patient={patient as Patient} />
-                    }
+                    <Content>
+                        {
+                            selected == 1 &&
+                            <ActivitiesTabComponent patient={patient as Patient} />
+                        }
+                    </Content>
                 </ErrorBoundary>
                 }
             </FormContainerLayout>
@@ -95,7 +97,6 @@ const Actions = styled.div`
 `;
 
 const Content = styled.div`
-    padding: 0 64px;
-    flex-direction: column;
-    width: 40%;
+    display: flex;
+    flex: 1
 `;

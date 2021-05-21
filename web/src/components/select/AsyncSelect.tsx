@@ -1,4 +1,4 @@
-import { Field } from "@atlaskit/form";
+import { ErrorMessage, Field } from "@atlaskit/form";
 import { FunctionComponent, useEffect, useState } from "react";
 import { AsyncSelect as AtlaskitAsyncSelect, OptionType, ValueType } from '@atlaskit/select'
 import { useField } from "formik";
@@ -33,15 +33,22 @@ const AsyncSelect: FunctionComponent<AsyncSelectProps> = ({ name, value, label, 
 
     return (
         <Field name={name} label={label} isRequired>
-            {(fieldProps) => <AtlaskitAsyncSelect
-                cacheOptions
-                defaultOptions
-                value={selected}
-                defaultValue={selected}
-                loadOptions={fetch}
-                onChange={handleSelect}
-                isOptionSelected={(option) => option.value === value}
-                {...fieldProps} />}
+            {(fieldProps) => <>
+                <AtlaskitAsyncSelect
+                    cacheOptions
+                    defaultOptions
+                    value={selected}
+                    defaultValue={selected}
+                    loadOptions={fetch}
+                    onChange={handleSelect}
+                    isOptionSelected={(option) => option.value === value}
+                    {...fieldProps} />
+                {meta.error && (
+                    <ErrorMessage>
+                        {meta.error}
+                    </ErrorMessage>
+                )}
+            </>}
         </Field>
     );
 }

@@ -1,4 +1,4 @@
-import { Field } from "@atlaskit/form";
+import { ErrorMessage, Field } from "@atlaskit/form";
 import { FunctionComponent, useEffect, useState } from "react";
 import { CreatableSelect as AtlaskitSelect } from '@atlaskit/select';
 import { useField } from "formik";
@@ -13,6 +13,7 @@ export interface SelectProps {
     label: string;
     value?: { name: string }[]
     placeholder?: string;
+    required?: boolean
 }
 
 interface SelectedEntity {
@@ -20,7 +21,7 @@ interface SelectedEntity {
     value: { name: string }
 }
 
-const TagsInputSelec: FunctionComponent<SelectProps> = ({ name, value, label, placeholder }: SelectProps) => {
+const TagsInputSelec: FunctionComponent<SelectProps> = ({ name, value, label, placeholder, required }: SelectProps) => {
 
     const [field, meta, helpers] = useField(name);
     const [values, setValues] = useState<SelectedEntity[]>([]);
@@ -44,18 +45,25 @@ const TagsInputSelec: FunctionComponent<SelectProps> = ({ name, value, label, pl
     }
 
     return (
-        <Field name={name} label={label} >
-            {(fieldProps) => <AtlaskitSelect
-                cacheOptions
-                defaultOptions
-                onChange={handlechange}
-                onCreateOption={handleCreate}
-                loadOptions={fetch}
-                noOptionsMessage={() => null}
-                value={values}
-                isMulti
-                placeholder={placeholder}
-                {...fieldProps} />}
+        <Field name={name} label={label} isRequired={required}>
+            {(fieldProps) => <>
+                <AtlaskitSelect
+                    cacheOptions
+                    defaultOptions
+                    onChange={handlechange}
+                    onCreateOption={handleCreate}
+                    loadOptions={fetch}
+                    noOptionsMessage={() => null}
+                    value={values}
+                    isMulti
+                    placeholder={placeholder}
+                    {...fieldProps} />
+                {meta.error && (
+                    <ErrorMessage>
+                        {meta.error}
+                    </ErrorMessage>
+                )}
+            </>}
         </Field>
     );
 }

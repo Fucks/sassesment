@@ -70,6 +70,8 @@ const ActivityForm: FunctionComponent<ActivityFormProps> = ({ activity, patient,
         },
         validationSchema: schema,
         enableReinitialize: true,
+        validateOnChange: false,
+        validateOnBlur: false,
         onSubmit: handleSubmit
     }
 
@@ -111,12 +113,12 @@ const ActivityForm: FunctionComponent<ActivityFormProps> = ({ activity, patient,
 const schema = Yup.object().shape({
     name: Yup.string().required('O campo nome é obrigatório'),
     description: Yup.string().required('O campo descrição é obrigatório'),
-    activityApplicationType: Yup.object(),
-    helpType: Yup.object(),
+    activityApplicationType: Yup.object().required('Informe o tipo de aplicação a ser utilizado'),
+    helpType: Yup.object().required('Informe o tipo de ajuda a ser utilizado'),
     retryNumber: Yup.number(),
     objectives: Yup.array().of(Yup.object().shape({
         name: Yup.string().required('O campo nome é obrigatório')
-    }))
+    })).min(1, 'Informe ao menos 1 alvo')
 })
 
 export default ActivityForm;
