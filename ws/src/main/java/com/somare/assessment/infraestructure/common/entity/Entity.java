@@ -1,6 +1,7 @@
 package com.somare.assessment.infraestructure.common.entity;
 
 import lombok.*;
+import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -12,6 +13,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
+@Audited
 @NoArgsConstructor
 @AllArgsConstructor
 @MappedSuperclass

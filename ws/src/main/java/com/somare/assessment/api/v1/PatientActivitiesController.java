@@ -41,6 +41,14 @@ public class PatientActivitiesController {
         return ResponseEntity.ok(this.patientService.listByPatientId(patientId, page));
     }
 
+    @PostMapping("/disable/{id}")
+    public ResponseEntity disable(@PathVariable Long patientId, @PathVariable Long id) {
+
+        this.activityService.disable(id);
+
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/application-types")
     public ResponseEntity<Page<ActivityApplicationType>> getApplicationTypes(@RequestParam String filter, @PageableDefault Pageable page) {
         return ResponseEntity.ok(this.activityApplicationTypeRepository.findByNameLike("%" + filter + "%", page));

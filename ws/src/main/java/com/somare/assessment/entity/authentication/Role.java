@@ -4,6 +4,7 @@ import com.somare.assessment.entity.Occupation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Data
+@Audited
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor

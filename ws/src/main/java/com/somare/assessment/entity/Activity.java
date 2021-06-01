@@ -36,6 +36,8 @@ public class Activity extends com.somare.assessment.infraestructure.common.entit
     @ManyToOne(fetch = FetchType.EAGER)
     private ActivityHelpType helpType;
 
+    private Integer helpDelay;
+
     @NotNull
     private Integer retryNumber;
 
@@ -59,10 +61,11 @@ public class Activity extends com.somare.assessment.infraestructure.common.entit
 
     @Override
     public void update(Activity entity) {
-        this.name = entity.name;
-        this.description = entity.description;
-        this.activityApplicationType = entity.activityApplicationType;
-        this.retryNumber = entity.retryNumber;
-        this.helpType = entity.helpType;
+        this.name = entity.getName();
+        this.description = entity.getDescription();
+        this.activityApplicationType = entity.getActivityApplicationType();
+        this.retryNumber = entity.getRetryNumber();
+        this.helpType = entity.getHelpType();
+        this.helpDelay = entity.getHelpDelay();
     }
 }

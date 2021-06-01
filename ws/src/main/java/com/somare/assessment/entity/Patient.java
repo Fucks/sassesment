@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Data
+@Audited
 @Entity
 @Table(schema = DefaultConfigs.DEFAULT_SCHEMA)
 @AllArgsConstructor

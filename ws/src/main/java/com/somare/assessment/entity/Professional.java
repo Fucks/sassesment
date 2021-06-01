@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @Entity
 @Data
+@Audited
 @Table(schema = DefaultConfigs.DEFAULT_SCHEMA)
 @AllArgsConstructor
 @NoArgsConstructor

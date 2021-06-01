@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,7 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 @Entity
+@Audited
 @Table(name = "ocuppation", schema = DefaultConfigs.DEFAULT_SCHEMA)
 @AllArgsConstructor
 @NoArgsConstructor
