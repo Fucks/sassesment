@@ -1,3 +1,4 @@
+import { AxiosResponse } from "axios";
 import { api } from "../util/Api";
 import { EmptyPage } from "../util/helpers";
 import { Page, Pageable } from "../util/page";
@@ -20,6 +21,7 @@ export interface Objective {
 export interface Activity {
     id?: number;
     name: string;
+    createdAt?: Date;
     description?: string;
     activityApplicationType: ActivityApplicationType;
     helpType: ActivityHelpType;
@@ -90,6 +92,19 @@ export class PatientActivityService {
         }
         catch (err) {
             throw err
+        }
+    }
+
+    disable = async (patientId: number, activityId: number): Promise<void> => {
+        try {
+            const { status } = await api().post<AxiosResponse>(`${this.path}/${patientId}/activities/disable/${activityId}`)
+
+            if (status != 200) {
+                throw new Error(`Erro ${status} ao desabilitar o registro`)
+            }
+        }
+        catch (err) {
+            throw err;
         }
     }
 }

@@ -15,6 +15,7 @@ import AuthenticationService, { AuthenticationInfo } from "../../services/Authen
 import { SignIn } from '@atlaskit/atlassian-navigation';
 import { Actions, useAuthentication } from "../../context/AutenticationContext";
 import { useHistory } from "react-router";
+import Logo from "../logo/Logo";
 
 const Layout: FunctionComponent = (props) => {
 
@@ -60,7 +61,7 @@ const Layout: FunctionComponent = (props) => {
                         renderProductHome={() => (<ProductHome
                             href="/"
                             icon={AtlassianIcon}
-                            logo={AtlassianLogo}
+                            logo={Logo}
                         />)}
                         renderSignIn={signIn}
                         primaryItems={[]}

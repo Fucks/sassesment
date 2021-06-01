@@ -9,6 +9,7 @@ import DashboardIcon from '@atlaskit/icon/glyph/dashboard';
 import './patient-view.css'
 import ActivitiesTabComponent from "./tabs/Activites.Component";
 import ErrorBoundary from '../../../components/error-boundary/ErrorBoundary'
+import NotImplementedYet from "../../../components/not-implemented-yet/NotImplementedYet";
 
 export interface PatientViewContainerProps { }
 
@@ -76,6 +77,10 @@ const PatientViewContainer: FunctionComponent<PatientViewContainerProps> = () =>
                 breadcrumbs={breacrumbs}>
                 {!loading && <ErrorBoundary>
                     <Content>
+                        {
+                            selected != 1 && 
+                            <NotImplementedYet />
+                        }
                         {
                             selected == 1 &&
                             <ActivitiesTabComponent patient={patient as Patient} />

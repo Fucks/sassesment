@@ -5,6 +5,7 @@ import './App.css';
 import { useAuthentication } from './context/AutenticationContext';
 import { useEffect } from 'react';
 import { LoginService } from './services/login/login.service';
+import { createGlobalStyle } from 'styled-components'
 
 function App() {
 
@@ -23,12 +24,54 @@ function App() {
     }
 
     return (
-        <BrowserRouter>
-            <Route children={<Routes />} path="/" />
-        </BrowserRouter>
-
+        <>
+            <BrowserRouter>
+                <Route children={<Routes />} path="/" />
+            </BrowserRouter >
+        </>
     );
 
 }
 
 export default App;
+
+
+export const GlobalStyle = createGlobalStyle`
+html {
+    height: 100%;
+}
+
+body {
+  margin: 0;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+#root {
+    height: 100%;
+    overflow: hidden;
+}
+
+#main{
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 60px);
+}
+
+a {
+    text-decoration: none;
+}
+
+fieldset {
+    border: none;
+    padding: 0;
+}`;

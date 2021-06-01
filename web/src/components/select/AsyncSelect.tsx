@@ -11,11 +11,12 @@ export interface SelectOption {
 export interface AsyncSelectProps {
     name: string;
     label: string;
+    required?: boolean;
     value?: SelectOption
     fetch: (filter: string) => Promise<SelectOption[]>
 }
 
-const AsyncSelect: FunctionComponent<AsyncSelectProps> = ({ name, value, label, fetch }: AsyncSelectProps) => {
+const AsyncSelect: FunctionComponent<AsyncSelectProps> = ({ name, value, label, required, fetch }: AsyncSelectProps) => {
 
     const [field, meta, helpers] = useField(name);
 
@@ -26,30 +27,31 @@ const AsyncSelect: FunctionComponent<AsyncSelectProps> = ({ name, value, label, 
     }, [field.value])
 
     const handleSelect = (event: any) => {
-
         setSelected(event.value);
         helpers.setValue(event.value)
     }
 
     return (
-        <Field name={name} label={label} isRequired>
-            {(fieldProps) => <>
-                <AtlaskitAsyncSelect
-                    cacheOptions
-                    defaultOptions
-                    value={selected}
-                    defaultValue={selected}
-                    loadOptions={fetch}
-                    onChange={handleSelect}
-                    isOptionSelected={(option) => option.value === value}
-                    {...fieldProps} />
-                {meta.error && (
-                    <ErrorMessage>
-                        {meta.error}
-                    </ErrorMessage>
-                )}
-            </>}
-        </Field>
+        <div style={{ flex: 1 }}>
+            <Field name={name} label={label} isRequired={required}>
+                {(fieldProps) => <>
+                    <AtlaskitAsyncSelect
+                        cacheOptions
+                        defaultOptions
+                        value={selected}
+                        defaultValue={selected}
+                        loadOptions={fetch}
+                        onChange={handleSelect}
+                        isOptionSelected={(option) => option.value === value}
+                        {...fieldProps} />
+                    {meta.error && (
+                        <ErrorMessage>
+                            {meta.error}
+                        </ErrorMessage>
+                    )}
+                </>}
+            </Field>
+        </div>
     );
 }
 
