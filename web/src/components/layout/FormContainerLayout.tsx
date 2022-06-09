@@ -31,7 +31,7 @@ const FormContainerLayout: FunctionComponent<FormContainerLayoutProps> = ({ titl
 
     return (
         <ModalTransition>
-            <PageHeader
+            <PageHeader 
                 breadcrumbs={breadcrumbsContent}
                 actions={actionsContent}
                 bottomBar={bottomBar}>
@@ -50,4 +50,5 @@ const Content = styled.div`
     overflow-y: hidden;
     display: flex;
     flex: 1;
+
 `;

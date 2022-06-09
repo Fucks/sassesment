@@ -1,4 +1,4 @@
-import Avatar, { AvatarItem } from "@atlaskit/avatar";
+import { AvatarItem } from "@atlaskit/avatar";
 import ListContainerLayout, { Items, ItemsContent, ListItem, Content } from "../../../components/layout/ListContainerLayout";
 import { FunctionComponent, useEffect, useState } from "react";
 import { useHistory } from "react-router";

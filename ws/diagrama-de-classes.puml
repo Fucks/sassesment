@@ -1,0 +1,116 @@
+@startuml
+class com.somare.assessment.entity.authentication.Profile {
+- String name
+- List<Role> roles
++ void update(Profile)
+}
+class com.somare.assessment.entity.Activity {
+- String name
+- String description
+- ActivityApplicationType activityApplicationType
+- ActivityHelpType helpType
+- Integer helpDelay
+- Integer retryNumber
+- Professional owner
+- List<Objective> objectives
+- List<Patient> patients
+- void addObjective(String)
++ void update(Activity)
+}
+class com.somare.assessment.entity.ActivityObjectiveHistory {
+- Objective objective
+- ObjectiveValue value
+}
+class com.somare.assessment.entity.ActivityHelpType {
+- String name
++ void update(ActivityHelpType)
+}
+enum com.somare.assessment.entity.ObjectiveValue {
++  BAD
++  SUCCESS
++  SUCCESS_WITH_HELP
+}
+class com.somare.assessment.entity.Objective {
+- String name
++ void update(Objective)
+}
+class com.somare.assessment.entity.authentication.Role {
+- Long id
+- String name
++ {static} String ROLE_VIEW_PROFESSIONALS
++ {static} String ROLE_MANAGER_PROFESSIONALS
++ {static} String ROLE_VIEW_OCCUPATION
++ {static} String ROLE_MANAGER_OCCUPATION
++ {static} String ROLE_VIEW_ALL_PATIENT
++ {static} String ROLE_VIEW_PATIENT
++ {static} String ROLE_MANAGER_PATIENT
++ {static} String ROLE_VIEW_TEAM
++ {static} String ROLE_MANAGER_TEAM
++ {static} String ROLE_VIEW_PROFILES
++ {static} String ROLE_MANAGER_PROFILES
++ String getAuthority()
+}
+class com.somare.assessment.entity.ActivityHistory {
+- Activity activity
+- Professional professional
+- Patient patient
+- LocalDateTime date
+- List<ActivityObjectiveHistory> objectives
++ void update(ActivityHistory)
+}
+class com.somare.assessment.entity.Professional {
+- String name
+- String email
+- String password
+- Occupation occupation
+- Profile profile
+- List<Team> teams
+- LocalDateTime disabled
++ void update(Professional)
+}
+class com.somare.assessment.entity.Team {
+- String name
+- Set<Professional> professionals
+- Set<Patient> patients
++ void addProfessional(Professional)
++ void addPatient(Patient)
++ void update(Team)
+}
+class com.somare.assessment.entity.Occupation {
+- String name
++ void update(Occupation)
+}
+class com.somare.assessment.entity.ActivityApplicationType {
+- String name
++ void update(ActivityApplicationType)
+}
+class com.somare.assessment.entity.Patient {
+- String name
+- LocalDate birthDate
+- List<Team> teams
++ void update(Patient)
+}
+
+com.somare.assessment.entity.Activity--|>com.somare.assessment.entity.ActivityApplicationType
+com.somare.assessment.entity.Activity--|>com.somare.assessment.entity.ActivityHelpType
+com.somare.assessment.entity.Activity--|>com.somare.assessment.entity.Objective
+com.somare.assessment.entity.Activity--|>com.somare.assessment.entity.Patient
+com.somare.assessment.entity.Activity--|>com.somare.assessment.entity.Professional
+
+com.somare.assessment.entity.ActivityHistory--|>com.somare.assessment.entity.Patient
+com.somare.assessment.entity.ActivityHistory--|>com.somare.assessment.entity.Professional
+com.somare.assessment.entity.ActivityHistory--|>com.somare.assessment.entity.Activity
+com.somare.assessment.entity.ActivityHistory--|>com.somare.assessment.entity.ActivityObjectiveHistory
+
+com.somare.assessment.entity.ActivityObjectiveHistory--|>com.somare.assessment.entity.ObjectiveValue
+com.somare.assessment.entity.ActivityObjectiveHistory--|>com.somare.assessment.entity.Objective
+
+com.somare.assessment.entity.authentication.Profile--|>com.somare.assessment.entity.authentication.Role
+
+com.somare.assessment.entity.Team--|>com.somare.assessment.entity.Professional
+com.somare.assessment.entity.Team--|>com.somare.assessment.entity.Patient
+
+com.somare.assessment.entity.Professional--|>com.somare.assessment.entity.Occupation
+com.somare.assessment.entity.Professional--|>com.somare.assessment.entity.authentication.Profile
+
+@enduml

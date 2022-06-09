@@ -13,7 +13,6 @@ import com.somare.assessment.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +37,7 @@ public class PatientService extends DefaultService<Patient> {
     public Page<Patient> list(String filter, Pageable page) {
 
         if (isUserAuthorizedToViewAllPatients()) {
-            return this.patientRepository.findAll(page);
+            return this.patientRepository.findByNameLikeIgnoreCase(filter, page);
         }
 
         var user = SecurityContextHolder.getContext().getAuthentication();
@@ -47,10 +46,10 @@ public class PatientService extends DefaultService<Patient> {
         var teamIds = professional.getTeams().stream().map(Team::getId).collect(Collectors.toList());
 
         if (teamIds.isEmpty()) {
-            return this.patientRepository.findAll(page);
+            return this.patientRepository.findByNameLikeIgnoreCase(filter, page);
         }
 
-        return this.patientRepository.findAllByTeams_IdIn(teamIds, page);
+        return this.patientRepository.findByTeams_IdInAndNameLikeIgnoreCase(filter, teamIds, page);
     }
 
     public Page<Activity> listByPatientId(Long patientId, Pageable page) {

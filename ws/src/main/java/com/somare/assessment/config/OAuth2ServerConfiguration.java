@@ -1,6 +1,7 @@
 package com.somare.assessment.config;
 
 import com.somare.assessment.infraestructure.UserDetailsService;
+import jdk.jfr.Timespan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -80,12 +81,18 @@ public class OAuth2ServerConfiguration {
         public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
             clients
                     .inMemory()
-                    .withClient("somare-api")
-                    .authorizedGrantTypes("password", "authorization_code", "refresh_token").scopes("all")
-                    .refreshTokenValiditySeconds(300000)
-                    .resourceIds(RESOURCE_ID)
-                    .secret(passwordEncoder.encode("r49KaTGr"))
-                    .accessTokenValiditySeconds(50000);
+                        .withClient("somare-api")
+                        .authorizedGrantTypes("password", "authorization_code", "refresh_token").scopes("all")
+                        .refreshTokenValiditySeconds(300000)
+                        .resourceIds(RESOURCE_ID)
+                        .secret(passwordEncoder.encode("r49KaTGr"))
+                        .accessTokenValiditySeconds(50000)
+                    .and()
+                        .withClient("somare-apk")
+                        .authorizedGrantTypes("password", "authorization_code", "refresh_token").scopes("all")
+                        .resourceIds(RESOURCE_ID)
+                        .secret(passwordEncoder.encode("2nssJtqsxd"))
+                        .accessTokenValiditySeconds(365 * 86400);
 
         }
 

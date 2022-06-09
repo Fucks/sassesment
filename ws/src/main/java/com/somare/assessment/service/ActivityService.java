@@ -40,7 +40,7 @@ public class ActivityService extends DefaultService<Activity> {
             activity.setPatients(new ArrayList<>());
         }
 
-        if(!activity.getPatients().stream().anyMatch(e -> e.getId().equals(patientId))) {
+        if(activity.getPatients().stream().noneMatch(e -> e.getId().equals(patientId))) {
             activity.getPatients().add(patient.get());
         }
 
