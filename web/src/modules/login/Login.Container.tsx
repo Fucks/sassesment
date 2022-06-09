@@ -10,13 +10,17 @@ import Banner from "@atlaskit/banner";
 import ErrorIcon from '@atlaskit/icon/glyph/error';
 import { Actions, useAuthentication } from "../../context/AutenticationContext";
 import AuthenticationService from "../../services/Authentication.service";
+import { useMemo } from "react";
 
 const LoginContainer: FunctionComponent = () => {
 
-    const loginService = new LoginService();
+    const loginService = useMemo<LoginService>(() => (new LoginService()), []);
+
     const [submiting, setSubmiting] = useState(false);
     const [error, setError]: any | null = useState(null);
+
     const history = useHistory();
+
     const { state, dispatch } = useAuthentication();
 
     const IsAuthenticationExpired = (loggedInDate: Date) => {
