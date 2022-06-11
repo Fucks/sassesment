@@ -1,11 +1,10 @@
 package com.somare.assessment.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.somare.assessment.config.DefaultConfigs;
 import com.somare.assessment.infraestructure.common.entity.DefaultEntity;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;
@@ -21,9 +20,8 @@ import java.util.Set;
 @Entity
 @Audited
 @Table(schema = DefaultConfigs.DEFAULT_SCHEMA)
-@AllArgsConstructor
-@NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class Team extends com.somare.assessment.infraestructure.common.entity.Entity implements DefaultEntity<Team> {
 
     @NotBlank
@@ -58,5 +56,15 @@ public class Team extends com.somare.assessment.infraestructure.common.entity.En
         this.name = entity.name;
         this.professionals = entity.professionals;
         this.patients = entity.patients;
+    }
+
+    public Team(Long id, String name, Set<Professional> professionals, Set<Patient> patients) {
+        super(id);
+        this.name = name;
+        this.professionals = professionals;
+        this.patients = patients;
+    }
+
+    public Team() {
     }
 }

@@ -1,13 +1,12 @@
 package com.somare.assessment.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.somare.assessment.config.DefaultConfigs;
 import com.somare.assessment.entity.authentication.Profile;
 import com.somare.assessment.infraestructure.common.entity.DefaultEntity;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
@@ -19,11 +18,12 @@ import java.util.List;
 
 @Entity
 @Data
+@ToString(exclude = {"profile", "teams"})
 @Audited
 @Table(schema = DefaultConfigs.DEFAULT_SCHEMA)
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"profile", "teams"})
 public class Professional extends com.somare.assessment.infraestructure.common.entity.Entity implements DefaultEntity<Professional> {
 
     @NotBlank
@@ -43,7 +43,7 @@ public class Professional extends com.somare.assessment.infraestructure.common.e
     @ManyToOne
     private Profile profile;
 
-    @ManyToMany(mappedBy = "professionals")
+    @ManyToMany(mappedBy = "professionals", fetch = FetchType.LAZY)
     private List<Team> teams;
 
     private LocalDateTime disabled;
@@ -55,7 +55,7 @@ public class Professional extends com.somare.assessment.infraestructure.common.e
         this.profile = professional.profile;
     }
 
-    public Professional(Long id){
+    public Professional(Long id) {
         super(id);
     }
 
@@ -66,5 +66,10 @@ public class Professional extends com.somare.assessment.infraestructure.common.e
         this.name = professional.name;
         this.password = professional.password;
         this.occupation = professional.occupation;
+    }
+
+    public Professional(Long id, String name) {
+        super(id);
+        this.name = name;
     }
 }

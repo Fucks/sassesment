@@ -4,8 +4,8 @@ import { Routes as OccupationRoutes } from "./modules/occupation/Routes";
 import { Routes as ProfileRoutes } from "./modules/profile/Routes";
 import { Routes as ProfessionalRoutes } from "./modules/professional/Routes";
 import { Routes as PatientRoutes } from "./modules/patient/Routes";
+import { Routes as TeamRoutes } from "./modules/team/Routes";
 import Layout from "./components/layout/PageLayout";
-import NotImplementedYet from "./components/not-implemented-yet/NotImplementedYet";
 
 const Routes: FunctionComponent = () => {
 
@@ -22,7 +22,7 @@ const Routes: FunctionComponent = () => {
                     <OccupationRoutes />
                 </Route>
                 <Route path="/team">
-                    <NotImplementedYet />
+                    <TeamRoutes />
                 </Route>
                 <Route path="/profile">
                     <ProfileRoutes />

@@ -1,5 +1,6 @@
 package com.somare.assessment.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.somare.assessment.config.DefaultConfigs;
 import com.somare.assessment.infraestructure.common.entity.DefaultEntity;
 import lombok.*;
@@ -41,6 +42,7 @@ public class Activity extends com.somare.assessment.infraestructure.common.entit
     @NotNull
     private Integer retryNumber;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     private Professional owner;
 
@@ -50,6 +52,7 @@ public class Activity extends com.somare.assessment.infraestructure.common.entit
     @ManyToMany
     private List<Patient> patients;
 
+    @JsonIgnore
     private void addObjective(@NotBlank String objective) {
 
         if(Objects.isNull(this.objectives)) {
@@ -59,6 +62,7 @@ public class Activity extends com.somare.assessment.infraestructure.common.entit
         this.objectives.add(new Objective(objective));
     }
 
+    @JsonIgnore
     @Override
     public void update(Activity entity) {
         this.name = entity.getName();

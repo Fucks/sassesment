@@ -21,7 +21,7 @@ interface SelectedEntity {
     value: { name: string }
 }
 
-const TagsInputSelec: FunctionComponent<SelectProps> = ({ name, value, label, placeholder, required }: SelectProps) => {
+const TagsInputSelec: FunctionComponent<SelectProps> = ({ name, value, label, placeholder, required}: SelectProps) => {
 
     const [field, meta, helpers] = useField(name);
     const [values, setValues] = useState<SelectedEntity[]>([]);
@@ -52,7 +52,6 @@ const TagsInputSelec: FunctionComponent<SelectProps> = ({ name, value, label, pl
                     defaultOptions
                     onChange={handlechange}
                     onCreateOption={handleCreate}
-                    loadOptions={fetch}
                     noOptionsMessage={() => null}
                     value={values}
                     isMulti

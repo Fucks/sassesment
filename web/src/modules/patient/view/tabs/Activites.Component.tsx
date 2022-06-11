@@ -1,5 +1,5 @@
-import Avatar, { AvatarItem } from "@atlaskit/avatar";
-import { FunctionComponent, useEffect, useState } from "react";
+import { AvatarItem } from "@atlaskit/avatar";
+import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { Items, ItemsContent, ListItem } from "../../../../components/layout/ListContainerLayout";
 import ListLoading from "../../../../components/loading/ListLoading";
 import { Activity, PatientActivityService } from "../../../../services/patient/patient-activity.service";
@@ -19,7 +19,7 @@ export interface ActivitiesTabComponentProps {
 
 const ActivitiesTabComponent: FunctionComponent<ActivitiesTabComponentProps> = ({ patient }) => {
 
-    const service = new PatientActivityService();
+    const service = useMemo(() => new PatientActivityService(), []);
 
     const [page, setPage] = useState<Page>({ page: 0, size: 10 });
     const [contentPage, setContentPage] = useState<Pageable<Activity>>();

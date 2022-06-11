@@ -3,32 +3,37 @@ import { FunctionComponent, useEffect, useState } from "react";
 import { AsyncSelect as AtlaskitAsyncSelect, OptionType, ValueType } from '@atlaskit/select'
 import { useField } from "formik";
 
-export interface SelectOption {
+export interface SelectOption<T> {
     label?: string;
-    value: any
+    value: T
 }
 
 export interface AsyncSelectProps {
     name: string;
     label: string;
     required?: boolean;
-    value?: SelectOption
-    fetch: (filter: string) => Promise<SelectOption[]>
+    value?: SelectOption<unknown> | SelectOption<unknown>[];
+    isMulti?: boolean;
+    fetch: (filter: string) => Promise<SelectOption<unknown>[]>
 }
 
-const AsyncSelect: FunctionComponent<AsyncSelectProps> = ({ name, value, label, required, fetch }: AsyncSelectProps) => {
+const AsyncSelect: FunctionComponent<AsyncSelectProps> = ({ name, value, label, required, isMulti, fetch }: AsyncSelectProps) => {
 
     const [field, meta, helpers] = useField(name);
 
-    const [selected, setSelected] = useState({ label: meta.initialValue?.name, value: meta.initialValue });
+    const handleSelect = (event: any | any[]) => {
 
-    useEffect(() => {
-        setSelected({ label: field.value?.name, value: field.value });
-    }, [field.value])
+        if (isMulti) {
 
-    const handleSelect = (event: any) => {
-        setSelected(event.value);
-        helpers.setValue(event.value)
+            const ids = event?.map((e: any) => e.value?.id );
+
+            const values = event?.filter((e: any, i: number) => ids.indexOf(e.value?.id) == i);
+            
+            helpers.setValue(values)
+        }
+        else {
+            helpers.setValue(event)
+        }
     }
 
     return (
@@ -37,12 +42,14 @@ const AsyncSelect: FunctionComponent<AsyncSelectProps> = ({ name, value, label, 
                 {(fieldProps) => <>
                     <AtlaskitAsyncSelect
                         cacheOptions
-                        defaultOptions
-                        value={selected}
-                        defaultValue={selected}
+                        defaultOptions  
+                        value={meta.value}
+                        defaultValue={meta.value}
+                        isMulti={isMulti}
                         loadOptions={fetch}
                         onChange={handleSelect}
-                        isOptionSelected={(option) => option.value === value}
+                        placeholder="Selecionar..."
+                        isOptionSelected={(option: any) => option.value === value}
                         {...fieldProps} />
                     {meta.error && (
                         <ErrorMessage>

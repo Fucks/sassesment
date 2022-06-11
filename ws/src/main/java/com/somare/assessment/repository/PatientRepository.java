@@ -11,9 +11,9 @@ import java.util.List;
 @Repository
 public interface PatientRepository extends DefaultRepository<Patient> {
 
-    Page<Patient> findByTeams_IdInAndNameLikeIgnoreCase(String name, List<Long> ids, Pageable page);
+    Page<Patient> findByTeams_IdInAndNameLikeIgnoreCaseAndDisabledIsNull(List<Long> ids, String name, Pageable page);
 
-    Page<Patient> findByNameLikeIgnoreCase(String name, Pageable page);
+    Page<Patient> findByNameLikeIgnoreCaseAndDisabledIsNull(String name, Pageable page);
 
 
 }

@@ -21,7 +21,7 @@ const TeamsListContainer: FunctionComponent<TeamsListContainerProps> = () => {
     const [loading, setLoading] = useState(false);
     const [contentPage, setContentPage] = useState<Pageable<Team>>();
     const [page, setPage] = useState<Page>({ size: 10, page: 0 });
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<any | null>(null);
 
     useEffect(() => {
         loadItens();
@@ -63,7 +63,7 @@ const TeamsListContainer: FunctionComponent<TeamsListContainerProps> = () => {
                     <ItemsContent>
                         <Items>
                             {loading ? <ListLoading />
-                                : contentPage?.content.map(e => (<ListItem key={e.id} onClick={() => onRowClick(e)}><AvatarItem primaryText={e.name} secondaryText={e.name || 'Nenhuma equipe'} avatar={<Avatar />} /></ListItem>))
+                                : contentPage?.content.map(e => (<ListItem key={e.id} onClick={() => onRowClick(e)}><AvatarItem primaryText={e.name} avatar={<Avatar />} /></ListItem>))
                             }
                         </Items>
                     </ItemsContent>

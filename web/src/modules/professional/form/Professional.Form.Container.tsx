@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import FormContainerLayout from "../../../components/layout/FormContainerLayout";
 import styled from "styled-components";
@@ -14,15 +14,17 @@ import { OccupationService } from "../../../services/occupation/occupation.servi
 import AsyncSelect from "../../../components/select/AsyncSelect";
 import { ProfileService } from "../../../services/profile/profile.service";
 import ProfessionalSchema from "./Professional.Schema";
+import { ProfessionalFormModel, ProfessionalParserAdapter } from "../../../services/professional/professional-parser.service";
 
 export interface ProfessionalFormContainerProps {
 }
 
 const ProfessionalFormContainer: FunctionComponent<ProfessionalFormContainerProps> = (props) => {
 
-    const service = new ProfessionalService();
-    const occupationService = new OccupationService();
-    const profileService = new ProfileService();
+    const service = useMemo(() => new ProfessionalService(), []);
+    const occupationService = useMemo(() => new OccupationService(), []);
+    const profileService = useMemo(() => new ProfileService(), []);
+    const parser = useMemo(() => new ProfessionalParserAdapter(), []);
 
     const { id } = useParams<any>();
 
@@ -32,7 +34,7 @@ const ProfessionalFormContainer: FunctionComponent<ProfessionalFormContainerProp
         id ? 'Editar profissional' : 'Cadastrar novo profissional'
     );
 
-    const [formValues, setFormValues] = useState<Professional>({ name: '', email: '', });
+    const [formValues, setFormValues] = useState<ProfessionalFormModel>({} as ProfessionalFormModel);
     const [submiting, setSubmiting] = useState(false);
 
     const [error, setError] = useState<any | null>(null);
@@ -54,22 +56,22 @@ const ProfessionalFormContainer: FunctionComponent<ProfessionalFormContainerProp
 
         var data = await service.getById(id);
 
-        setFormValues(data);
+        setFormValues(parser.serializeTo(data));
 
         setSubmiting(false);
     }
 
-    const handleSave = async (values: Professional) => {
+    const handleSave = async (values: ProfessionalFormModel) => {
 
         setSubmiting(true);
 
         try {
 
             if (id != null) {
-                await service.update(id, values);
+                await service.update(id, parser.serializeFrom(values));
             }
             else {
-                await service.create(values);
+                await service.create(parser.serializeFrom(values));
             }
 
             await new Promise((resolve) => { setTimeout(() => { history.push('/professional'); resolve(null) }, 3000) })
@@ -131,7 +133,7 @@ const ProfessionalFormContainer: FunctionComponent<ProfessionalFormContainerProp
     )
 
     const form = {
-        initialValues: formValues,
+        initialValues: formValues as ProfessionalFormModel,
         validationSchema: ProfessionalSchema,
         enableReinitialize: true,
         onSubmit: handleSave
@@ -150,13 +152,13 @@ const ProfessionalFormContainer: FunctionComponent<ProfessionalFormContainerProp
                             <Banner
                                 appearance="error"
                                 icon={<ErrorIcon label="" secondaryColor="inherit" />}
-                                isOpen>
+                                isOpen={true}>
                                 {(error as any).message}
                             </Banner>
                         }
                         <Content>
                             <FormSection title="Dados pessoais">
-                                <FormField name="name" value={formValues.name} label="Nome do profissional" required />
+                                <FormField name="name" value={formProps.initialValues?.name} label="Nome do profissional" required />
                             </FormSection>
 
                             <FormSection title="Dados profissionais">
@@ -164,8 +166,8 @@ const ProfessionalFormContainer: FunctionComponent<ProfessionalFormContainerProp
                             </FormSection>
 
                             <FormSection title="Dados de acesso" >
-                                <FormField name="email" value={formValues.email} label="Email" required />
-                                <AsyncSelect fetch={handleProfiles} label="Perfil de acesso" name="profile" />
+                                <FormField name="email" value={formProps.initialValues?.email} label="Email" required />
+                                <AsyncSelect fetch={handleProfiles} label="Perfil de acesso" name="profile"  />
                                 <FormField type="password" name="password" value="" label="Senha" />
                                 <FormField type="password" name="confirmPassword" value="" label="Confirmar senha" />
                             </FormSection>

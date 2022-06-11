@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,7 +38,7 @@ public class PatientService extends DefaultService<Patient> {
     public Page<Patient> list(String filter, Pageable page) {
 
         if (isUserAuthorizedToViewAllPatients()) {
-            return this.patientRepository.findByNameLikeIgnoreCase(filter, page);
+            return this.patientRepository.findByNameLikeIgnoreCaseAndDisabledIsNull(filter, page);
         }
 
         var user = SecurityContextHolder.getContext().getAuthentication();
@@ -46,21 +47,25 @@ public class PatientService extends DefaultService<Patient> {
         var teamIds = professional.getTeams().stream().map(Team::getId).collect(Collectors.toList());
 
         if (teamIds.isEmpty()) {
-            return this.patientRepository.findByNameLikeIgnoreCase(filter, page);
+            return this.patientRepository.findByNameLikeIgnoreCaseAndDisabledIsNull(filter, page);
         }
 
-        return this.patientRepository.findByTeams_IdInAndNameLikeIgnoreCase(filter, teamIds, page);
+        return this.patientRepository.findByTeams_IdInAndNameLikeIgnoreCaseAndDisabledIsNull(teamIds, filter, page);
     }
 
     public Page<Activity> listByPatientId(Long patientId, Pageable page) {
 
-        if(isUserAuthorizedToViewAllPatients()) {
+        if (isUserAuthorizedToViewAllPatients()) {
             return this.activityRepository.findAllByPatients_Id(patientId, page);
         }
 
         var user = SecurityContextHolder.getContext().getAuthentication();
 
         return this.activityRepository.findAllByOwner_IdAndPatients_Id(((ProfessionalUserDetails) user.getPrincipal()).getId(), patientId, page);
+    }
+
+    public List<Team> getPatientTeams(Long id) {
+        return teamRepository.findByPatients_IdAndDisabledIsNull(id);
     }
 
     private boolean isUserAuthorizedToViewAllPatients() {

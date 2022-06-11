@@ -1,5 +1,5 @@
 import { Formik } from "formik";
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import * as Yup from 'yup';
 import { Activity, PatientActivityService } from "../../../../services/patient/patient-activity.service";
 import Modal from '@atlaskit/modal-dialog'
@@ -15,6 +15,7 @@ import moment from "moment";
 import Button from "@atlaskit/button";
 import TrashIcon from '@atlaskit/icon/glyph/trash';
 import ConfirmDisableDialog from "../../../../components/confirm-disable-dialog/ConfirmDisableDialog";
+import { ActivityFormModel, PatientActivityParser } from "../../../../services/patient/patient-activity-parser.service";
 
 export interface ActivityFormProps {
     activity?: Activity,
@@ -22,19 +23,33 @@ export interface ActivityFormProps {
     onClose: (activity: Activity | null) => void
 }
 
+
 const ActivityForm: FunctionComponent<ActivityFormProps> = ({ activity, patient, onClose }) => {
 
-    const service = new PatientActivityService();
+    const service = useMemo(() => new PatientActivityService(), []);
+    const parser = useMemo(() => new PatientActivityParser(), []);
 
     const title = activity != null ? 'Editar atividade' : 'Criar nova atividade';
 
-    const [error, setError] = useState();
+    const [error, setError] = useState<any>();
     const [showDisablePopup, setShowDisablePopup] = useState(false);
+    const [formModel, setFormModel] = useState<ActivityFormModel>();
 
-    const handleSubmit = async (activity: Activity) => {
+    useEffect(() => {
+        
+        var initialState = {} as ActivityFormModel;
+
+        if(activity != null) {
+            initialState = parser.serializeTo(activity);
+        }
+
+        setFormModel(initialState);
+    }, []);
+
+    const handleSubmit = async (activity: ActivityFormModel) => {
 
         try {
-            const response = await service.create(patient.id as number, activity);
+            const response = await service.create(patient.id as number, parser.serializeFrom(activity));
             onClose(response);
         }
         catch (err) {
@@ -95,9 +110,7 @@ const ActivityForm: FunctionComponent<ActivityFormProps> = ({ activity, patient,
     }
 
     const form = {
-        initialValues: activity || {
-            name: '', activityApplicationType: { name: '' }, helpType: { name: '' }, retryNumber: 1, objectives: []
-        },
+        initialValues: formModel as ActivityFormModel,
         validationSchema: schema,
         enableReinitialize: true,
         validateOnChange: false,
@@ -133,7 +146,7 @@ const ActivityForm: FunctionComponent<ActivityFormProps> = ({ activity, patient,
                                 {(error as any).message}
                             </Banner>
                         }
-                        <FormField name="name" label="Nome da atividade" required value={form.initialValues.name} />
+                        <FormField name="name" label="Nome da atividade" required value={form.initialValues?.name} />
                         <AsyncSelect fetch={handleApplicationType} label="Tipo de aplicação" name="activityApplicationType" />
                         <div style={{
                             display: 'flex',
@@ -141,11 +154,11 @@ const ActivityForm: FunctionComponent<ActivityFormProps> = ({ activity, patient,
                             gridGap: '16px'
                         }}>
                             <AsyncSelect fetch={handleHelpType} label="Tipo de ajuda" name="helpType" />
-                            <FormField type="number" name="helpDelay" label="Tempo de espera" value={form.initialValues.retryNumber} />
+                            <FormField type="number" name="helpDelay" label="Tempo de espera" value={form.initialValues?.helpDelay} />
                         </div>
-                        <FormField name="retryNumber" label="Total de tentativas" required value={form.initialValues.retryNumber} />
-                        <TagsInputSelec name="objectives" label="Alvos" placeholder="Digite um de cada vez e pressione ENTER" value={form.initialValues.objectives} />
-                        <TextArea name="description" label="Procedimento" value={form.initialValues.description} required={true} />
+                        <FormField name="retryNumber" label="Total de tentativas" required value={form.initialValues?.retryNumber} />
+                        <TagsInputSelec name="objectives" label="Alvos" placeholder="Digite um de cada vez e pressione ENTER" value={form.initialValues?.objectives} />
+                        <TextArea name="description" label="Procedimento" value={form.initialValues?.description} required={true} />
                     </form>
                 )}
             </Formik>

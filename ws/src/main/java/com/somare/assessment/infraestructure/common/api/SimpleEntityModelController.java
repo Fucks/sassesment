@@ -1,5 +1,6 @@
 package com.somare.assessment.infraestructure.common.api;
 
+import com.somare.assessment.api.parsers.ModelToEntityParserAdapter;
 import com.somare.assessment.infraestructure.common.entity.DefaultEntity;
 import com.somare.assessment.infraestructure.common.entity.Entity;
 import com.somare.assessment.infraestructure.common.service.DefaultService;
@@ -11,34 +12,40 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-public abstract class DefaultController<T extends Entity & DefaultEntity<T>> implements CrudController<T> {
+public abstract class SimpleEntityModelController<T extends Entity & DefaultEntity<T>, S> implements CrudController<S> {
 
     @Autowired
     private DefaultService<T> service;
 
+    @Autowired
+    private ModelToEntityParserAdapter<T, S> parserAdapter;
+
     @Override
     @PostMapping()
-    public ResponseEntity<T> insert(@RequestBody T entity) {
+    public ResponseEntity<S> insert(@RequestBody S model) {
+
+        var entity = parserAdapter.serializeToEntity(model);
 
         var response = this.service.insert(entity);
 
         return ResponseEntity
-                .ok(response);
+                .ok(parserAdapter.serializeToModel(response));
+
     }
 
     @Override
     @PutMapping("/{id}")
-    public ResponseEntity<T> update(@PathVariable Long id, @RequestBody T entity) {
+    public ResponseEntity<S> update(@PathVariable Long id, @RequestBody S model) {
 
-        var response = this.service.update(id, entity);
+        var response = this.service.update(id, parserAdapter.serializeToEntity(model));
 
         return ResponseEntity
-                .ok(response);
+                .ok(parserAdapter.serializeToModel(response));
     }
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<T> getById(@PathVariable Long id) {
+    public ResponseEntity<S> getById(@PathVariable Long id) {
 
         var hasEntity = this.service.getById(id);
 
@@ -49,12 +56,12 @@ public abstract class DefaultController<T extends Entity & DefaultEntity<T>> imp
         }
 
         return ResponseEntity
-                .ok(hasEntity.get());
+                .ok(parserAdapter.serializeToModel(hasEntity.get()));
     }
 
     @Override
     @PostMapping("/disable/{id}")
-    public ResponseEntity<T> disable(@PathVariable Long id) {
+    public ResponseEntity<S> disable(@PathVariable Long id) {
         this.service.disable(id);
 
         return ResponseEntity
@@ -64,9 +71,8 @@ public abstract class DefaultController<T extends Entity & DefaultEntity<T>> imp
 
     @Override
     @GetMapping("/list")
-    public ResponseEntity<Page<T>> list(@RequestParam String filter, @PageableDefault Pageable page) {
+    public ResponseEntity<Page<S>> list(String filter, @PageableDefault Pageable page) {
         return ResponseEntity
-                .ok(this.service.list(new LikeFilterDecorator(filter).decorate(), page));
+                .ok(this.service.list(new LikeFilterDecorator(filter).decorate(), page).map(parserAdapter::serializeToModel));
     }
-
 }

@@ -1,34 +1,30 @@
 import Banner from "@atlaskit/banner";
 import Button, { LoadingButton } from "@atlaskit/button";
 import { FormSection } from "@atlaskit/form";
-import { Actions } from "@atlaskit/modal-dialog/dist/types/internal/styles/content";
 import { Formik } from "formik";
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import ConfirmDisableDialog from "../../../components/confirm-disable-dialog/ConfirmDisableDialog";
 import FormField from "../../../components/form-field/FormField";
 import FormContainerLayout from "../../../components/layout/FormContainerLayout";
-import { Content } from "../../../components/layout/ListContainerLayout";
-import { Patient, PatientService } from "../../../services/patient/patient.service";
-import ProfessionalService, { Professional } from "../../../services/professional/professional.service";
-import { Team, TeamService } from "../../../services/team/team.service";
+import { PatientService } from "../../../services/patient/patient.service";
+import ProfessionalService from "../../../services/professional/professional.service";
+import { TeamService } from "../../../services/team/team.service";
 import TeamSchema from "./Team.Schema";
 import ErrorIcon from '@atlaskit/icon/glyph/error';
+import styled from "styled-components";
+import AsyncSelect from "../../../components/select/AsyncSelect";
+import { FormEntity, TeamParser } from "../../../services/team/team-parser.service";
 
 export interface TeamFormContainerProps {
 }
 
-interface FormEntity {
-    name: string;
-    professionals: Professional[];
-    patients: Patient[]
-}
-
 const TeamFormContainer: FunctionComponent<TeamFormContainerProps> = (props) => {
 
-    const service = new TeamService();
-    const professionalService = new ProfessionalService();
-    const patientService = new PatientService();
+    const service = useMemo(() => new TeamService(), []);
+    const professionalService = useMemo(() => new ProfessionalService(), []);
+    const patientService = useMemo(() => new PatientService(), []);
+    const parser = useMemo(() => new TeamParser(), []);
 
     const { id } = useParams<any>();
 
@@ -38,7 +34,7 @@ const TeamFormContainer: FunctionComponent<TeamFormContainerProps> = (props) => 
         id ? 'Editar equipe' : 'Cadastrar nova equipe'
     );
 
-    const [formValues, setFormValues] = useState<Team>({ name: ''});
+    const [formValues, setFormValues] = useState<FormEntity>({ name: '', patients: [], professionals: [] });
     const [submiting, setSubmiting] = useState(false);
 
     const [error, setError] = useState<any | null>(null);
@@ -60,22 +56,24 @@ const TeamFormContainer: FunctionComponent<TeamFormContainerProps> = (props) => 
 
         var data = await service.getById(id);
 
-        setFormValues(data);
+        setFormValues(parser.parseEntityToFormModel(data));
 
         setSubmiting(false);
     }
 
-    const handleSave = async (values: Team) => {
+    const handleSave = async (values: FormEntity) => {
 
         setSubmiting(true);
 
         try {
 
+            const _entity = parser.parseFormModelToEntity(values);
+
             if (id != null) {
-                await service.update(id, values);
+                await service.update(id, _entity);
             }
             else {
-                await service.create(values);
+                await service.create(_entity);
             }
 
             await new Promise((resolve) => { setTimeout(() => { history.push('/team'); resolve(null) }, 3000) })
@@ -141,35 +139,50 @@ const TeamFormContainer: FunctionComponent<TeamFormContainerProps> = (props) => 
         initialValues: formValues,
         validationSchema: TeamSchema,
         enableReinitialize: true,
-        onSubmit: handleSave
+        onSubmit: handleSave,
     }
 
-	return (<Formik {...form} >
-            {(formProps) => (
-                <form onSubmit={formProps.handleSubmit}>
-                    <FormContainerLayout
-                        title={FormTitle}
-                        onBackAction={() => history.goBack()}
-                        saveButton={actions}
-                        breadcrumbs={breacrumbs}>
-                        {error &&
-                            <Banner
-                                appearance="error"
-                                icon={<ErrorIcon label="" secondaryColor="inherit" />}
-                                isOpen>
-                                {(error as any).message}
-                            </Banner>
-                        }
-                        <Content>
-                            <FormSection title="Dados da Equipe">
-                                <FormField name="name" value={formValues.name} label="Nome da equipe" required />
-                            </FormSection>
-                        </Content>
-                        <ConfirmDisableDialog isOpen={showDisablePopup} onClose={() => setShowDisablePopup(false)} onConfirm={handleDisableEntity} />
-                    </FormContainerLayout>
-                </form>
-            )}
-        </Formik>
+    return (<Formik {...form} >
+        {(formProps) => (
+            <form onSubmit={formProps.handleSubmit} style={{ flex: 1 }}>
+                <FormContainerLayout
+                    title={FormTitle}
+                    onBackAction={() => history.goBack()}
+                    saveButton={actions}
+                    breadcrumbs={breacrumbs}>
+                    {error &&
+                        <Banner
+                            appearance="error"
+                            icon={<ErrorIcon label="" secondaryColor="inherit" />}
+                            isOpen>
+                            {(error as any).message}
+                        </Banner>
+                    }
+                    <Content>
+                        <FormSection title="Dados da Equipe">
+                            <FormField name="name" value={formValues.name} label="Nome da equipe" required />
+                            <AsyncSelect fetch={handlePatients} label="Pacientes" name="patients" required isMulti={true} />
+                            <AsyncSelect fetch={handleProfessionals} label="Profissionais" name="professionals" required isMulti={true} />
+                        </FormSection>
+                    </Content>
+                    <ConfirmDisableDialog isOpen={showDisablePopup} onClose={() => setShowDisablePopup(false)} onConfirm={handleDisableEntity} />
+                </FormContainerLayout>
+            </form>
+        )}
+    </Formik>
     );
 }
 export default TeamFormContainer;
+
+const Actions = styled.div`
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+`;
+
+const Content = styled.div`
+    padding: 0 64px;
+    flex-direction: column;
+    width: 40%;
+    height: 100%;
+`;

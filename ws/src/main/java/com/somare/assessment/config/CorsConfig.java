@@ -17,8 +17,8 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-//        config.addAllowedOrigin("http://localhost:3000");
-        config.addAllowedOrigin("https://s-assesment-web.herokuapp.com");
+        config.addAllowedOrigin("http://localhost:3000");
+//        config.addAllowedOrigin("https://s-assesment-web.herokuapp.com");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);

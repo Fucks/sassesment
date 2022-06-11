@@ -26,6 +26,7 @@ export interface Activity {
     activityApplicationType: ActivityApplicationType;
     helpType: ActivityHelpType;
     retryNumber: number;
+    helpDelay: number;
     objectives: Objective[]
 }
 

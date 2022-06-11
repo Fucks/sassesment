@@ -50,5 +50,6 @@ const Content = styled.div`
     overflow-y: hidden;
     display: flex;
     flex: 1;
-
+    flex-direction: column;
+    height: 100%
 `;

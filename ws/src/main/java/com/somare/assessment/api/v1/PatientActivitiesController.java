@@ -3,6 +3,7 @@ package com.somare.assessment.api.v1;
 import com.somare.assessment.entity.Activity;
 import com.somare.assessment.entity.ActivityApplicationType;
 import com.somare.assessment.entity.ActivityHelpType;
+import com.somare.assessment.infraestructure.decorators.LikeFilterDecorator;
 import com.somare.assessment.repository.ActivityApplicationTypeRepository;
 import com.somare.assessment.repository.ActivityHelpTypeRepository;
 import com.somare.assessment.service.ActivityService;
@@ -51,11 +52,11 @@ public class PatientActivitiesController {
 
     @GetMapping("/application-types")
     public ResponseEntity<Page<ActivityApplicationType>> getApplicationTypes(@RequestParam String filter, @PageableDefault Pageable page) {
-        return ResponseEntity.ok(this.activityApplicationTypeRepository.findByNameLike("%" + filter + "%", page));
+        return ResponseEntity.ok(this.activityApplicationTypeRepository.findByNameLike(new LikeFilterDecorator(filter).decorate(), page));
     }
 
     @GetMapping("/help-types")
     public ResponseEntity<Page<ActivityHelpType>> getHelpTypes(@RequestParam String filter, @PageableDefault Pageable page) {
-        return ResponseEntity.ok(this.activityHelpTypeRepository.findByNameLike("%" + filter + "%", page));
+        return ResponseEntity.ok(this.activityHelpTypeRepository.findByNameLike(new LikeFilterDecorator(filter).decorate(), page));
     }
 }
