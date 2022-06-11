@@ -1,5 +1,6 @@
 package com.somare.assessment.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,8 +9,14 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.List;
+
 @Configuration
 public class CorsConfig {
+
+    @Value("${app.cors.allowedOrigins}")
+    private List<String> allowedOrigins;
+
     //IMPORTANT: it has to be a normal configuration class,
     //not extending WebMvcConfigurerAdapter or other Spring Security class
     @Bean
@@ -17,8 +24,9 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:3000");
-        config.addAllowedOrigin("https://s-assesment-web.herokuapp.com");
+
+        config.setAllowedOrigins(allowedOrigins);
+
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
