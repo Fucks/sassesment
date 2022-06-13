@@ -1,0 +1,40 @@
+{
+  "expo": {
+    "name": "sassesmentapk",
+    "slug": "expo-template-tabs",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "sassesment",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/images/splashscreen_image.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "./assets/images/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "br.com.sassesment"
+    },
+    "web": {
+      "favicon": "./assets/images/favicon.png"
+    },
+    "extra": {
+      "WS_URL": "https://s-assesment.herokuapp.com/",
+      "CLIENT_ID": "somare-api",
+      "CLIENT_SECRET": "r49KaTGr"
+    }
+  }
+}
