@@ -38,8 +38,8 @@ const AssessmentForm: FunctionComponent<AssessmentFormProps> = ({ assessment, on
     const [model, setModel] = useState<Assessment | undefined>();
     const [error, setError] = useState<any>();
 
-    const [loading, setLoading] = useState(false);
-    const [loadingFinish, setLoadingFinish] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+    const [finishing, setFinishing] = useState(false);
 
     const title = assessment?.id ? `Atendimento #${assessment.id}` : 'Novo atendimento';
 
@@ -71,7 +71,7 @@ const AssessmentForm: FunctionComponent<AssessmentFormProps> = ({ assessment, on
 
     const onSave = async () => {
 
-        setLoading(true);
+        setSubmitting(true);
 
         try {
             const _model = { ...model, ...{ patient: state?.patient, professional: loggedProfessional } } as Assessment;
@@ -83,14 +83,14 @@ const AssessmentForm: FunctionComponent<AssessmentFormProps> = ({ assessment, on
             setError(err)
         }
         finally {
-            setLoading(false);
+            setSubmitting(false);
         }
 
     }
 
     const onFinishAssessment = async () => {
 
-        setLoading(true);
+        setFinishing(true);
 
         try {
             const entity = await service.finish({ ...model, ...{ patient: state?.patient, professional: loggedProfessional } } as Assessment);
@@ -100,15 +100,15 @@ const AssessmentForm: FunctionComponent<AssessmentFormProps> = ({ assessment, on
             setError(err)
         }
         finally {
-            setLoading(false);
+            setFinishing(false);
         }
     }
 
     return (
         <Modal
             actions={[
-                { text: 'Finalizar atendimento', isLoading: loadingFinish, isDisabled: loading, hidden: assessment?.endDate != null, appearance: 'default', onClick: onFinishAssessment },
-                { text: 'Salvar', appearance: "primary", isDisabled: loadingFinish, hidden: assessment?.endDate != null, onClick: onSave, isLoading: loading },
+                { text: 'Finalizar atendimento', isLoading: finishing, isDisabled: submitting, hidden: assessment?.endDate != null, appearance: 'default', onClick: onFinishAssessment },
+                { text: 'Salvar', appearance: "primary", isDisabled: finishing, hidden: assessment?.endDate != null, onClick: onSave, isLoading: submitting },
                 { text: assessment?.endDate != null ? 'Fechar' : 'Cancelar', onClick: () => onClose(null) },
             ]}
             shouldCloseOnOverlayClick={false}

@@ -36,6 +36,10 @@
     display: grid;
 }
 
+button[data-has-overlay="true"] , button[data-has-overlay="true"] svg {
+    line-height: 24px !important;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

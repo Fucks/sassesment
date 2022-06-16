@@ -2,12 +2,10 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import LoginContainer from './modules/login/Login.Container';
 import Routes from './Routes';
 import './App.css';
-import 'react-perfect-scrollbar/dist/css/styles.css';
 import { useAuthentication } from './context/AutenticationContext';
 import { useEffect } from 'react';
 import { LoginService } from './services/login/login.service';
 import { createGlobalStyle } from 'styled-components'
-import PerfectScrollbar from 'react-perfect-scrollbar'
 
 function App() {
 
@@ -27,11 +25,9 @@ function App() {
 
     return (
         <>
-        <PerfectScrollbar>
             <BrowserRouter>
                 <Route children={<Routes />} path="/" />
             </BrowserRouter >
-        </PerfectScrollbar>
         </>
     );
 
