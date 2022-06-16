@@ -91,6 +91,25 @@ class com.somare.assessment.entity.Patient {
 + void update(Patient)
 }
 
+class com.somare.assessment.entity.Patient {
+- String name
+- LocalDate birthDate
+- List<Team> teams
++ void update(Patient)
+}
+
+class com.somare.assessment.entity.Assessment {
+- Professional professional
+- Patient patient
+- LocalDateTime startDate
+- LocalDateTime endDate
+- List<ActivityHistory> assessmentPlan
+}
+
+com.somare.assessment.entity.Assessment--|>com.somare.assessment.entity.Patient
+com.somare.assessment.entity.Assessment--|>com.somare.assessment.entity.Professional
+com.somare.assessment.entity.Assessment--|>com.somare.assessment.entity.ActivityHistory
+
 com.somare.assessment.entity.Activity--|>com.somare.assessment.entity.ActivityApplicationType
 com.somare.assessment.entity.Activity--|>com.somare.assessment.entity.ActivityHelpType
 com.somare.assessment.entity.Activity--|>com.somare.assessment.entity.Objective

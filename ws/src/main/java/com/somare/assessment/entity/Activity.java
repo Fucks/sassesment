@@ -10,16 +10,14 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Data
 @Entity
 @Table(schema = DefaultConfigs.DEFAULT_SCHEMA)
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"patients", "owner", "objectives"})
 @Builder
 public class Activity extends com.somare.assessment.infraestructure.common.entity.Entity implements DefaultEntity<Activity> {
 
@@ -43,20 +41,21 @@ public class Activity extends com.somare.assessment.infraestructure.common.entit
     private Integer retryNumber;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Professional owner;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Objective> objectives;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Objective> objectives;
 
-    @ManyToMany
-    private List<Patient> patients;
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<Patient> patients;
 
     @JsonIgnore
     private void addObjective(@NotBlank String objective) {
 
         if(Objects.isNull(this.objectives)) {
-            this.objectives = new ArrayList<>();
+            this.objectives = new HashSet<>();
         }
 
         this.objectives.add(new Objective(objective));

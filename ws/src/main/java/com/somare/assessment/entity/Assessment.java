@@ -1,5 +1,6 @@
 package com.somare.assessment.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.somare.assessment.config.DefaultConfigs;
 import com.somare.assessment.infraestructure.common.entity.DefaultEntity;
 import lombok.AllArgsConstructor;
@@ -8,38 +9,40 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Entity
 @Table(schema = DefaultConfigs.DEFAULT_SCHEMA)
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true, exclude = {"objectives", "professional", "activity"})
-public class ActivityHistory extends com.somare.assessment.infraestructure.common.entity.Entity implements DefaultEntity<ActivityHistory> {
+@EqualsAndHashCode(callSuper = true)
+public class Assessment extends com.somare.assessment.infraestructure.common.entity.Entity implements DefaultEntity<Objective> {
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Activity activity;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Patient patient;
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     private Professional professional;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Patient patient;
+    @NotEmpty
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<ActivityHistory> assessmentPlan;
 
     @NotNull
     private ZonedDateTime startDate;
 
-    @NotNull
     private ZonedDateTime endDate;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<ActivityObjectiveHistory> objectives;
-
     @Override
-    public void update(ActivityHistory entity) {
+    public void update(Objective entity) {
     }
 }

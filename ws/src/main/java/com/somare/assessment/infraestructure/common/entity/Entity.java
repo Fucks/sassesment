@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Data
 @Audited
@@ -36,7 +37,7 @@ public abstract class Entity implements Serializable {
             name = "created_at",
             columnDefinition = "TIMESTAMP WITH TIME ZONE")
     @CreatedDate
-    protected LocalDateTime createdAt;
+    protected ZonedDateTime createdAt;
 
     @LastModifiedBy
     protected Long updatedBy;
@@ -44,10 +45,10 @@ public abstract class Entity implements Serializable {
     @Column(name = "updated_at",
             columnDefinition = "TIMESTAMP WITH TIME ZONE")
     @LastModifiedDate
-    protected LocalDateTime updatedAt;
+    protected ZonedDateTime updatedAt;
 
     @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
-    private LocalDateTime disabled;
+    private ZonedDateTime disabled;
 
     public Entity(Long id) {
         this.id = id;

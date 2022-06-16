@@ -1,10 +1,11 @@
 package com.somare.assessment.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.somare.assessment.config.DefaultConfigs;
 import com.somare.assessment.infraestructure.common.entity.DefaultEntity;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;
@@ -22,7 +23,7 @@ import java.util.List;
 @Table(schema = DefaultConfigs.DEFAULT_SCHEMA)
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"teams"})
 public class Patient extends com.somare.assessment.infraestructure.common.entity.Entity implements DefaultEntity<Patient> {
 
     @NotBlank

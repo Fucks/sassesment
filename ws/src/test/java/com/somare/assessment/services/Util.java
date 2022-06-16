@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.HashSet;
 
 @Service
 public class Util {
@@ -42,7 +43,7 @@ public class Util {
 
         var profileViewAllPatients = new Profile();
         profileViewAllPatients.setName("View all patients");
-        profileViewAllPatients.setRoles(Collections.singletonList(ROLE_VIEW_ALL_PATIENT));
+        profileViewAllPatients.setRoles(new HashSet<>(Collections.singletonList(ROLE_VIEW_ALL_PATIENT)));
 
         profileViewAllPatients = this.profileRepository.save(profileViewAllPatients);
 
@@ -60,7 +61,7 @@ public class Util {
 
         var profileViewPatients = new Profile();
         profileViewPatients.setName("View patients");
-        profileViewPatients.setRoles(Collections.singletonList(ROLE_VIEW_PATIENT));
+        profileViewPatients.setRoles(new HashSet<>(Collections.singletonList(ROLE_VIEW_PATIENT)));
 
         profileViewPatients = this.profileRepository.save(profileViewPatients);
 
@@ -86,7 +87,7 @@ public class Util {
 
         var profileViewPatients = new Profile();
         profileViewPatients.setName("View patients");
-        profileViewPatients.setRoles(Collections.singletonList(ROLE_VIEW_PATIENT));
+        profileViewPatients.setRoles(new HashSet<>(Collections.singletonList(ROLE_VIEW_PATIENT)));
 
         profileViewPatients = this.profileRepository.save(profileViewPatients);
 

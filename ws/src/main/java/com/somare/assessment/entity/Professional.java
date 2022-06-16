@@ -14,6 +14,7 @@ import javax.persistence.Entity;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Entity
@@ -23,7 +24,7 @@ import java.util.List;
 @Table(schema = DefaultConfigs.DEFAULT_SCHEMA)
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true, exclude = {"profile", "teams"})
+@EqualsAndHashCode(callSuper = true, exclude = {"profile", "teams", "occupation"})
 public class Professional extends com.somare.assessment.infraestructure.common.entity.Entity implements DefaultEntity<Professional> {
 
     @NotBlank
@@ -46,7 +47,7 @@ public class Professional extends com.somare.assessment.infraestructure.common.e
     @ManyToMany(mappedBy = "professionals", fetch = FetchType.LAZY)
     private List<Team> teams;
 
-    private LocalDateTime disabled;
+    private ZonedDateTime disabled;
 
     public void update(@Valid Professional professional) {
         this.name = professional.name;

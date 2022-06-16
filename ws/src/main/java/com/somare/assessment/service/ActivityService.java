@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Objects;
 
 @Service
@@ -37,7 +38,7 @@ public class ActivityService extends DefaultService<Activity> {
         }
 
         if(Objects.isNull(activity.getPatients())){
-            activity.setPatients(new ArrayList<>());
+            activity.setPatients(new HashSet<>());
         }
 
         if(activity.getPatients().stream().noneMatch(e -> e.getId().equals(patientId))) {

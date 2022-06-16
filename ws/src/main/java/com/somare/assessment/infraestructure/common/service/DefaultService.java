@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 
 public abstract class DefaultService<T extends Entity & DefaultEntity<T>> {
@@ -57,7 +58,7 @@ public abstract class DefaultService<T extends Entity & DefaultEntity<T>> {
     }
 
     public void disable(T entity) {
-        entity.setDisabled(LocalDateTime.now());
+        entity.setDisabled(ZonedDateTime.now());
         this.repository.save(entity);
     }
 

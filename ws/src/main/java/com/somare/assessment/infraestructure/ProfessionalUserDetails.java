@@ -9,10 +9,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ProfessionalUserDetails extends User implements UserDetails {
@@ -33,7 +30,7 @@ public class ProfessionalUserDetails extends User implements UserDetails {
     private final String occupation;
 
     @Getter
-    private final List<Role> authorities;
+    private final Set<Role> authorities;
 
     public ProfessionalUserDetails(Professional professional) {
         super(professional.getEmail(), professional.getPassword(), professional.getProfile().getRoles());
@@ -44,7 +41,7 @@ public class ProfessionalUserDetails extends User implements UserDetails {
         this.id = professional.getId();
 
         this.occupation = Objects.isNull(professional.getOccupation()) ? "Nenhuma ocupação" : professional.getOccupation().getName();
-        this.authorities = Objects.isNull(professional.getProfile()) ? new ArrayList<>() : professional.getProfile().getRoles();
+        this.authorities = Objects.isNull(professional.getProfile()) ? new HashSet<>() : professional.getProfile().getRoles();
     }
 
     @Override

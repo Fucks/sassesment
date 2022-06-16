@@ -29,6 +29,7 @@ import javax.annotation.PostConstruct;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 @AutoConfigureMockMvc
@@ -93,7 +94,7 @@ public class ActivitiesByPatientAndProfessionalTest implements ApplicationContex
                 .name("Teste de cores")
                 .description("Tempo de resposta do paciente ao estimulo usando cores")
                 .retryNumber(5)
-                .objectives(Arrays.asList(new Objective("Olhos"), new Objective("Reflexo")))
+                .objectives(new HashSet<>(Arrays.asList(new Objective("Olhos"), new Objective("Reflexo"))))
                 .build();
 
         activity = this.activityService.insert(activity);
@@ -127,8 +128,8 @@ public class ActivitiesByPatientAndProfessionalTest implements ApplicationContex
                 .name("Teste de cores")
                 .description("Tempo de resposta do paciente ao estimulo usando cores")
                 .retryNumber(5)
-                .patients(Collections.singletonList(patientOne))
-                .objectives(Arrays.asList(new Objective("Olhos"), new Objective("Reflexo")))
+                .patients(new HashSet<>(Collections.singletonList(patientOne)))
+                .objectives(new HashSet<>(Arrays.asList(new Objective("Olhos"), new Objective("Reflexo"))))
                 .build();
 
         var activityTwo = Activity.builder()
@@ -137,8 +138,8 @@ public class ActivitiesByPatientAndProfessionalTest implements ApplicationContex
                 .name("Teste de palavras")
                 .description("Tempo de resposta do paciente")
                 .retryNumber(5)
-                .patients(Arrays.asList(patientOne, patientTwo))
-                .objectives(Arrays.asList(new Objective("Olhos"), new Objective("Reflexo")))
+                .patients(new HashSet<>(Arrays.asList(patientOne, patientTwo)))
+                .objectives(new HashSet<>(Arrays.asList(new Objective("Olhos"), new Objective("Reflexo"))))
                 .build();
 
         activityOne = this.activityService.insert(activityOne);
@@ -169,8 +170,8 @@ public class ActivitiesByPatientAndProfessionalTest implements ApplicationContex
                 .name("Teste de cores")
                 .description("Tempo de resposta do paciente ao estimulo usando cores")
                 .retryNumber(5)
-                .patients(Collections.singletonList(patientOne))
-                .objectives(Arrays.asList(new Objective("Olhos"), new Objective("Reflexo")))
+                .patients(new HashSet<>(Collections.singletonList(patientOne)))
+                .objectives(new HashSet<>(Arrays.asList(new Objective("Olhos"), new Objective("Reflexo"))))
                 .build();
 
         var activityTwo = Activity.builder()
@@ -179,8 +180,8 @@ public class ActivitiesByPatientAndProfessionalTest implements ApplicationContex
                 .name("Teste de palavras")
                 .description("Tempo de resposta do paciente")
                 .retryNumber(5)
-                .patients(Arrays.asList(patientOne, patientTwo))
-                .objectives(Arrays.asList(new Objective("Olhos"), new Objective("Reflexo")))
+                .patients(new HashSet<>(Arrays.asList(patientOne, patientTwo)))
+                .objectives(new HashSet<>(Arrays.asList(new Objective("Olhos"), new Objective("Reflexo"))))
                 .build();
 
         activityOne = this.activityService.insert(activityOne);

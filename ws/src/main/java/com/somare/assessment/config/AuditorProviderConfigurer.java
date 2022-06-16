@@ -10,7 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
 @Configuration
-@EnableJpaAuditing(auditorAwareRef = "auditorProvider")
+@EnableJpaAuditing(auditorAwareRef = "auditorProvider", dateTimeProviderRef = "zonedDateTimeProvider")
 public class AuditorProviderConfigurer {
 
     @Bean

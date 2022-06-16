@@ -20,7 +20,7 @@ import java.util.Set;
 @Entity
 @Audited
 @Table(schema = DefaultConfigs.DEFAULT_SCHEMA)
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"patients", "professionals"})
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class Team extends com.somare.assessment.infraestructure.common.entity.Entity implements DefaultEntity<Team> {
 

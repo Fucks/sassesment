@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
+import java.util.stream.Collectors;
+
 @Component
 public class Bootstrap implements InitializingBean {
 
@@ -73,7 +76,7 @@ public class Bootstrap implements InitializingBean {
             return;
         }
 
-        this.profileRepository.save(new Profile("Gerencia", this.roleRepository.findAll()));
+        this.profileRepository.save(new Profile("Gerencia", new HashSet<>(this.roleRepository.findAll())));
     }
 
     public void bootstrapAdmUser() {

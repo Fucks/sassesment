@@ -15,4 +15,12 @@ public class PatientModel {
 
     private LocalDate birthDate;
 
+    public PatientModel() {
+    }
+
+    public PatientModel(Long id, String name, LocalDate birthDate) {
+        this.id = id;
+        this.name = name;
+        this.birthDate = birthDate;
+    }
 }

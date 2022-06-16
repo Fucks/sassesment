@@ -1,10 +1,12 @@
 package com.somare.assessment.entity;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.somare.assessment.config.DefaultConfigs;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.core.annotation.Order;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -14,7 +16,6 @@ import javax.persistence.Entity;
 @Table(schema = DefaultConfigs.DEFAULT_SCHEMA)
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 public class ActivityObjectiveHistory extends com.somare.assessment.infraestructure.common.entity.Entity {
 
     @ManyToOne
@@ -23,4 +24,25 @@ public class ActivityObjectiveHistory extends com.somare.assessment.infraestruct
     @Enumerated(value = EnumType.STRING)
     private ObjectiveValue value;
 
+    @OrderBy
+    @JsonAlias("order")
+    private Integer position;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        ActivityObjectiveHistory that = (ActivityObjectiveHistory) o;
+
+        return super.id != null && super.id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + value.hashCode();
+        return result;
+    }
 }
