@@ -1,5 +1,6 @@
 package com.somare.assessment.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.somare.assessment.config.DefaultConfigs;
 import com.somare.assessment.infraestructure.common.entity.DefaultEntity;
@@ -7,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.core.annotation.Order;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -21,7 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class Assessment extends com.somare.assessment.infraestructure.common.entity.Entity implements DefaultEntity<Objective> {
+public class Assessment extends com.somare.assessment.infraestructure.common.entity.Entity implements DefaultEntity<Assessment> {
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @NotNull
@@ -35,6 +37,7 @@ public class Assessment extends com.somare.assessment.infraestructure.common.ent
 
     @NotEmpty
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OrderBy("startDate ASC")
     private List<ActivityHistory> assessmentPlan;
 
     @NotNull
@@ -42,7 +45,14 @@ public class Assessment extends com.somare.assessment.infraestructure.common.ent
 
     private ZonedDateTime endDate;
 
+    @JsonIgnore
     @Override
-    public void update(Objective entity) {
+    public void update(Assessment entity) {
+        this.assessmentPlan = entity.getAssessmentPlan();
+    }
+
+    @JsonIgnore
+    public void finish() {
+        this.endDate = ZonedDateTime.now();
     }
 }

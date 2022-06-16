@@ -24,7 +24,6 @@ public class ActivityObjectiveHistory extends com.somare.assessment.infraestruct
     @Enumerated(value = EnumType.STRING)
     private ObjectiveValue value;
 
-    @OrderBy
     @JsonAlias("order")
     private Integer position;
 
@@ -37,12 +36,5 @@ public class ActivityObjectiveHistory extends com.somare.assessment.infraestruct
         ActivityObjectiveHistory that = (ActivityObjectiveHistory) o;
 
         return super.id != null && super.id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + value.hashCode();
-        return result;
     }
 }

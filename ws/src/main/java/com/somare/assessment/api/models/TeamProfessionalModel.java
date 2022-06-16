@@ -10,4 +10,12 @@ public class TeamProfessionalModel {
     private Long id;
 
     private String name;
+
+    public TeamProfessionalModel() {
+    }
+
+    public TeamProfessionalModel(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

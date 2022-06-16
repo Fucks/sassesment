@@ -17,4 +17,13 @@ public class TeamModel {
 
     private List<TeamPatientModel> patients;
 
+    public TeamModel() {
+    }
+
+    public TeamModel(Long id, String name, List<TeamProfessionalModel> professionals, List<TeamPatientModel> patients) {
+        this.id = id;
+        this.name = name;
+        this.professionals = professionals;
+        this.patients = patients;
+    }
 }

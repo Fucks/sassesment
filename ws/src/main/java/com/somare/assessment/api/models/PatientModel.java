@@ -23,4 +23,5 @@ public class PatientModel {
         this.name = name;
         this.birthDate = birthDate;
     }
+
 }

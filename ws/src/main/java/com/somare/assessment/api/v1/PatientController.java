@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping(path = "/api/v1/patient")
 public class PatientController extends SimpleEntityModelController<Patient, PatientModel> {
@@ -25,7 +27,10 @@ public class PatientController extends SimpleEntityModelController<Patient, Pati
     @GetMapping("/{id}/teams")
     public ResponseEntity getTeamsByPatientId(@PathVariable Long id) {
 
-        var response = this.patientService.getPatientTeams(id).stream().map(teamParserAdapter::serializeToModel);
+        var response = this.patientService.getPatientTeams(id)
+                .stream()
+                .map(teamParserAdapter::serializeToModel)
+                .collect(Collectors.toList());
 
         return ResponseEntity
                 .ok(response);

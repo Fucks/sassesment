@@ -37,6 +37,7 @@ public class ActivityHistory extends com.somare.assessment.infraestructure.commo
     private ZonedDateTime endDate;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OrderBy("position ASC")
     private Set<ActivityObjectiveHistory> objectives;
 
     @Override

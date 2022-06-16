@@ -10,4 +10,12 @@ public class TeamPatientModel {
     private Long id;
 
     private String name;
+
+    public TeamPatientModel() {
+    }
+
+    public TeamPatientModel(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

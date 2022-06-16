@@ -21,8 +21,19 @@ public class PatientAssessmentController {
 
     @PostMapping
     public ResponseEntity<Assessment> createAssessment(@RequestBody @Valid Assessment assessment) {
-
         var response = assessmentService.create(assessment);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping
+    public ResponseEntity<Assessment> updateAssessment(@RequestBody @Valid Assessment assessment) {
+        var response = assessmentService.update(assessment);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/finish")
+    public ResponseEntity<Assessment> finishAssessment(@RequestBody @Valid Assessment assessment) {
+        var response = this.assessmentService.finishAssessment(assessment);
         return ResponseEntity.ok(response);
     }
 
