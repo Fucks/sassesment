@@ -53,6 +53,7 @@ export interface AuthenticationInfo {
     email: string;
     occupation: string;
     loggedIn:Date
+    id: number;
 }
 
 export interface Role {

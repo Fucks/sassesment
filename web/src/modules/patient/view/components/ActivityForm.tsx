@@ -33,6 +33,7 @@ const ActivityForm: FunctionComponent<ActivityFormProps> = ({ activity, patient,
 
     const [error, setError] = useState<any>();
     const [showDisablePopup, setShowDisablePopup] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [formModel, setFormModel] = useState<ActivityFormModel>();
 
     useEffect(() => {
@@ -48,12 +49,17 @@ const ActivityForm: FunctionComponent<ActivityFormProps> = ({ activity, patient,
 
     const handleSubmit = async (activity: ActivityFormModel) => {
 
+        setLoading(true);
+
         try {
             const response = await service.create(patient.id as number, parser.serializeFrom(activity));
             onClose(response);
         }
         catch (err) {
             setError(err);
+        }
+        finally{
+            setLoading(false);
         }
     }
 
@@ -121,7 +127,7 @@ const ActivityForm: FunctionComponent<ActivityFormProps> = ({ activity, patient,
     return (
         <Modal
             actions={[
-                { text: 'Salvar', appearance: 'primary', type: 'submit', form: "activity" },
+                { text: 'Salvar', appearance: 'primary', isLoading: loading, type: 'submit', form: "activity" },
                 { text: 'Cancelar', onClick: () => onClose(null) },
             ]}
             shouldCloseOnOverlayClick={false}

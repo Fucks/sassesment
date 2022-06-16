@@ -11,19 +11,29 @@ import ActivitiesTabComponent from "./tabs/Activites.Component";
 import ErrorBoundary from '../../../components/error-boundary/ErrorBoundary'
 import NotImplementedYet from "../../../components/not-implemented-yet/NotImplementedYet";
 import PatientTeamsTabComponent from "./tabs/Teams.Component";
+import HistoryTabComponent from "./tabs/History.Component";
+import { usePatientContext, Actions as PatientContextActions } from "../context/PatientContext";
+import { PatientActivityService } from "../../../services/patient/patient-activity.service";
+import { PatientAssessmentService } from "../../../services/patient/patient-assessment.service";
+import { Page } from "../../../services/util/page";
 
 export interface PatientViewContainerProps { }
 
 const PatientViewContainer: FunctionComponent<PatientViewContainerProps> = () => {
 
     const service = useMemo(() => new PatientService(), []);
+    const activitiesService = useMemo(() => new PatientActivityService(), []);
+    const assessmentService = useMemo(() => new PatientAssessmentService(), []);
+
+    const { state, dispatch } = usePatientContext();
 
     const { id } = useParams<any>();
+
     const history = useHistory();
     const breacrumbs = ["Paciente", "Visualização"];
 
     const [title, setTitle] = useState('');
-    const [error, setError] = useState();
+    const [error, setError] = useState<unknown>();
     const [loading, setLoading] = useState<boolean>(true);
     const [patient, setPatient] = useState<Patient>();
     const [selected, setSelected] = useState(1);
@@ -38,11 +48,26 @@ const PatientViewContainer: FunctionComponent<PatientViewContainerProps> = () =>
 
         try {
             const patient = await service.getById(id);
+            const activities = await activitiesService.listPatientActivities(patient?.id as number);
+            const teams = await service.fetchTeams(patient.id as number);
+            const assessments = await assessmentService.load(patient.id as number, { page: 0, size: 10 });
+
             setPatient(patient);
-            setTitle(patient.name)
+            setTitle(patient.name);
+
+            dispatch({
+                type: PatientContextActions.LOAD, payload: {
+                    patient: patient,
+                    activities: activities.content,
+                    teams: teams,
+                    assessments: assessments.content,
+                    assessmentPage: { page: 0, size: 10 }
+                }
+            })
+
         }
-        catch (err) {
-            setError(error)
+        catch (err: unknown) {
+            setError(err)
         }
         finally {
             setLoading(false);
@@ -66,7 +91,6 @@ const PatientViewContainer: FunctionComponent<PatientViewContainerProps> = () =>
     )
 
     return (
-
         <Tabs
             onChange={index => setSelected(index)}
             selected={selected}
@@ -78,29 +102,31 @@ const PatientViewContainer: FunctionComponent<PatientViewContainerProps> = () =>
                 saveButton={actions}
                 bottomBar={tagsMenu}
                 breadcrumbs={breacrumbs}>
+
                 {!loading && <ErrorBoundary>
-                    <Content>
-                        {
-                            selected == 0 &&
-                            <NotImplementedYet />
-                        }
-                        {
-                            selected == 1 &&
-                            <ActivitiesTabComponent patient={patient as Patient} />
-                        }
-                        {
-                            selected == 2 &&
-                            <NotImplementedYet />
-                        }
-                        {
-                            selected == 3 && 
-                            <PatientTeamsTabComponent patient={patient as Patient} />
-                        }
-                    </Content>
+                    {!error && 
+                        <Content>
+                            {
+                                selected == 0 &&
+                                <NotImplementedYet />
+                            }
+                            {
+                                selected == 1 &&
+                                <ActivitiesTabComponent patient={patient as Patient} />
+                            }
+                            {
+                                selected == 2 &&
+                                <HistoryTabComponent patient={patient as Patient} />
+                            }
+                            {
+                                selected == 3 &&
+                                <PatientTeamsTabComponent patient={patient as Patient} />
+                            }
+                        </Content>
+                    }
                 </ErrorBoundary>
                 }
             </FormContainerLayout>
-
         </Tabs>
     );
 }

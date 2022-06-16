@@ -4,17 +4,20 @@ import NoResultsImg from '../../assets/no-results-found.png';
 import Button from "@atlaskit/button";
 
 export interface EmptyStateProps {
+    header?: string;
+    description?: string;
+    newActionLabel?: string;
     onNewAction: () => void
 }
 
-const EmptyState: FunctionComponent<EmptyStateProps> = ({onNewAction}: EmptyStateProps) => {
+const EmptyState: FunctionComponent<EmptyStateProps> = ({ header, description, newActionLabel, onNewAction }: EmptyStateProps) => {
 
     const empty = {
-        header: 'Nenhum resultado encontrado',
-        description: `Nenhum registro foi encontrado na nossa base de dados com os filtros informados, 
+        header: header || 'Nenhum resultado encontrado',
+        description: description || `Nenhum registro foi encontrado na nossa base de dados com os filtros informados, 
                     refaça sua busca ou clique no botão abaixo para criar um novo registro.`,
         imageUrl: NoResultsImg,
-        primaryAction: <Button appearance="primary" onClick={onNewAction}>Cadastrar novo registro</Button>
+        primaryAction: <Button appearance="primary" onClick={onNewAction}>{newActionLabel || 'Cadastrar novo registro'}</Button>
     };
 
     return (<AtlassianEmptyState  {...empty} />);

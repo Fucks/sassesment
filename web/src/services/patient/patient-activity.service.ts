@@ -34,9 +34,9 @@ export class PatientActivityService {
 
     path = "/api/v1/patient"
 
-    listPatientActivities = async (patientId: number, page: Page): Promise<Pageable<Activity>> => {
+    listPatientActivities = async (patientId: number): Promise<Pageable<Activity>> => {
         try {
-            const { data, status } = await api().get<Pageable<Activity>>(`${this.path}/${patientId}/activities/?&page=${page.page}&size=${page.size}`);
+            const { data, status } = await api().get<Pageable<Activity>>(`${this.path}/${patientId}/activities/?&page=${0}&size=${100}`);
 
             if (status != 200) {
                 throw new Error(`Erro ${status} ao buscar os registros`);

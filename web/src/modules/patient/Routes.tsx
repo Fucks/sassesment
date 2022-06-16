@@ -1,5 +1,6 @@
 import { FunctionComponent } from "react";
 import { Switch, Redirect, Route } from "react-router-dom";
+import { PatientProvider } from "./context/PatientContext";
 import PatientFormContainer from "./form/Patient.Form.Container";
 import PatientListContainer from "./list/Patient.List.Container";
 import PatientViewContainer from "./view/Patient.View.Container";
@@ -17,7 +18,9 @@ const Routes: FunctionComponent = () => {
             <PatientFormContainer />
         </Route>
         <Route key={4} exact path="/patient/view/:id">
-            <PatientViewContainer />
+            <PatientProvider>
+                <PatientViewContainer />
+            </PatientProvider>
         </Route>
         <Route key={5} exact path="/patient">
             <Redirect to="/patient/list" />

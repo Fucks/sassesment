@@ -10,6 +10,7 @@ import Initials from "../../../../components/initials/Initials";
 import EmptyState from "../../../../components/empty-state/EmptyState";
 import Button from "@atlaskit/button";
 import TeamsForm from "../components/TeamsForm";
+import { Actions, PatientContextData, usePatientContext } from "../../context/PatientContext";
 
 export interface ActivitiesTabComponentProps {
     patient: Patient
@@ -17,38 +18,15 @@ export interface ActivitiesTabComponentProps {
 
 const PatientTeamsTabComponent: FunctionComponent<ActivitiesTabComponentProps> = ({ patient }) => {
 
-    const service = useMemo(() => new PatientService(), []);
-    const [loading, setLoading] = useState<boolean>(true);
     const [showForm, setShowForm] = useState<boolean>(false);
 
-    const [teams, setTeams] = useState<Team[]>([]);
-
-    useEffect(() => {
-        if(!teams.length) {
-            fetchTeams();
-        }
-    }, [])
-
-    const fetchTeams = async () => {
-
-        setLoading(true);
-
-        try {
-            var response = await service.fetchTeams(patient.id as number);
-            setTeams(response);
-        }
-        catch (err) {
-            throw err
-        }
-        finally {
-            setLoading(false)
-        }
-    }
+    const {state: context, dispatch} = usePatientContext();
+    const state = context as PatientContextData;
 
     const onFormClose = (team? : Team | null) => {
 
-        if(team && teams.findIndex(e => e.id == team.id) < 0) {
-            setTeams([...teams, team])
+        if(team && state.teams.findIndex(e => e.id == team.id) < 0) {
+            dispatch({type: Actions.LOAD, payload: {teams: [...state.teams, team]}})
         }
 
         setShowForm(false);
@@ -62,16 +40,16 @@ const PatientTeamsTabComponent: FunctionComponent<ActivitiesTabComponentProps> =
     return (
         <Container>
             {
-                teams.length > 0 &&
+                state.teams.length > 0 &&
                 <ItemsContent style={{ flex: 1 }}>
                     <Button onClick={() => handleAddTeam()}>Adicionar a uma equipe</Button>
                     <Items>
-                        {loading ? <ListLoading /> : teams.map(e => (<ListItem><AvatarItem primaryText={e.name} avatar={<Initials text={e.name} />} /></ListItem>))}
+                        {state.teams.map(e => (<ListItem><AvatarItem primaryText={e.name} avatar={<Initials text={e.name} />} /></ListItem>))}
                     </Items>
                 </ItemsContent>
             }
             {
-                teams.length == 0 &&
+                state.teams.length == 0 &&
                 <EmptyState  onNewAction={handleAddTeam} />
             }
             {
