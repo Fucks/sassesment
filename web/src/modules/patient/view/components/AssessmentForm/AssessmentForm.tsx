@@ -1,10 +1,9 @@
 import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { Patient } from "../../../../../services/patient/patient.service";
-import { ActivityHistory, Assessment } from "../../../../../services/assessment/assessment.service";
 import { useAuthentication } from "../../../../../context/AutenticationContext";
 import { AuthenticationInfo } from "../../../../../services/Authentication.service";
 import { usePatientContext } from "../../../context/PatientContext";
-import { PatientAssessmentService } from "../../../../../services/patient/patient-assessment.service";
+import { ActivityHistory, Assessment, PatientAssessmentService } from "../../../../../services/patient/patient-assessment.service";
 import AssessmentPlanRow, { NewActivityHistoryRow } from "./components/AssessmentPlanRow.component";
 import AssesmentActivityExecutionForm from "./AssessmentActivityExecutionForm";
 import EmptyState from "../../../../../components/empty-state/EmptyState";
@@ -12,7 +11,9 @@ import ErrorIcon from '@atlaskit/icon/glyph/error';
 import Modal from '@atlaskit/modal-dialog'
 import Banner from "@atlaskit/banner";
 import styled from "styled-components";
-import PerfectScrollbar from 'react-perfect-scrollbar'
+import { dateAndTimeToString } from "../../../../../services/util/date-helper";
+import Lozenge from '@atlaskit/lozenge';
+import async from "react-select/async";
 
 export interface AssessmentFormProps {
     assessment?: Assessment,
@@ -27,13 +28,20 @@ const AssessmentForm: FunctionComponent<AssessmentFormProps> = ({ assessment, on
 
     const { state: auth } = useAuthentication();
     const loggedUser = auth as AuthenticationInfo;
+    const loggedProfessional = {
+        id: loggedUser.id,
+        name: loggedUser.name,
+        email: loggedUser.email
+    };
 
     const [showActivityExecutionForm, setShowActivityExecutionForm] = useState<boolean>(false);
     const [model, setModel] = useState<Assessment | undefined>();
     const [error, setError] = useState<any>();
-    const [loading, setLoading] = useState(false);
 
-    const title = assessment ? `Atendimento #${assessment.id}` : 'Novo atendimento';
+    const [loading, setLoading] = useState(false);
+    const [loadingFinish, setLoadingFinish] = useState(false);
+
+    const title = assessment?.id ? `Atendimento #${assessment.id}` : 'Novo atendimento';
 
     useEffect(() => {
 
@@ -41,11 +49,7 @@ const AssessmentForm: FunctionComponent<AssessmentFormProps> = ({ assessment, on
 
         if (!_assesment) {
             _assesment = {
-                professional: {
-                    id: loggedUser.id,
-                    name: loggedUser.name,
-                    email: loggedUser.email
-                },
+                professional: loggedProfessional,
                 startDate: new Date(),
                 patient: state?.patient as Patient,
                 assessmentPlan: []
@@ -70,7 +74,9 @@ const AssessmentForm: FunctionComponent<AssessmentFormProps> = ({ assessment, on
         setLoading(true);
 
         try {
-            const entity = await service.create(model as Assessment);
+            const _model = { ...model, ...{ patient: state?.patient, professional: loggedProfessional } } as Assessment;
+            const entity = model?.id ? await service.update(_model) : await service.create(_model);
+
             onClose(entity);
         }
         catch (err) {
@@ -82,12 +88,28 @@ const AssessmentForm: FunctionComponent<AssessmentFormProps> = ({ assessment, on
 
     }
 
+    const onFinishAssessment = async () => {
+
+        setLoading(true);
+
+        try {
+            const entity = await service.finish({ ...model, ...{ patient: state?.patient, professional: loggedProfessional } } as Assessment);
+            onClose(entity);
+        }
+        catch (err) {
+            setError(err)
+        }
+        finally {
+            setLoading(false);
+        }
+    }
+
     return (
         <Modal
             actions={[
-                { text: 'Finalizar atendimento', appearance: 'default', onClick: () => { } },
-                { text: 'Salvar', appearance: "primary", onClick: onSave, isLoading: loading },
-                { text: 'Cancelar', onClick: () => onClose(null) },
+                { text: 'Finalizar atendimento', isLoading: loadingFinish, isDisabled: loading, hidden: assessment?.endDate != null, appearance: 'default', onClick: onFinishAssessment },
+                { text: 'Salvar', appearance: "primary", isDisabled: loadingFinish, hidden: assessment?.endDate != null, onClick: onSave, isLoading: loading },
+                { text: assessment?.endDate != null ? 'Fechar' : 'Cancelar', onClick: () => onClose(null) },
             ]}
             shouldCloseOnOverlayClick={false}
             shouldCloseOnEscapePress={false}
@@ -95,8 +117,9 @@ const AssessmentForm: FunctionComponent<AssessmentFormProps> = ({ assessment, on
             scrollBehavior={"inside"}
             height="800px"
             heading={
-                <div>
-                    <Header>{title}</Header>
+                <div className="col-12 text-truncate">
+                    <Header>{title} {!assessment?.endDate && <Lozenge appearance="removed">Não finalizado</Lozenge>}</Header>
+                    <Subtitle>Iniciado em: {dateAndTimeToString(assessment?.startDate as Date)} por {assessment?.professional?.name}</Subtitle>
                 </div>
             }>
             {error &&
@@ -110,7 +133,7 @@ const AssessmentForm: FunctionComponent<AssessmentFormProps> = ({ assessment, on
             {assessment?.assessmentPlan && assessment?.assessmentPlan.length > 0 &&
                 <>
                     {assessment?.assessmentPlan.map(e => <AssessmentPlanRow key={e.startDate.toISOString()} activityHistory={e} />)}
-                    <NewActivityHistoryRow onClick={() => setShowActivityExecutionForm(true)} />
+                    {!assessment?.endDate && <NewActivityHistoryRow onClick={() => setShowActivityExecutionForm(true)} />}
                 </>
             }
             {assessment?.assessmentPlan.length == 0 &&
@@ -130,3 +153,9 @@ export default AssessmentForm;
 const Header = styled.h3`
     margin-bottom: 0px;
 `;
+
+const Subtitle = styled.span`
+    font-size: 12px;
+    color: #5E6C84;
+    font-weight: 200;
+`

@@ -31,3 +31,15 @@ export const EmptyPage = {
     numberOfElements: 0,
     empty: true
 }
+
+export function updateArray<T>(array: T[], comparator: (param: T) => boolean, entity: T) {
+
+    const index = array.findIndex(comparator);
+
+    if (index >= 0) {
+        array[index] = entity;
+        return [...array]
+    }
+
+    return [...array, entity];
+}

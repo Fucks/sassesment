@@ -1,5 +1,9 @@
-export const dateToString = (value: Date) => {
+export const dateAndTimeToString = (value: Date) => {
     return `${value.toLocaleDateString('pt-BR')} ${value.toLocaleTimeString('pt-BR')}`
+}
+
+export const dateToString = (value: Date) => {
+    return `${value.toLocaleDateString('pt-BR')}`
 }
 
 export const differenceBetweenDates = (start : Date, end: Date) => {

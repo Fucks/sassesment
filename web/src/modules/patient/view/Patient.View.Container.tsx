@@ -1,21 +1,20 @@
 import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { useHistory, useParams } from "react-router";
-import FormContainerLayout from "../../../components/layout/FormContainerLayout";
 import { Patient, PatientService } from "../../../services/patient/patient.service";
+import { usePatientContext, Actions as PatientContextActions } from "../context/PatientContext";
+import { PatientActivityService } from "../../../services/patient/patient-activity.service";
+import { PatientAssessmentService } from "../../../services/patient/patient-assessment.service";
+import FormContainerLayout from "../../../components/layout/FormContainerLayout";
 import styled from "styled-components";
 import Button from "@atlaskit/button";
 import Tabs, { Tab, TabList } from "@atlaskit/tabs";
 import DashboardIcon from '@atlaskit/icon/glyph/dashboard';
-import './patient-view.css'
 import ActivitiesTabComponent from "./tabs/Activites.Component";
 import ErrorBoundary from '../../../components/error-boundary/ErrorBoundary'
 import NotImplementedYet from "../../../components/not-implemented-yet/NotImplementedYet";
 import PatientTeamsTabComponent from "./tabs/Teams.Component";
-import HistoryTabComponent from "./tabs/History.Component";
-import { usePatientContext, Actions as PatientContextActions } from "../context/PatientContext";
-import { PatientActivityService } from "../../../services/patient/patient-activity.service";
-import { PatientAssessmentService } from "../../../services/patient/patient-assessment.service";
-import { Page } from "../../../services/util/page";
+import AssessmentsTabComponent from "./tabs/Assessments.Component";
+import './patient-view.css'
 
 export interface PatientViewContainerProps { }
 
@@ -116,7 +115,7 @@ const PatientViewContainer: FunctionComponent<PatientViewContainerProps> = () =>
                             }
                             {
                                 selected == 2 &&
-                                <HistoryTabComponent patient={patient as Patient} />
+                                <AssessmentsTabComponent patient={patient as Patient} />
                             }
                             {
                                 selected == 3 &&

@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import Icon from '@atlaskit/icon';
-import { ActivityObjectiveHistory } from "../../../../../../services/assessment/assessment.service";
 import Button from "@atlaskit/button";
+import { ActivityObjectiveHistory } from "../../../../../../services/patient/patient-assessment.service";
 
 interface ObjectiveRowProps {
     index: number;

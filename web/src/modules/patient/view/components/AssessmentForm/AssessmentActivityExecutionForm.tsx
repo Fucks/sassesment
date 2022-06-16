@@ -3,11 +3,11 @@ import { Activity } from "../../../../../services/patient/patient-activity.servi
 import { ProgressIndicator } from '@atlaskit/progress-indicator';
 import { usePatientContext } from "../../../context/PatientContext";
 import { ActivityRow } from "./components/ActivityRow.Component";
-import { ActivityHistory, ActivityObjectiveHistory, Assessment } from "../../../../../services/assessment/assessment.service";
 import { ObjectiveRow } from "./components/ObjectiveRow.Component";
 
 import Modal, { ActionProps } from '@atlaskit/modal-dialog'
 import styled from "styled-components";
+import { ActivityHistory, ActivityObjectiveHistory, Assessment } from "../../../../../services/patient/patient-assessment.service";
 
 export interface AssesmentActivityExecutionFormProps {
     assessment: Assessment,

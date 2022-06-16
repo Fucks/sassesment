@@ -1,11 +1,10 @@
-import { ActivityHistory } from "../../../../../../services/assessment/assessment.service"
-
 import Icon from '@atlaskit/icon';
 import styled from "styled-components";
 import Button from "@atlaskit/button";
 import { useState } from "react";
 import { ObjectiveRow } from "./ObjectiveRow.Component";
-import { dateToString, differenceBetweenDates } from "../../../../../../services/util/date-helper";
+import { dateAndTimeToString, differenceBetweenDates } from "../../../../../../services/util/date-helper";
+import { ActivityHistory } from '../../../../../../services/patient/patient-assessment.service';
 
 interface AssessmentPlanRowProps {
     activityHistory: ActivityHistory;
@@ -23,10 +22,10 @@ const AssessmentPlanRow = ({ activityHistory }: AssessmentPlanRowProps) => {
 
     return (
         <Container>
-            <Row>
-                <div>
-                    <h4 className="title">{activity.name}</h4>
-                    <Subtitle>{activity.activityApplicationType.name} ({activity.helpType.name}) - Duração: {differenceBetweenDates(activityHistory.startDate, activityHistory.endDate as Date)}</Subtitle>
+            <Row className='row'>
+                <div className='col-9'>
+                    <h4 className="title text-truncate d-inline-block">{activity.name}</h4>
+                    <Subtitle className='text-truncate'>{dateAndTimeToString(activityHistory.startDate)} - {activity.activityApplicationType.name} ({activity.helpType.name}) - {activityHistory.professional.name}</Subtitle>
                 </div>
 
                 <TogglableButton autoFocus={false} type="button" appearance="link" onClick={onExpand} className={isExpanded ? 'expanded' : ''}>
@@ -35,6 +34,7 @@ const AssessmentPlanRow = ({ activityHistory }: AssessmentPlanRowProps) => {
             </Row>
             {isExpanded &&
                 <Panel className={isExpanded ? 'open' : 'close'}>
+                    <Subtitle>Duração: {differenceBetweenDates(activityHistory.startDate, activityHistory.endDate as Date)}</Subtitle>
                     <Subtitle>Tempo de espera: {activity.helpDelay} segundos</Subtitle>
                     <div className="py-2">
                         {activityHistory.objectives.map((e, i) => <ObjectiveRow objectiveHistory={e} index={i} />)}
@@ -46,10 +46,10 @@ const AssessmentPlanRow = ({ activityHistory }: AssessmentPlanRowProps) => {
     )
 }
 
-export const NewActivityHistoryRow = ({onClick}: {onClick: () => void}) => {
+export const NewActivityHistoryRow = ({ onClick }: { onClick: () => void }) => {
 
     return (
-        <Container style={{marginTop: '16px'}}>
+        <Container style={{ marginTop: '16px' }}>
             <Button onClick={onClick} appearance="link">
                 <Icon glyph={Plus} label="Executar treino" />
             </Button>
@@ -76,12 +76,11 @@ const Container = styled.div`
     
 `;
 
-const Subtitle = styled.span`
-    font-size: 14px;
+const Subtitle = styled.div`
+    font-size: 12px;
     color: #5E6C84;
     font-weight: 200;
 `
-
 const Row = styled.div`
     display: flex;
     padding: 16px 0;

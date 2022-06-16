@@ -1,8 +1,9 @@
 import React, { createContext, useMemo, useReducer } from 'react';
-import { Assessment } from '../../../services/assessment/assessment.service';
 import { Activity } from '../../../services/patient/patient-activity.service';
+import { Assessment } from '../../../services/patient/patient-assessment.service';
 import { Patient } from '../../../services/patient/patient.service';
 import { Team } from '../../../services/team/team.service';
+import { updateArray } from '../../../services/util/helpers';
 import { Page } from '../../../services/util/page';
 
 export interface PatientContextData {
@@ -15,40 +16,30 @@ export interface PatientContextData {
 }
 
 type Dispatch = (action: Action) => void;
-type Action = { type: Actions, payload: Partial<PatientContextData> | null | Activity }
+type Action = { type: Actions, payload: Partial<PatientContextData> | null | Activity | Assessment }
 type PatientContextType = { state: Partial<PatientContextData> | null, dispatch: Dispatch }
 
 const PatientContext = createContext<PatientContextType>({} as any);
 
 export enum Actions {
     LOAD,
-    UPDATE_ACTIVITY
+    UPDATE_ACTIVITY,
+    UPDATE_ASSESSMENTS
 }
 
+
 function PatientReducer(state: Partial<PatientContextData> | null, action: Action) {
-
-    const updateActivity = () => {
-        const activityToUpdate = action.payload as Activity;
-        const activities = state?.activities as Activity[];
-
-        const indexInArray = activities?.findIndex(e => e.id == activityToUpdate.id) as number;
-
-        if (indexInArray >= 0) {
-            activities[indexInArray] = activityToUpdate;
-        }
-        else {
-            activities.push(activityToUpdate);
-        }
-
-        return { ...state, ...{ activities: activities } }
-    }
 
     switch (action.type) {
         case Actions.LOAD:
             return { ...state, ...action.payload } as PatientContextData | null;
         case Actions.UPDATE_ACTIVITY:
-            return updateActivity();
+            const activities = updateArray<Activity>(state?.activities as Activity[], (e: Activity) => e.id == (action.payload as Activity).id, (action.payload as Activity));
+            return { ...state, ...{ activities } }
 
+        case Actions.UPDATE_ASSESSMENTS:
+            const assessments = updateArray<Assessment>(state?.assessments as Assessment[], (e: Assessment) => e.id == (action.payload as Assessment).id, (action.payload as Assessment))
+            return { ...state, ...{ assessments } }
         default:
             throw new Error('Ação desconhecida.')
     }

@@ -283,6 +283,17 @@
     "@babel/runtime" "^7.0.0"
     react-uid "^2.2.0"
 
+"@atlaskit/lozenge@^11.1.11":
+  version "11.1.11"
+  resolved "https://registry.yarnpkg.com/@atlaskit/lozenge/-/lozenge-11.1.11.tgz#50fa64dd5fb50ecd24db2626857c4c2a87118eac"
+  integrity sha512-B++rUnGG5gmK1O7n4okpmuYBqEaWu91lRlLz1nFbRPWY3o+n+1Iv9FwshvCfbO69X1o4dsztfpibcXHC+N6/hQ==
+  dependencies:
+    "@atlaskit/codemod-utils" "^4.0.0"
+    "@atlaskit/theme" "^12.1.0"
+    "@atlaskit/tokens" "^0.10.0"
+    "@babel/runtime" "^7.0.0"
+    "@emotion/core" "^10.0.9"
+
 "@atlaskit/menu@^0.7.0":
   version "0.7.6"
   resolved "https://registry.yarnpkg.com/@atlaskit/menu/-/menu-0.7.6.tgz#5b8a8a30883b202d1afd01f211dfa5f1fad422c1"

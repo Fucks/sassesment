@@ -71,7 +71,7 @@ const TeamsForm: FunctionComponent<TeamsFormProps> = ({ id, onClose }) => {
             <Formik {...form}>
                 {(formProps) => (
                     <form id="teams" onSubmit={formProps.handleSubmit} style={{ position: 'absolute', width: 'calc(100% - 48px)' }}>
-                        <AsyncSelect fetch={handleTeams} label="Tipo de aplicação" name="team" required />
+                        <AsyncSelect fetch={handleTeams} label="Equipe" name="team" required />
                     </form>
                 )}
             </Formik>
