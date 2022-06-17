@@ -40,7 +40,8 @@ export class PatientAssessmentService {
             const { data, status } = await api().post<Assessment>(`${this.path}/${assessment.patient.id}/assessment`, assessment);
 
             if (status != 200) {
-                throw new Error(`Erro ${status} ao salvar o atendimento.`);
+                console.error(data);
+                throw new Error(`Erro ao salvar o atendimento.`);
             }
 
             return data;
@@ -56,7 +57,8 @@ export class PatientAssessmentService {
             const { data, status } = await api().put<Assessment>(`${this.path}/${assessment.patient.id}/assessment`, assessment);
 
             if (status != 200) {
-                throw new Error(`Erro ${status} ao salvar o atendimento.`);
+                console.error(data);
+                throw new Error(`Erro ao atualizar o atendimento.`);
             }
 
             return data;
@@ -73,7 +75,8 @@ export class PatientAssessmentService {
             const { data, status } = await api().get<Pageable<Assessment>>(`${this.path}/${patientId}/assessment/list?&page=${page.page}&size=${page.size}`);
 
             if (status != 200) {
-                throw new Error(`Erro ${status} ao salvar o atendimento.`);
+                console.error(data);
+                throw new Error(`Erro ao carregar os atendimentos.`);
             }
 
             return data;
@@ -89,7 +92,8 @@ export class PatientAssessmentService {
             const { data, status } = await api().post<Assessment>(`${this.path}/${assessment.patient.id}/assessment/finish`, assessment);
 
             if (status != 200) {
-                throw new Error(`Erro ${status} ao finalizar o atendimento.`);
+                console.error(data);
+                throw new Error(`Erro ao finalizar o atendimento.`);
             }
 
             return data;

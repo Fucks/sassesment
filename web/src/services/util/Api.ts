@@ -60,6 +60,8 @@ const createApi = () => {
             window.location.href = "/"
             return;
         }
+
+        return error.response;
     });
 
     return api;
