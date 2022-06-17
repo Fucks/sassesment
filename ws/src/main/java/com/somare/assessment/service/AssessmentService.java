@@ -22,7 +22,6 @@ public class AssessmentService {
         return this.repository.saveAndFlush(assessment);
     }
 
-    @Transactional(readOnly = true)
     public Assessment update(Assessment assessment) throws AssessmentNotFoundException {
 
         if (Objects.isNull(assessment.getId())) {
@@ -41,7 +40,7 @@ public class AssessmentService {
 
         this.repository.saveAndFlush(dbAssessment);
 
-        return assessment;
+        return this.repository.findByIdWithDeps(dbAssessment.getId());
     }
 
     public Assessment finishAssessment(Assessment assessment) throws AssessmentNotFoundException {
@@ -65,7 +64,7 @@ public class AssessmentService {
 
         this.repository.saveAndFlush(dbAssessment);
 
-        return assessment;
+        return this.repository.findByIdWithDeps(assessment.getId());
     }
 
     public Page<Assessment> listByPatientId(Long patientId, Pageable page) {
