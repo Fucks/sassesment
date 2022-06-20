@@ -1,20 +1,21 @@
 import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { useHistory, useParams } from "react-router";
+import { Formik } from "formik";
+import { FormSection } from "@atlaskit/form";
+import { OccupationService } from "../../../services/occupation/occupation.service";
+import { ProfileService } from "../../../services/profile/profile.service";
+import { ProfessionalFormModel, ProfessionalParserAdapter } from "../../../services/professional/professional-parser.service";
+import { ActionItem, SvgSaveIcon } from "../../../components/page-header/PageHeader";
 import FormContainerLayout from "../../../components/layout/FormContainerLayout";
 import styled from "styled-components";
-import Button, { LoadingButton } from "@atlaskit/button";
 import ErrorIcon from '@atlaskit/icon/glyph/error';
 import Banner from "@atlaskit/banner";
 import FormField from "../../../components/form-field/FormField";
 import ConfirmDisableDialog from "../../../components/confirm-disable-dialog/ConfirmDisableDialog";
-import { Formik } from "formik";
-import ProfessionalService, { Professional } from "../../../services/professional/professional.service";
-import { FormSection } from "@atlaskit/form";
-import { OccupationService } from "../../../services/occupation/occupation.service";
-import AsyncSelect from "../../../components/select/AsyncSelect";
-import { ProfileService } from "../../../services/profile/profile.service";
+import Icon from "@atlaskit/icon";
+import ProfessionalService from "../../../services/professional/professional.service";
 import ProfessionalSchema from "./Professional.Schema";
-import { ProfessionalFormModel, ProfessionalParserAdapter } from "../../../services/professional/professional-parser.service";
+import AsyncSelect from "../../../components/select/AsyncSelect";
 
 export interface ProfessionalFormContainerProps {
 }
@@ -31,7 +32,7 @@ const ProfessionalFormContainer: FunctionComponent<ProfessionalFormContainerProp
     const breacrumbs = ["Profissionais", "Formulário", id ? 'Editar' : 'Cadastrar'];
 
     const FormTitle = (
-        id ? 'Editar profissional' : 'Cadastrar novo profissional'
+        id ? 'Editar profissional' : 'Novo profissional'
     );
 
     const [formValues, setFormValues] = useState<ProfessionalFormModel>({} as ProfessionalFormModel);
@@ -125,12 +126,21 @@ const ProfessionalFormContainer: FunctionComponent<ProfessionalFormContainerProp
         return profiles.content.map(e => ({ label: e.name, value: e }));
     }
 
-    const actions = (
-        <Actions>
-            {id && <Button onClick={() => setShowDisablePopup(true)} appearance="danger">Desativar</Button>}
-            <LoadingButton type="submit" appearance="primary" isLoading={submiting}>Salvar</LoadingButton>
-        </Actions>
-    )
+    const actions: ActionItem[] = useMemo(() => [
+        id && {
+            onClick: () => setShowDisablePopup(true),
+            appearance: "danger",
+            label: 'Desativar'
+        },
+        {
+            type: "submit",
+            appearance: "primary",
+            isLoading: submiting,
+            icon: <Icon glyph={SvgSaveIcon} label="" size="small" primaryColor="#172B4D" />,
+            label: 'Salvar'
+        }
+    ].filter(e => e), [submiting]);
+
 
     const form = {
         initialValues: formValues as ProfessionalFormModel,
@@ -146,7 +156,7 @@ const ProfessionalFormContainer: FunctionComponent<ProfessionalFormContainerProp
                     <FormContainerLayout
                         title={FormTitle}
                         onBackAction={() => history.goBack()}
-                        saveButton={actions}
+                        actions={actions}
                         breadcrumbs={breacrumbs}>
                         {error &&
                             <Banner
@@ -156,23 +166,47 @@ const ProfessionalFormContainer: FunctionComponent<ProfessionalFormContainerProp
                                 {(error as any).message}
                             </Banner>
                         }
-                        <Content>
+                        <div>
                             <FormSection title="Dados pessoais">
-                                <FormField name="name" value={formProps.initialValues?.name} label="Nome do profissional" required />
+                                <div className="row">
+                                    <div className="col-lg-6 col-md-12">
+                                        <FormField name="name" value={formProps.initialValues?.name} label="Nome do profissional" required />
+                                    </div>
+                                </div>
                             </FormSection>
 
                             <FormSection title="Dados profissionais">
-                                <AsyncSelect fetch={handleOccupations} label="Ocupação" name="occupation" />
+                                <div className="row">
+                                    <div className="col-lg-6 col-md-12">
+                                        <AsyncSelect fetch={handleOccupations} label="Ocupação" name="occupation" />
+                                    </div>
+                                </div>
                             </FormSection>
 
                             <FormSection title="Dados de acesso" >
-                                <FormField name="email" value={formProps.initialValues?.email} label="Email" required />
-                                <AsyncSelect fetch={handleProfiles} label="Perfil de acesso" name="profile"  />
-                                <FormField type="password" name="password" value="" label="Senha" />
-                                <FormField type="password" name="confirmPassword" value="" label="Confirmar senha" />
+                                <div className="row">
+                                    <div className="col-lg-6 col-md-12">
+                                        <FormField name="email" value={formProps.initialValues?.email} label="Email" required />
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-lg-6 col-md-12">
+                                        <AsyncSelect fetch={handleProfiles} label="Perfil de acesso" name="profile" />
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-lg-6 col-md-12">
+                                        <FormField type="password" name="password" value="" label="Senha" />
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-lg-6 col-md-12">
+                                        <FormField type="password" name="confirmPassword" value="" label="Confirmar senha" />
+                                    </div>
+                                </div>
                             </FormSection>
 
-                        </Content>
+                        </div>
                         <ConfirmDisableDialog isOpen={showDisablePopup} onClose={() => setShowDisablePopup(false)} onConfirm={handleDisableEntity} />
                     </FormContainerLayout>
                 </form>
@@ -188,10 +222,4 @@ const Actions = styled.div`
     display: flex;
     flex-direction: row;
     gap: 4px;
-`;
-
-const Content = styled.div`
-    padding: 0 64px;
-    flex-direction: column;
-    width: 40%;
 `;

@@ -1,5 +1,5 @@
 import { AvatarItem } from "@atlaskit/avatar";
-import ListContainerLayout, { Items, ItemsContent, ListItem, Content } from "../../../components/layout/ListContainerLayout";
+import ListContainerLayout, { ItemsContent, ListItem, Content } from "../../../components/layout/ListContainerLayout";
 import { FunctionComponent, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { Occupation, OccupationService } from "../../../services/occupation/occupation.service";
@@ -56,29 +56,37 @@ const OccupationListContainer: FunctionComponent<OccupationListContainerProps> =
 
     return (
         <ListContainerLayout
-            title="Listagem de ocupações"
+            title="Ocupações"
             breadcrumbs={["Ocupações", "Listagem"]}
             onSearchAction={setFilter}
             onNewAction={goToNew}>
 
             <Content>
-                {
-                    contentPage && contentPage.totalElements > 0 &&
-                    <ItemsContent>
-                        <Items>
-                            {loading ? <ListLoading />
-                                : contentPage?.content.map(e => (<ListItem onClick={() => onRowClick(e)}><AvatarItem primaryText={e.name} avatar={<Initials text={e.name} />} /></ListItem>))
-                            }
-                        </Items>
-                    </ItemsContent>
-                }
-                {
-                    contentPage && contentPage.totalPages > 0 &&
-                    <Pagination selectedIndex={page.page} onChange={(ev, page) => onChangePage(ev, page, setPage)} innerStyles={{ margin: '0 auto' }} pages={getPagesArray(contentPage)} />
-                }
-                {
-                    contentPage && contentPage.totalElements == 0 &&
-                    <EmptyState onNewAction={goToNew} />
+                {loading ? <ListLoading /> :
+                    <>
+                        {
+                            contentPage && contentPage.totalElements > 0 &&
+                            <ItemsContent className="flex-lg-wrap flex-lg-row flex-column">
+                                {
+                                    contentPage?.content.map(e => (
+                                        <div className="col-lg-6 col-md-12 col-sm-12">
+                                            <ListItem onClick={() => onRowClick(e)}>
+                                                <AvatarItem primaryText={e.name} avatar={<Initials text={e.name} />} />
+                                            </ListItem>
+                                        </div>
+                                    ))
+                                }
+                            </ItemsContent>
+                        }
+                        {
+                            contentPage && contentPage.totalPages > 0 &&
+                            <Pagination selectedIndex={page.page} onChange={(ev, page) => onChangePage(ev, page, setPage)} innerStyles={{ margin: '0 auto' }} pages={getPagesArray(contentPage)} />
+                        }
+                        {
+                            contentPage && contentPage.totalElements == 0 &&
+                            <EmptyState onNewAction={goToNew} />
+                        }
+                    </>
                 }
             </Content>
         </ListContainerLayout>

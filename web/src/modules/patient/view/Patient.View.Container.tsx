@@ -6,7 +6,6 @@ import { PatientActivityService } from "../../../services/patient/patient-activi
 import { PatientAssessmentService } from "../../../services/patient/patient-assessment.service";
 import FormContainerLayout from "../../../components/layout/FormContainerLayout";
 import styled from "styled-components";
-import Button from "@atlaskit/button";
 import Tabs, { Tab, TabList } from "@atlaskit/tabs";
 import DashboardIcon from '@atlaskit/icon/glyph/dashboard';
 import ActivitiesTabComponent from "./tabs/Activites.Component";
@@ -15,6 +14,8 @@ import NotImplementedYet from "../../../components/not-implemented-yet/NotImplem
 import PatientTeamsTabComponent from "./tabs/Teams.Component";
 import AssessmentsTabComponent from "./tabs/Assessments.Component";
 import './patient-view.css'
+import { ActionItem } from "../../../components/page-header/PageHeader";
+import { SkeletonItem } from "@atlaskit/side-navigation";
 
 export interface PatientViewContainerProps { }
 
@@ -74,11 +75,13 @@ const PatientViewContainer: FunctionComponent<PatientViewContainerProps> = () =>
 
     }
 
-    const actions = (
-        <Actions>
-            <Button type="button" onClick={() => history.push(`/patient/form/${id}`)} appearance="primary">Editar</Button>
-        </Actions>
-    )
+    const actions : ActionItem[] = [
+        {
+            onClick: () => history.push(`/patient/form/${id}`),
+            appearance: "primary",
+            label: 'Editar'
+        }
+    ];
 
     const tagsMenu = (
         <TabList>
@@ -96,15 +99,15 @@ const PatientViewContainer: FunctionComponent<PatientViewContainerProps> = () =>
             id="default">
 
             <FormContainerLayout
-                title={title}
+                title={loading ? <SkeletonItem /> : title}
                 onBackAction={() => history.goBack()}
-                saveButton={actions}
+                actions={actions}
                 bottomBar={tagsMenu}
                 breadcrumbs={breacrumbs}>
 
                 {!loading && <ErrorBoundary>
-                    {!error && 
-                        <Content>
+                    {!error &&
+                        <>
                             {
                                 selected == 0 &&
                                 <NotImplementedYet />
@@ -121,7 +124,7 @@ const PatientViewContainer: FunctionComponent<PatientViewContainerProps> = () =>
                                 selected == 3 &&
                                 <PatientTeamsTabComponent patient={patient as Patient} />
                             }
-                        </Content>
+                        </>
                     }
                 </ErrorBoundary>
                 }
@@ -136,9 +139,4 @@ const Actions = styled.div`
     display: flex;
     flex-direction: row;
     gap: 4px;
-`;
-
-const Content = styled.div`
-    display: flex;
-    flex: 1
 `;

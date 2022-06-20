@@ -5,3 +5,11 @@ div[role="tablist"] {
 div[role="tablist"] div[role="tab"]:not(:first-child) {
     flex: 1;
 }
+
+@media screen and (max-width: 576px) {
+    div[role="tablist"] {
+        height: 55px;
+        align-items: center;
+        display: flex;
+    }
+}

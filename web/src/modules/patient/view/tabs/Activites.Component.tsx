@@ -16,7 +16,7 @@ export interface ActivitiesTabComponentProps {
 
 const ActivitiesTabComponent: FunctionComponent<ActivitiesTabComponentProps> = ({ patient }) => {
 
-    const {state: context, dispatch} = usePatientContext();
+    const { state: context, dispatch } = usePatientContext();
     const state = context as PatientContextData;
 
     const [showForm, setShowForm] = useState(false);
@@ -30,21 +30,28 @@ const ActivitiesTabComponent: FunctionComponent<ActivitiesTabComponentProps> = (
     const onFormClose = (activity: Activity | null) => {
         setShowForm(false);
 
-        if(activity) {
-            dispatch({type: Actions.UPDATE_ACTIVITY, payload: activity})
+        if (activity) {
+            dispatch({ type: Actions.UPDATE_ACTIVITY, payload: activity })
         }
     }
 
     return (
-        <Container>
+        <div>
             {
                 state.activities.length > 0 &&
-                <ItemsContent style={{ flex: 1 }}>
+                <div className="pt-2">
                     <Button onClick={() => handleShowForm()}>Criar nova atividade</Button>
-                    <Items>
-                        {state.activities.map(e => (<ListItem onClick={() => handleShowForm(e)}><AvatarItem primaryText={e.name} secondaryText={`${e.activityApplicationType.name} (${e.helpType.name})`} avatar={<Initials text={e.name} />} /></ListItem>))}
-                    </Items>
-                </ItemsContent>
+                    <ItemsContent className="flex-lg-wrap flex-lg-row flex-column pt-2">
+                        {state.activities.map(e => (
+                            <div className="col-lg-6 col-md-12 col-sm-12">
+                                <ListItem onClick={() => handleShowForm(e)}>
+                                    <AvatarItem primaryText={e.name} secondaryText={`${e.activityApplicationType.name} (${e.helpType.name})`} avatar={<Initials text={e.name} />} />
+                                </ListItem>
+                            </div>
+                        ))}
+                    </ItemsContent>
+                </div>
+
             }
             {
                 state.activities.length == 0 &&
@@ -53,14 +60,7 @@ const ActivitiesTabComponent: FunctionComponent<ActivitiesTabComponentProps> = (
             {
                 showForm && <ActivityForm activity={activitySelected} patient={patient} onClose={onFormClose} />
             }
-        </Container>);
+        </div>);
 }
 
 export default ActivitiesTabComponent;
-
-const Container = styled.div`
-    padding: 16px 64px;
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-`;

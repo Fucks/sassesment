@@ -25,7 +25,6 @@ const AssessmentsTabComponent: FunctionComponent<AssessmentsTabComponentProps> =
     const { state: auth } = useAuthentication();
     const userLogged = auth as AuthenticationInfo;
 
-    const [error, setError] = useState();
     const [showForm, setShowForm] = useState(false);
     const [assessment, setAssessment] = useState<Assessment | undefined>();
 
@@ -58,22 +57,25 @@ const AssessmentsTabComponent: FunctionComponent<AssessmentsTabComponentProps> =
     }
 
     return (
-        <Container>
+        <div>
             {
                 state?.assessments && state.assessments.length > 0 &&
-                <ItemsContent style={{ flex: 1 }}>
+                <div className="pt-2">
                     <Button onClick={() => handleShowForm()}>Iniciar novo atendimento</Button>
-                    <Items>
+                    <ItemsContent className="flex-lg-wrap flex-lg-row flex-column pt-2">
                         {state?.assessments.map(e => (
-                            <ListItem onClick={() => handleShowForm(e)}>
-                                <AvatarItem
-                                    primaryText={<>{`Atendimento #${e.id}`}  {!e?.endDate && <Lozenge appearance="removed">Não finalizado</Lozenge>}</>}
-                                    secondaryText={`${dateAndTimeToString(e.startDate)}`}
-                                    avatar={<Initials text={`Atendimento ${e.id}`} />} />
-                            </ListItem>)
+                            <div className="col-lg-6 col-md-12 col-sm-12">
+
+                                <ListItem onClick={() => handleShowForm(e)}>
+                                    <AvatarItem
+                                        primaryText={<>{`Atendimento #${e.id}`}  {!e?.endDate && <Lozenge appearance="removed">Não finalizado</Lozenge>}</>}
+                                        secondaryText={`${dateAndTimeToString(e.startDate)}`}
+                                        avatar={<Initials text={`Atendimento ${e.id}`} />} />
+                                </ListItem>
+                            </div>)
                         )}
-                    </Items>
-                </ItemsContent>
+                    </ItemsContent>
+                </div>
             }
             {
                 (!state?.assessments || state.assessments.length == 0) &&
@@ -82,14 +84,7 @@ const AssessmentsTabComponent: FunctionComponent<AssessmentsTabComponentProps> =
             {
                 showForm && <AttendaceForm assessment={assessment} onClose={onFormClose} />
             }
-        </Container>);
+        </div>);
 }
 
 export default AssessmentsTabComponent;
-
-const Container = styled.div`
-    padding: 16px 64px;
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-`;

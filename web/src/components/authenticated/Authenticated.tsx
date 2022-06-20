@@ -3,19 +3,31 @@ import { FunctionComponent, useMemo } from "react";
 import styled from "styled-components";
 import AuthenticationService, { AuthenticationInfo } from "../../services/Authentication.service";
 
-const Authenticated: FunctionComponent = () => {
+interface AuthenticatedProps {
+    smallMode?: boolean
+}
+
+const Authenticated: FunctionComponent<AuthenticatedProps> = ({ smallMode }) => {
 
     const userInfo = useMemo<AuthenticationInfo>(() => AuthenticationService.getUserInfo(), []);
+
+    if (smallMode) {
+        return <Avatar
+            presence={'online'}
+        />
+    }
 
     return <SideNavHeaderContainer1>
         <SideNavHeaderContainer>
             <Avatar
                 presence={'online'}
             />
-            <HeaderTitle>
-                <h2>{userInfo.name}</h2>
-                <span>{userInfo.occupation}</span>
-            </HeaderTitle>
+            {!smallMode &&
+                <HeaderTitle>
+                    <h2>{userInfo.name}</h2>
+                    <span>{userInfo.occupation}</span>
+                </HeaderTitle>
+            }
         </SideNavHeaderContainer>
     </SideNavHeaderContainer1>;
 }

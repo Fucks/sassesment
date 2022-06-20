@@ -14,7 +14,7 @@ export interface TeamsListContainerProps {
 
 const TeamsListContainer: FunctionComponent<TeamsListContainerProps> = () => {
 
-	const service = new TeamService();
+    const service = new TeamService();
     const history = useHistory();
 
     const [filter, setFilter] = useState('');
@@ -52,32 +52,40 @@ const TeamsListContainer: FunctionComponent<TeamsListContainerProps> = () => {
         history.push(`/team/form/${team.id}`)
     }
 
-	return (<ListContainerLayout
-            title="Listagem de Equipes"
-            breadcrumbs={["Equipes", "Listagem"]}
-            onSearchAction={setFilter}
-            onNewAction={goToNew}>
-            <Content>
-                {
-                    contentPage && contentPage.totalElements > 0 &&
-                    <ItemsContent>
-                        <Items>
-                            {loading ? <ListLoading />
-                                : contentPage?.content.map(e => (<ListItem key={e.id} onClick={() => onRowClick(e)}><AvatarItem primaryText={e.name} avatar={<Avatar />} /></ListItem>))
+    return (<ListContainerLayout
+        title="Listagem de Equipes"
+        breadcrumbs={["Equipes", "Listagem"]}
+        onSearchAction={setFilter}
+        onNewAction={goToNew}>
+        <Content>
+            {loading ? <ListLoading /> :
+                <>
+                    {
+                        contentPage && contentPage.totalElements > 0 &&
+                        <ItemsContent className="flex-lg-wrap flex-lg-row flex-column">
+                            {
+                                contentPage?.content.map(e => (
+                                    <div className="col-lg-6 col-md-12 col-sm-12">
+                                        <ListItem key={e.id} onClick={() => onRowClick(e)}>
+                                            <AvatarItem primaryText={e.name} avatar={<Avatar />} />
+                                        </ListItem>
+                                    </div>
+                                ))
                             }
-                        </Items>
-                    </ItemsContent>
-                }
-                {
-                    contentPage && contentPage.totalPages > 0 &&
-                    <Pagination selectedIndex={page.page} onChange={(ev, page) => onChangePage(ev, page, setPage)} innerStyles={{ margin: '0 auto' }} pages={getPagesArray(contentPage)} />
-                }
-                {
-                    contentPage && contentPage.totalElements == 0 &&
-                    <EmptyState onNewAction={goToNew} />
-                }
-            </Content>
-        </ListContainerLayout>);
+                        </ItemsContent>
+                    }
+                    {
+                        contentPage && contentPage.totalPages > 0 &&
+                        <Pagination selectedIndex={page.page} onChange={(ev, page) => onChangePage(ev, page, setPage)} innerStyles={{ margin: '0 auto' }} pages={getPagesArray(contentPage)} />
+                    }
+                    {
+                        contentPage && contentPage.totalElements == 0 &&
+                        <EmptyState onNewAction={goToNew} />
+                    }
+                </>
+            }
+        </Content>
+    </ListContainerLayout>);
 
 }
 export default TeamsListContainer;

@@ -1,5 +1,4 @@
 import Banner from "@atlaskit/banner";
-import Button, { LoadingButton } from "@atlaskit/button";
 import { FormSection } from "@atlaskit/form";
 import { Formik } from "formik";
 import { FunctionComponent, useEffect, useMemo, useState } from "react";
@@ -15,6 +14,8 @@ import ErrorIcon from '@atlaskit/icon/glyph/error';
 import styled from "styled-components";
 import AsyncSelect from "../../../components/select/AsyncSelect";
 import { FormEntity, TeamParser } from "../../../services/team/team-parser.service";
+import { ActionItem, SvgSaveIcon } from "../../../components/page-header/PageHeader";
+import Icon from "@atlaskit/icon";
 
 export interface TeamFormContainerProps {
 }
@@ -128,12 +129,20 @@ const TeamFormContainer: FunctionComponent<TeamFormContainerProps> = (props) => 
         return patient.content.map(e => ({ label: e.name, value: e }))
     }
 
-    const actions = (
-        <Actions>
-            {id && <Button onClick={() => setShowDisablePopup(true)} appearance="danger">Desativar</Button>}
-            <LoadingButton type="submit" appearance="primary" isLoading={submiting}>Salvar</LoadingButton>
-        </Actions>
-    )
+    const actions: ActionItem[] = useMemo(() => [
+        id && {
+            onClick: () => setShowDisablePopup(true),
+            appearance: "danger",
+            label: 'Desativar'
+        },
+        {
+            type: "submit",
+            appearance: "primary",
+            isLoading: submiting,
+            icon: <Icon glyph={SvgSaveIcon} label="" size="small" primaryColor="#172B4D"  />,
+            label: 'Salvar'
+        }
+    ].filter(e => e), [submiting]);
 
     const form = {
         initialValues: formValues,
@@ -148,7 +157,7 @@ const TeamFormContainer: FunctionComponent<TeamFormContainerProps> = (props) => 
                 <FormContainerLayout
                     title={FormTitle}
                     onBackAction={() => history.goBack()}
-                    saveButton={actions}
+                    actions={actions}
                     breadcrumbs={breacrumbs}>
                     {error &&
                         <Banner
@@ -158,13 +167,25 @@ const TeamFormContainer: FunctionComponent<TeamFormContainerProps> = (props) => 
                             {(error as any).message}
                         </Banner>
                     }
-                    <Content>
+                    <div>
                         <FormSection title="Dados da Equipe">
-                            <FormField name="name" value={formValues.name} label="Nome da equipe" required />
-                            <AsyncSelect fetch={handlePatients} label="Pacientes" name="patients" required isMulti={true} />
-                            <AsyncSelect fetch={handleProfessionals} label="Profissionais" name="professionals" required isMulti={true} />
+                            <div className="row">
+                                <div className="col-lg-6 col-md-12 col-sm-12">
+                                    <FormField name="name" value={formValues.name} label="Nome da equipe" required />
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-lg-6 col-md-12 col-sm-12">
+                                    <AsyncSelect fetch={handlePatients} label="Pacientes" name="patients" required isMulti={true} />
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-lg-6 col-md-12 col-sm-12">
+                                    <AsyncSelect fetch={handleProfessionals} label="Profissionais" name="professionals" required isMulti={true} />
+                                </div>
+                            </div>
                         </FormSection>
-                    </Content>
+                    </div>
                     <ConfirmDisableDialog isOpen={showDisablePopup} onClose={() => setShowDisablePopup(false)} onConfirm={handleDisableEntity} />
                 </FormContainerLayout>
             </form>
@@ -178,11 +199,4 @@ const Actions = styled.div`
     display: flex;
     flex-direction: row;
     gap: 4px;
-`;
-
-const Content = styled.div`
-    padding: 0 64px;
-    flex-direction: column;
-    width: 40%;
-    height: 100%;
 `;

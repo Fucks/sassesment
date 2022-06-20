@@ -1,5 +1,5 @@
-import { FunctionComponent, useMemo } from "react";
-import { AtlassianIcon, AtlassianLogo } from '@atlaskit/logo';
+import { FunctionComponent, useState } from "react";
+import { AtlassianIcon } from '@atlaskit/logo';
 import {
     PageLayout,
     Main,
@@ -8,19 +8,22 @@ import {
     TopNavigation
 } from '@atlaskit/page-layout';
 import { AtlassianNavigation, generateTheme, ProductHome } from "@atlaskit/atlassian-navigation";
-import { ButtonItem, LinkItem, NavigationFooter, NavigationHeader, NestableNavigationContent, Section, SideNavigation } from "@atlaskit/side-navigation";
+import { ButtonItem as AtlassianButtonItem, NavigationFooter, NavigationHeader, NestableNavigationContent, Section, SideNavigation } from "@atlaskit/side-navigation";
 import Authenticated from "../authenticated/Authenticated";
 import { MenuOptions } from "../../constants/menu.constants";
-import AuthenticationService, { AuthenticationInfo } from "../../services/Authentication.service";
+import AuthenticationService from "../../services/Authentication.service";
 import { SignIn } from '@atlaskit/atlassian-navigation';
 import { Actions, useAuthentication } from "../../context/AutenticationContext";
 import { useHistory } from "react-router";
 import Logo from "../logo/Logo";
+import styled from "styled-components";
+
 
 const Layout: FunctionComponent = (props) => {
 
-    const {state: auth, dispatch} = useAuthentication();
+    const { state: auth, dispatch } = useAuthentication();
     const history = useHistory();
+    const [smallMode, setSmallMode] = useState(window.innerWidth < 1024);
 
     const isUserAuthorizedToAccessMenu = (menuOption: any) => {
 
@@ -39,7 +42,7 @@ const Layout: FunctionComponent = (props) => {
 
     const logout = () => {
         AuthenticationService.clear();
-        dispatch({type: Actions.LOGOUT, payload: null})
+        dispatch({ type: Actions.LOGOUT, payload: null })
     }
 
     const signIn = () => (
@@ -69,7 +72,7 @@ const Layout: FunctionComponent = (props) => {
                 </TopNavigation>
             }
             <Content testId="content">
-                {
+                {!smallMode &&
                     <LeftSidebarWithoutResize
                         testId="leftSidebar"
                         id="left-sidebar"
@@ -86,9 +89,9 @@ const Layout: FunctionComponent = (props) => {
                                 <Section>
                                     {MenuOptions.map(option => (
                                         isUserAuthorizedToAccessMenu(option) &&
-                                        <ButtonItem key={option.url} onClick={() => history.push(option.url)} iconBefore={option.icon}>
+                                        <AtlassianButtonItem key={option.url} onClick={() => history.push(option.url)} iconBefore={option.icon}>
                                             {option.title}
-                                        </ButtonItem>
+                                        </AtlassianButtonItem>
                                     ))}
                                 </Section>
                             </NestableNavigationContent>
@@ -99,8 +102,31 @@ const Layout: FunctionComponent = (props) => {
                     </LeftSidebarWithoutResize>
                 }
                 {
+                    smallMode && <SmallNavigation>
+                        <NavigationHeader>
+                            <Authenticated smallMode={smallMode} />
+                        </NavigationHeader>
+                        <NestableNavigationContent
+                            initialStack={[]}
+                            testId="nestable-navigation-content">
+                            <Section>
+                                {MenuOptions.map(option => (
+                                    isUserAuthorizedToAccessMenu(option) &&
+                                    <ButtonItem key={option.url} onClick={() => history.push(option.url)}>
+                                        {option.icon}
+                                    </ButtonItem>
+                                ))}
+                            </Section>
+                        </NestableNavigationContent>
+                        <NavigationFooter>
+                        </NavigationFooter>
+                    </SmallNavigation>
+                }
+                {
                     <Main testId="main" id="main" skipLinkTitle="Main Content">
-                        {props.children}
+                        <div className="d-flex flex-column h-100" style={{overflowY: 'auto'}}>
+                            {props.children}
+                        </div>
                     </Main>
                 }
             </Content>
@@ -108,3 +134,28 @@ const Layout: FunctionComponent = (props) => {
     );
 };
 export default Layout;
+
+
+const SmallNavigation = styled.div`
+    min-height: 100%;
+    width: 58px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgb(235, 236, 240);
+    background:#FAFBFC;
+`
+
+const ButtonItem = styled(AtlassianButtonItem)`
+    padding: 8px 8px !important;
+`
+
+
+export const ButtonGroup = styled.div`
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    column-gap: 8px;
+    justify-content: end;
+    align-items: center;
+`
+

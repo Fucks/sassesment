@@ -1,19 +1,19 @@
 import Breadcrumbs, { BreadcrumbsItem } from "@atlaskit/breadcrumbs";
-import Button, { ButtonGroup } from "@atlaskit/button";
+import Button, { LoadingButton } from "@atlaskit/button";
 import { FunctionComponent, ReactElement, useMemo } from "react";
 import styled from "styled-components";
-import PageHeader from "../page-header/PageHeader";
 import { ModalTransition } from '@atlaskit/modal-dialog';
+import { ActionItem, PageHeader, SmallPageHeader } from "../page-header/PageHeader";
 
 export interface FormContainerLayoutProps {
-    title: string;
+    title: React.ReactNode;
     breadcrumbs?: string[]
-    saveButton?: ReactElement,
+    actions?: ActionItem[],
     onBackAction: () => void,
     bottomBar?: ReactElement
 }
 
-const FormContainerLayout: FunctionComponent<FormContainerLayoutProps> = ({ title, breadcrumbs, saveButton, onBackAction, bottomBar, children }) => {
+const FormContainerLayout: FunctionComponent<FormContainerLayoutProps> = ({ title, breadcrumbs, actions, onBackAction, bottomBar, children }) => {
 
     const breadcrumbsContent = useMemo(() => (
         <Breadcrumbs>
@@ -21,25 +21,26 @@ const FormContainerLayout: FunctionComponent<FormContainerLayoutProps> = ({ titl
         </Breadcrumbs>
     ), [])
 
-    const actionsContent = useMemo(() => (
-        <ButtonGroup>
-            <Button onClick={onBackAction}>{'Voltar'}</Button>
-            {saveButton}
-        </ButtonGroup>
-    ), [saveButton]);
-
-
     return (
         <ModalTransition>
-            <PageHeader 
+            <PageHeader className="d-none d-md-block d-lg-block d-xlg-block d-xxlg-block d-xxxlg-block"
                 breadcrumbs={breadcrumbsContent}
-                actions={actionsContent}
+                actions={actions}
+                onBackAction={onBackAction}
                 bottomBar={bottomBar}>
                 {title}
             </PageHeader>
-            <Content>
+            <SmallPageHeader className="d-flex d-md-none d-lg-none d-xlg-none d-xxlg-none d-xxxlg-none"
+                actions={actions}
+                onBackAction={onBackAction}>
+                {title}
+            </SmallPageHeader>
+            <Content className="container">
                 {children}
             </Content>
+            {bottomBar && <MobileBottomBar className="d-block d-md-none d-lg-none d-xlg-none d-xxlg-none d-xxxlg-none">
+                {bottomBar}
+            </MobileBottomBar>}
         </ModalTransition>
     );
 }
@@ -47,9 +48,13 @@ const FormContainerLayout: FunctionComponent<FormContainerLayoutProps> = ({ titl
 export default FormContainerLayout;
 
 const Content = styled.div`
-    overflow-y: hidden;
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    height: 100%
+     padding: 0 64px;
+     margin: 0 0 64px 0;
+     flex: 1;
 `;
+
+const MobileBottomBar = styled.div`
+    height: 58px;
+    background: #FAFBFC;
+    border-top: 1px solid rgb(235,236,240);
+`

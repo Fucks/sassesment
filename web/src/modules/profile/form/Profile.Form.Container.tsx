@@ -1,20 +1,20 @@
 import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { useHistory, useParams } from "react-router";
+import { Profile, ProfileService } from "../../../services/profile/profile.service";
+import { CheckboxField, Fieldset } from "@atlaskit/form";
+import { Role } from "../../../services/Authentication.service";
+import { Formik, FormikProps } from "formik";
+import ProfileSchema from "./Profile.Schema";
+import styled from "styled-components";
 import FormContainerLayout from "../../../components/layout/FormContainerLayout";
-import Button, { LoadingButton } from "@atlaskit/button";
 import ErrorIcon from '@atlaskit/icon/glyph/error';
 import Banner from "@atlaskit/banner";
-import TextField from "@atlaskit/textfield";
 import ConfirmDisableDialog from "../../../components/confirm-disable-dialog/ConfirmDisableDialog";
-import { Profile, ProfileService } from "../../../services/profile/profile.service";
-import ProfileSchema from "./Profile.Schema";
-import { Role } from "../../../services/Authentication.service";
-import { FastField, FieldArray, Formik, FormikProps } from "formik";
-import styled from "styled-components";
-import { CheckboxField, Field, Fieldset } from "@atlaskit/form";
 import Checkbox from "@atlaskit/checkbox";
 import RoleNames from "./Roles";
 import FormField from "../../../components/form-field/FormField";
+import { ActionItem, SvgSaveIcon } from "../../../components/page-header/PageHeader";
+import Icon from "@atlaskit/icon";
 
 export interface ProfileFormContainerProps {
 }
@@ -137,12 +137,20 @@ const ProfileFormContainer: FunctionComponent<ProfileFormContainerProps> = (prop
         }
     }
 
-    const actions = (
-        <Actions>
-            {id && <Button onClick={() => setShowDisablePopup(true)} appearance="danger">Desativar</Button>}
-            <LoadingButton type="submit" appearance="primary" isLoading={submiting}>Salvar</LoadingButton>
-        </Actions>
-    )
+    const actions: ActionItem[] = useMemo(() => [
+        id && {
+            onClick: () => setShowDisablePopup(true),
+            appearance: "danger",
+            label: 'Desativar'
+        },
+        {
+            type: "submit",
+            appearance: "primary",
+            icon: <Icon glyph={SvgSaveIcon} label="" size="small"  primaryColor="#172B4D" />,
+            isLoading: submiting,
+            label: 'Salvar'
+        }
+    ].filter(e => e), [submiting]);
 
     const form = {
         initialValues: formValues,
@@ -190,7 +198,7 @@ const ProfileFormContainer: FunctionComponent<ProfileFormContainerProps> = (prop
                     <FormContainerLayout
                         title={FormTitle}
                         onBackAction={() => history.goBack()}
-                        saveButton={actions}
+                        actions={actions}
                         breadcrumbs={breacrumbs}>
                         {error &&
                             <Banner
@@ -200,10 +208,14 @@ const ProfileFormContainer: FunctionComponent<ProfileFormContainerProps> = (prop
                                 {(error as any).message}
                             </Banner>
                         }
-                        <Content>
-                            <FormField value={formProps.initialValues.name} label="Nome do perfil de acesso" name="name" />
-                            {rolesElement(formProps)}
-                        </Content>
+                        <div>
+                            <div className="row">
+                                <div className="col-lg-6 col-md-12 col-sm-12">
+                                    <FormField value={formProps.initialValues.name} label="Nome do perfil de acesso" name="name" />
+                                    {rolesElement(formProps)}
+                                </div>
+                            </div>
+                        </div>
                         <ConfirmDisableDialog isOpen={showDisablePopup} onClose={() => setShowDisablePopup(false)} onConfirm={handleDisableEntity} />
                     </FormContainerLayout>
                 </form>
@@ -218,10 +230,4 @@ const Actions = styled.div`
     display: flex;
     flex-direction: row;
     gap: 4px;
-`;
-
-const Content = styled.div`
-    padding: 0 64px;
-    flex-direction: column;
-    width: 40%;
 `;

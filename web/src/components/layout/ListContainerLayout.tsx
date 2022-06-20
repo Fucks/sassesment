@@ -1,33 +1,19 @@
 import Breadcrumbs, { BreadcrumbsItem } from "@atlaskit/breadcrumbs";
-import Button, { ButtonGroup } from "@atlaskit/button";
 import { FunctionComponent, useMemo } from "react";
 import styled from "styled-components";
-import Textfield from '@atlaskit/textfield';
 import { useFormik } from "formik";
-import PageHeader from "../page-header/PageHeader";
+import { ActionItem, PageHeader, SmallPageHeader } from "../page-header/PageHeader";
 
 export interface ListContainerLayoutProps {
     title: string;
     breadcrumbs?: string[]
     newButtonText?: string;
+    onBackAction?: () => void,
     onNewAction?: () => void,
     onSearchAction?: (filter: string) => void
 }
 
-const ListContainerLayout: FunctionComponent<ListContainerLayoutProps> = ({ title, breadcrumbs, newButtonText, onNewAction, onSearchAction, children }) => {
-
-    const form = useFormik({
-        initialValues: {
-            filter: ''
-        },
-        onSubmit: (values) => {
-
-            if (onSearchAction) {
-                return onSearchAction(values.filter);
-            }
-
-        }
-    });
+const ListContainerLayout: FunctionComponent<ListContainerLayoutProps> = ({ title, breadcrumbs, newButtonText, onNewAction, onSearchAction, children, onBackAction }) => {
 
     const breadcrumbsContent = useMemo(() => (
         <Breadcrumbs>
@@ -35,28 +21,29 @@ const ListContainerLayout: FunctionComponent<ListContainerLayoutProps> = ({ titl
         </Breadcrumbs>
     ), [])
 
-    const searchBar = useMemo(() => (
-        <form onSubmit={form.handleSubmit} >
-            <Textfield name="filter" style={{ background: '#fff' }} autoComplete="off" onChange={form.handleChange} placeholder="Pesquisar" />
-            <input type="submit" style={{ display: 'none' }} />
-        </form>
-    ), []);
-
-    const actionsContent = useMemo(() => (
-        <ButtonGroup>
-            {searchBar}
-            <Button appearance="primary" onClick={onNewAction}>{newButtonText || 'Novo'}</Button>
-        </ButtonGroup>
-    ), []);
+    const actionsContent: ActionItem[] = useMemo(() => [
+        {
+            type: "searchbar"
+        },
+        {
+            label: newButtonText || "Novo",
+            appearance: "primary",
+            onClick: onNewAction
+        }
+    ], []);
 
     return (
         <>
-            <PageHeader
+            <PageHeader  onBackAction={onBackAction}  className="d-none d-md-block d-lg-block d-xlg-block d-xxlg-block d-xxxlg-block"
                 breadcrumbs={breadcrumbsContent}
                 actions={actionsContent}>
                 {title}
             </PageHeader>
-            <ListContainer>
+            <SmallPageHeader onBackAction={onBackAction} className="d-flex justify-content-between d-md-none d-lg-none d-xlg-none d-xxlg-none d-xxxlg-none"
+                actions={actionsContent}>
+                {title}
+            </SmallPageHeader>
+            <ListContainer className="container-fluid d-flex flex-grow-1">
                 {children}
             </ListContainer>
         </>
@@ -66,21 +53,20 @@ const ListContainerLayout: FunctionComponent<ListContainerLayoutProps> = ({ titl
 export default ListContainerLayout;
 
 export const ListContainer = styled.div`
-    padding: 0 0 16px 0;
-    overflow-y: hidden;
-    display: flex;
-    flex: 1;
+    padding: 0 64px;
+    margin: 0 0 64px 0;
 `;
 
 export const Content = styled.div`
     display: flex;
     flex-direction: column;
-    margin: 0 64px;
+    justify-content: space-between;
+    margin: 32px 0 0 0;
     flex: 1;
 `;
 
 export const ItemsContent = styled.div`
-    flex: 1;
+    display: flex;
     overflow: auto;
 `;
 
@@ -115,9 +101,7 @@ export const ListItem = styled.div`
     padding: 4px;
     text-align: left;
     text-decoration: none;
-    width: 35%;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-    width: 90%;
     cursor: pointer;
     height: 60px
 `;
