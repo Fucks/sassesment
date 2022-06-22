@@ -1,20 +1,21 @@
 import { AvatarItem } from "@atlaskit/avatar";
 import { FunctionComponent, useState } from "react";
-import { Items, ItemsContent, ListItem } from "../../../../components/layout/ListContainerLayout";
+import { ItemsContent, ListItem } from "../../../../components/layout/ListContainerLayout";
 import { Activity } from "../../../../services/patient/patient-activity.service";
 import { Patient } from "../../../../services/patient/patient.service";
 import EmptyState from "../../../../components/empty-state/EmptyState";
 import ActivityForm from "../components/ActivityForm";
-import styled from "styled-components";
 import Initials from "../../../../components/initials/Initials";
 import Button from "@atlaskit/button";
 import { Actions, PatientContextData, usePatientContext } from "../../context/PatientContext";
+import ListLoading from "../../../../components/loading/ListLoading";
 
 export interface ActivitiesTabComponentProps {
+    loading?: boolean;
     patient: Patient
 }
 
-const ActivitiesTabComponent: FunctionComponent<ActivitiesTabComponentProps> = ({ patient }) => {
+const ActivitiesTabComponent: FunctionComponent<ActivitiesTabComponentProps> = ({ patient, loading }) => {
 
     const { state: context, dispatch } = usePatientContext();
     const state = context as PatientContextData;
@@ -33,6 +34,10 @@ const ActivitiesTabComponent: FunctionComponent<ActivitiesTabComponentProps> = (
         if (activity) {
             dispatch({ type: Actions.UPDATE_ACTIVITY, payload: activity })
         }
+    }
+
+    if (loading) {
+        return <ListLoading />
     }
 
     return (
@@ -60,7 +65,8 @@ const ActivitiesTabComponent: FunctionComponent<ActivitiesTabComponentProps> = (
             {
                 showForm && <ActivityForm activity={activitySelected} patient={patient} onClose={onFormClose} />
             }
-        </div>);
+        </div>
+    );
 }
 
 export default ActivitiesTabComponent;

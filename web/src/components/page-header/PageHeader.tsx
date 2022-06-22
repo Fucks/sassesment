@@ -98,21 +98,38 @@ const PageHeader = ({ actions, children, className, bottomBar, breadcrumbs, onSe
             return isNullishCoalesce;
         }
 
-        return (actionButtons.map((e, i) => Object.keys(e).findIndex(e => e == 'isLoading') >= 0 ?
-            <LoadingButton
-                key={i}
-                type={e.type as "button" | "submit" | "reset" || 'button'}
-                onClick={e.onClick} isLoading={e.isLoading} appearance={e.appearance}>
-                {e.label}
-            </LoadingButton>
-            : <Button
-                key={i}
-                type={e.type as "button" | "submit" | "reset" || 'button'}
-                onClick={e.onClick}
-                appearance={e.appearance}>
-                {e.label}
-            </Button>
-        ))
+        return (
+            <>
+                {
+                    onBackAction && <Button
+                        type="button"
+                        className="me-2"
+                        onClick={onBackAction}
+                        appearance="default">
+                        Voltar
+                    </Button>
+                }
+                {
+                    actionButtons.map((e, i) => Object.keys(e).findIndex(e => e == 'isLoading') >= 0 ?
+                        <LoadingButton
+                            key={i}
+                            className="me-2"
+                            type={e.type as "button" | "submit" | "reset" || 'button'}
+                            onClick={e.onClick} isLoading={e.isLoading} appearance={e.appearance}>
+                            {e.label}
+                        </LoadingButton>
+                        : <Button
+                            key={i}
+                            className="me-2"
+                            type={e.type as "button" | "submit" | "reset" || 'button'}
+                            onClick={e.onClick}
+                            appearance={e.appearance}>
+                            {e.label}
+                        </Button>
+                    )
+                }
+            </>
+        )
     }
 
     const actionsContent = useMemo(() => (
@@ -226,6 +243,7 @@ const SmallContainer = styled.div`
 
 const IconButton = styled(LoadingButton)`
     align-items: center !important;
+    margin-right: 0.5rem!important;
 
     &:hover, &:focus{
         box-shadow: none !important;

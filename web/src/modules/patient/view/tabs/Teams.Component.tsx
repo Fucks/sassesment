@@ -1,22 +1,22 @@
 import { AvatarItem } from "@atlaskit/avatar";
-import { FunctionComponent, useEffect, useMemo, useState } from "react";
-import { Items, ItemsContent, ListItem } from "../../../../components/layout/ListContainerLayout";
-import { Patient, PatientService } from "../../../../services/patient/patient.service";
+import { FunctionComponent, useState } from "react";
+import { ItemsContent, ListItem } from "../../../../components/layout/ListContainerLayout";
+import { Patient } from "../../../../services/patient/patient.service";
 import { Team } from "../../../../services/team/team.service";
-
-import ListLoading from "../../../../components/loading/ListLoading";
+import { Actions, PatientContextData, usePatientContext } from "../../context/PatientContext";
 import styled from "styled-components";
 import Initials from "../../../../components/initials/Initials";
 import EmptyState from "../../../../components/empty-state/EmptyState";
 import Button from "@atlaskit/button";
 import TeamsForm from "../components/TeamsForm";
-import { Actions, PatientContextData, usePatientContext } from "../../context/PatientContext";
+import ListLoading from "../../../../components/loading/ListLoading";
 
 export interface ActivitiesTabComponentProps {
-    patient: Patient
+    patient: Patient,
+    loading?: boolean;
 }
 
-const PatientTeamsTabComponent: FunctionComponent<ActivitiesTabComponentProps> = ({ patient }) => {
+const PatientTeamsTabComponent: FunctionComponent<ActivitiesTabComponentProps> = ({ patient, loading }) => {
 
     const [showForm, setShowForm] = useState<boolean>(false);
 
@@ -37,7 +37,7 @@ const PatientTeamsTabComponent: FunctionComponent<ActivitiesTabComponentProps> =
         setShowForm(true);
     }
 
-    return (
+    return loading ? <ListLoading /> :
         <div>
             {
                 state.teams.length > 0 &&
@@ -62,7 +62,7 @@ const PatientTeamsTabComponent: FunctionComponent<ActivitiesTabComponentProps> =
             {
                 showForm && <TeamsForm id={patient.id as number} onClose={onFormClose} />
             }
-        </div>);
+        </div>;
 }
 
 export default PatientTeamsTabComponent;

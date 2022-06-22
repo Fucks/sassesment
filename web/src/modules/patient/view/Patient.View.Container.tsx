@@ -75,7 +75,7 @@ const PatientViewContainer: FunctionComponent<PatientViewContainerProps> = () =>
 
     }
 
-    const actions : ActionItem[] = [
+    const actions: ActionItem[] = [
         {
             onClick: () => history.push(`/patient/form/${id}`),
             appearance: "primary",
@@ -105,7 +105,7 @@ const PatientViewContainer: FunctionComponent<PatientViewContainerProps> = () =>
                 bottomBar={tagsMenu}
                 breadcrumbs={breacrumbs}>
 
-                {!loading && <ErrorBoundary>
+                <ErrorBoundary>
                     {!error &&
                         <>
                             {
@@ -114,20 +114,19 @@ const PatientViewContainer: FunctionComponent<PatientViewContainerProps> = () =>
                             }
                             {
                                 selected == 1 &&
-                                <ActivitiesTabComponent patient={patient as Patient} />
+                                <ActivitiesTabComponent loading={loading} patient={patient as Patient} />
                             }
                             {
                                 selected == 2 &&
-                                <AssessmentsTabComponent patient={patient as Patient} />
+                                <AssessmentsTabComponent loading={loading} patient={patient as Patient} />
                             }
                             {
                                 selected == 3 &&
-                                <PatientTeamsTabComponent patient={patient as Patient} />
+                                <PatientTeamsTabComponent loading={loading} patient={patient as Patient} />
                             }
                         </>
                     }
                 </ErrorBoundary>
-                }
             </FormContainerLayout>
         </Tabs>
     );

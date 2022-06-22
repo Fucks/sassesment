@@ -1,7 +1,6 @@
 import Breadcrumbs, { BreadcrumbsItem } from "@atlaskit/breadcrumbs";
 import { FunctionComponent, useMemo } from "react";
 import styled from "styled-components";
-import { useFormik } from "formik";
 import { ActionItem, PageHeader, SmallPageHeader } from "../page-header/PageHeader";
 
 export interface ListContainerLayoutProps {
@@ -34,7 +33,7 @@ const ListContainerLayout: FunctionComponent<ListContainerLayoutProps> = ({ titl
 
     return (
         <>
-            <PageHeader  onBackAction={onBackAction}  className="d-none d-md-block d-lg-block d-xlg-block d-xxlg-block d-xxxlg-block"
+            <PageHeader onBackAction={onBackAction} className="d-none d-md-block d-lg-block d-xlg-block d-xxlg-block d-xxxlg-block"
                 breadcrumbs={breadcrumbsContent}
                 actions={actionsContent}>
                 {title}
@@ -55,6 +54,11 @@ export default ListContainerLayout;
 export const ListContainer = styled.div`
     padding: 0 64px;
     margin: 0 0 64px 0;
+
+    @media (max-width: 576px){ 
+        padding: 0 16px;
+        margin: 0 0 16px 0;
+    }
 `;
 
 export const Content = styled.div`

@@ -48,9 +48,14 @@ const FormContainerLayout: FunctionComponent<FormContainerLayoutProps> = ({ titl
 export default FormContainerLayout;
 
 const Content = styled.div`
-     padding: 0 64px;
-     margin: 0 0 64px 0;
-     flex: 1;
+    padding: 0 64px;
+    margin: 0 0 64px 0;
+    flex: 1;
+     
+    @media (max-width: 576px){ 
+        padding: 0 16px;
+        margin: 0 0 16px 0;
+    }
 `;
 
 const MobileBottomBar = styled.div`

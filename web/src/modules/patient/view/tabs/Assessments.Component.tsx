@@ -13,12 +13,14 @@ import Initials from "../../../../components/initials/Initials";
 import Button from "@atlaskit/button";
 import AttendaceForm from "../components/AssessmentForm/AssessmentForm";
 import Lozenge from "@atlaskit/lozenge";
+import ListLoading from "../../../../components/loading/ListLoading";
 
 export interface AssessmentsTabComponentProps {
-    patient: Patient
+    patient: Patient,
+    loading?: boolean
 }
 
-const AssessmentsTabComponent: FunctionComponent<AssessmentsTabComponentProps> = ({ patient }) => {
+const AssessmentsTabComponent: FunctionComponent<AssessmentsTabComponentProps> = ({ patient, loading }) => {
 
     const { state, dispatch } = usePatientContext();
 
@@ -56,7 +58,7 @@ const AssessmentsTabComponent: FunctionComponent<AssessmentsTabComponentProps> =
         setShowForm(false)
     }
 
-    return (
+    return loading ? <ListLoading /> :
         <div>
             {
                 state?.assessments && state.assessments.length > 0 &&
@@ -84,7 +86,7 @@ const AssessmentsTabComponent: FunctionComponent<AssessmentsTabComponentProps> =
             {
                 showForm && <AttendaceForm assessment={assessment} onClose={onFormClose} />
             }
-        </div>);
+        </div>;
 }
 
 export default AssessmentsTabComponent;

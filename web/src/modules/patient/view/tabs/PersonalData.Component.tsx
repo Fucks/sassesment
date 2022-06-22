@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { Patient } from "../../../../services/patient/patient.service";
 
 export interface PersonalDataComponentProps {
-    patient?: Patient
+    patient?: Patient;
+    loading?: boolean;
 }
 
 const PersonalDataComponent: FunctionComponent<PersonalDataComponentProps> = ({ patient }) => {
