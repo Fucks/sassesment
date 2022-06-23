@@ -1,6 +1,6 @@
 package com.somare.assessment.entity;
 
-import com.somare.assessment.config.DefaultConfigs;
+import com.somare.assessment.config.ws.DefaultConfigs;
 import com.somare.assessment.infraestructure.common.entity.DefaultEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;

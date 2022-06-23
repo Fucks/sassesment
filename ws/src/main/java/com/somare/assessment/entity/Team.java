@@ -2,7 +2,7 @@ package com.somare.assessment.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.somare.assessment.config.DefaultConfigs;
+import com.somare.assessment.config.ws.DefaultConfigs;
 import com.somare.assessment.infraestructure.common.entity.DefaultEntity;
 import lombok.*;
 import org.hibernate.envers.Audited;
@@ -21,6 +21,7 @@ import java.util.Set;
 @Audited
 @Table(schema = DefaultConfigs.DEFAULT_SCHEMA)
 @EqualsAndHashCode(callSuper = true, exclude = {"patients", "professionals"})
+@ToString(callSuper = true, exclude = {"patients", "professionals"})
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class Team extends com.somare.assessment.infraestructure.common.entity.Entity implements DefaultEntity<Team> {
 
@@ -35,7 +36,7 @@ public class Team extends com.somare.assessment.infraestructure.common.entity.En
 
     public void addProfessional(@NotNull Professional professional) {
 
-        if(Objects.isNull(this.professionals)) {
+        if (Objects.isNull(this.professionals)) {
             this.professionals = new HashSet<>();
         }
 
@@ -44,7 +45,7 @@ public class Team extends com.somare.assessment.infraestructure.common.entity.En
 
     public void addPatient(@NotNull Patient patient) {
 
-        if(Objects.isNull(this.patients)) {
+        if (Objects.isNull(this.patients)) {
             this.patients = new HashSet<>();
         }
 

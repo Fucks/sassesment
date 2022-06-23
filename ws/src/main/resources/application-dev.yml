@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/somare
+    username: postgres
+    password: postgres
+
+app:
+  cors:
+    allowedOrigins: http://localhost:3000

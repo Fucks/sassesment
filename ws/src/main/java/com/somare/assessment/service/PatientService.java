@@ -4,8 +4,8 @@ import com.somare.assessment.entity.Activity;
 import com.somare.assessment.entity.Patient;
 import com.somare.assessment.entity.Team;
 import com.somare.assessment.entity.authentication.Role;
+import com.somare.assessment.infraestructure.authentication.JwtTokenInfoExtractor;
 import com.somare.assessment.infraestructure.common.service.DefaultService;
-import com.somare.assessment.infraestructure.ProfessionalUserDetails;
 import com.somare.assessment.repository.ActivityRepository;
 import com.somare.assessment.repository.PatientRepository;
 import com.somare.assessment.repository.ProfessionalRepository;
@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,6 +35,9 @@ public class PatientService extends DefaultService<Patient> {
     @Autowired
     private ActivityRepository activityRepository;
 
+    @Autowired
+    private JwtTokenInfoExtractor tokenInfoExtractor;
+
     @Override
     public Page<Patient> list(String filter, Pageable page) {
 
@@ -41,8 +45,7 @@ public class PatientService extends DefaultService<Patient> {
             return this.patientRepository.findByNameLikeIgnoreCaseAndDisabledIsNull(filter, page);
         }
 
-        var user = SecurityContextHolder.getContext().getAuthentication();
-        var professional = this.professionalRepository.findByIdWithTeams(((ProfessionalUserDetails) user.getPrincipal()).getId());
+        var professional = this.professionalRepository.findByIdWithTeams(tokenInfoExtractor.<Long>getClaim("id"));
 
         var teamIds = professional.getTeams().stream().map(Team::getId).collect(Collectors.toList());
 
@@ -59,9 +62,7 @@ public class PatientService extends DefaultService<Patient> {
             return this.activityRepository.findAllByPatients_Id(patientId, page);
         }
 
-        var user = SecurityContextHolder.getContext().getAuthentication();
-
-        return this.activityRepository.findAllByOwner_IdAndPatients_Id(((ProfessionalUserDetails) user.getPrincipal()).getId(), patientId, page);
+        return this.activityRepository.findAllByProfessional_IdAndPatients_Id(tokenInfoExtractor.<Long>getClaim("id"), patientId, page);
     }
 
     public List<Team> getPatientTeams(Long id) {
@@ -69,11 +70,8 @@ public class PatientService extends DefaultService<Patient> {
     }
 
     private boolean isUserAuthorizedToViewAllPatients() {
-        var user = SecurityContextHolder.getContext().getAuthentication();
-
-        return user
-                .getAuthorities()
+        return tokenInfoExtractor.<List<String>>getClaim("authorities")
                 .stream()
-                .anyMatch(e -> e.getAuthority().equals(Role.ROLE_VIEW_ALL_PATIENT));
+                .anyMatch(e -> e.equals(Role.ROLE_VIEW_ALL_PATIENT));
     }
 }

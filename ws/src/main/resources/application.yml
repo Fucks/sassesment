@@ -1,0 +1,39 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+
+  profiles.active: @spring.profiles.active@
+
+  main:
+    banner-mode: off
+
+  liquibase:
+    enabled: false
+
+  jpa:
+    show-sql: true
+    hibernate.ddl-auto: update
+    properties:
+      hibernate:
+        default_schema: business
+        jdbc.lob.non_contextual_creation: true
+      org.hibernate.envers.default_schema: history
+
+  datasource:
+    initialization-mode: always
+    platform: postgres
+
+  sql:
+    init:
+      mode: always
+      platform: postgres
+
+javax:
+  persistence.schema-generation.database.action: create
+
+logging.level.root: INFO
+
+jwt:
+  private.key: classpath:app.key
+  public.key: classpath:app.pub

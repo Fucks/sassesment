@@ -1,4 +1,4 @@
-package com.somare.assessment.infraestructure;
+package com.somare.assessment.infraestructure.authentication;
 
 import com.somare.assessment.entity.Professional;
 import com.somare.assessment.entity.authentication.Role;

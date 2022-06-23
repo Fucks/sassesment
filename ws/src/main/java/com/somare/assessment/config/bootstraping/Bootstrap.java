@@ -1,4 +1,4 @@
-package com.somare.assessment.config;
+package com.somare.assessment.config.bootstraping;
 
 import com.somare.assessment.entity.ActivityApplicationType;
 import com.somare.assessment.entity.ActivityHelpType;

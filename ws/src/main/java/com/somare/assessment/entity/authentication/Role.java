@@ -1,22 +1,20 @@
 package com.somare.assessment.entity.authentication;
 
-import com.somare.assessment.entity.Occupation;
+import com.somare.assessment.config.ws.DefaultConfigs;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.envers.Audited;
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Data
 @Audited
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(schema = DefaultConfigs.DEFAULT_SCHEMA)
 public class Role implements GrantedAuthority {
 
     @Id

@@ -1,18 +1,18 @@
 package com.somare.assessment.entity;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import com.somare.assessment.config.DefaultConfigs;
+import com.somare.assessment.config.ws.DefaultConfigs;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.core.annotation.Order;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
 
 @Data
 @Entity
+@Audited
 @Table(schema = DefaultConfigs.DEFAULT_SCHEMA)
 @AllArgsConstructor
 @NoArgsConstructor

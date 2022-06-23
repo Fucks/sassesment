@@ -10,17 +10,15 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 @Data
-@Audited
 @NoArgsConstructor
 @AllArgsConstructor
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
 @ToString
 @EqualsAndHashCode
+@EntityListeners(AuditingEntityListener.class)
 public abstract class Entity implements Serializable {
 
     @Transient

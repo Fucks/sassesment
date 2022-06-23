@@ -1,5 +1,5 @@
 package com.somare.assessment.entity;
-import com.somare.assessment.config.AuditingRevisionListener;
+import com.somare.assessment.config.auditing.AuditingRevisionListener;
 import lombok.*;
 import org.hibernate.envers.RevisionNumber;
 import org.hibernate.envers.RevisionTimestamp;
@@ -26,7 +26,4 @@ public class RevisionEntity {
     private long timestamp;
 
     private String userName;
-
-    private Long userId;
-
 }

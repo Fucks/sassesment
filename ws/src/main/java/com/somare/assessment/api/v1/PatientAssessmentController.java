@@ -1,6 +1,5 @@
 package com.somare.assessment.api.v1;
 
-import com.somare.assessment.entity.Activity;
 import com.somare.assessment.entity.Assessment;
 import com.somare.assessment.service.AssessmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +19,13 @@ public class PatientAssessmentController {
     private AssessmentService assessmentService;
 
     @PostMapping
-    public ResponseEntity<Assessment> createAssessment(@RequestBody @Valid Assessment assessment) {
+    public ResponseEntity<Assessment> createAssessment(@RequestBody Assessment assessment) {
         var response = assessmentService.create(assessment);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping
-    public ResponseEntity<Assessment> updateAssessment(@RequestBody @Valid Assessment assessment) {
+    public ResponseEntity<Assessment> updateAssessment(@RequestBody Assessment assessment) {
         var response = assessmentService.update(assessment);
         return ResponseEntity.ok(response);
     }

@@ -1,15 +1,12 @@
 package com.somare.assessment.services;
 
 import com.somare.assessment.AssessmentApplication;
-import com.somare.assessment.api.v1.ProfessionalController;
 import com.somare.assessment.entity.*;
-import com.somare.assessment.infraestructure.ProfessionalUserDetails;
 import com.somare.assessment.repository.ActivityApplicationTypeRepository;
 import com.somare.assessment.repository.ActivityHelpTypeRepository;
 import com.somare.assessment.repository.ProfessionalRepository;
 import com.somare.assessment.service.ActivityService;
 import com.somare.assessment.service.PatientService;
-import com.somare.assessment.service.ProfessionalService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +23,9 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 
 @AutoConfigureMockMvc
 @SpringBootTest(classes = AssessmentApplication.class)
@@ -104,8 +99,8 @@ public class ActivitiesByPatientAndProfessionalTest implements ApplicationContex
         var dbActivity = this.activityService.getById(activity.getId());
 
         Assert.isTrue(dbActivity.isPresent(), "Nao foi encontrada a atividade no banco de dados");
-        Assert.isTrue(dbActivity.get().getOwner() != null, "O owner não foi adicionado automaticamente");
-        Assert.isTrue(dbActivity.get().getOwner().getEmail().equals("professionalToViewAll"), "O owner não condiz com o que cadastrou");
+        Assert.isTrue(dbActivity.get().getProfessional() != null, "O owner não foi adicionado automaticamente");
+        Assert.isTrue(dbActivity.get().getProfessional().getEmail().equals("professionalToViewAll"), "O owner não condiz com o que cadastrou");
         Assert.isTrue(dbActivity.get().getObjectives().size() == 2, "Objetivos não possui a mesma quantidade");
 
     }

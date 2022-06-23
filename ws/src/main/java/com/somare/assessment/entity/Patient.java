@@ -1,11 +1,8 @@
 package com.somare.assessment.entity;
 
-import com.somare.assessment.config.DefaultConfigs;
+import com.somare.assessment.config.ws.DefaultConfigs;
 import com.somare.assessment.infraestructure.common.entity.DefaultEntity;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;
@@ -24,6 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true, exclude = {"teams"})
+@ToString(callSuper = true, exclude = {"teams"})
 public class Patient extends com.somare.assessment.infraestructure.common.entity.Entity implements DefaultEntity<Patient> {
 
     @NotBlank

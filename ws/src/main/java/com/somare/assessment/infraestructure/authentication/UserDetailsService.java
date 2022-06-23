@@ -1,4 +1,4 @@
-package com.somare.assessment.infraestructure;
+package com.somare.assessment.infraestructure.authentication;
 
 import com.somare.assessment.repository.ProfessionalRepository;
 import org.springframework.beans.factory.annotation.Autowired;

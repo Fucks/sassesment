@@ -33,7 +33,6 @@ public class PatientActivitiesController {
 
     @PostMapping("/")
     public ResponseEntity createActivity(@PathVariable Long patientId, @RequestBody Activity activity) {
-
         return ResponseEntity.ok(this.activityService.saveActivityForPatientId(patientId, activity));
     }
 

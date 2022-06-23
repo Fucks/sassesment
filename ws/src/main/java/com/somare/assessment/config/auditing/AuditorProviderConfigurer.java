@@ -1,10 +1,11 @@
-package com.somare.assessment.config;
+package com.somare.assessment.config.auditing;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
@@ -21,17 +22,15 @@ public class AuditorProviderConfigurer {
             var authentication = Optional
                     .ofNullable(SecurityContextHolder.getContext().getAuthentication());
 
-            if(authentication.isEmpty()) {
+            if (authentication.isEmpty()) {
                 return Optional.empty();
             }
 
             try {
-                var getIdMethod = authentication.get().getPrincipal().getClass().getMethod("getId");
-
-                var id = (Long) getIdMethod.invoke(authentication.get().getPrincipal());
+                var id = (Long) ((Jwt) authentication.get().getPrincipal()).getClaim("id");
                 return Optional.of(id);
-            }
-            catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            } catch (Exception e) {
+                e.printStackTrace();
                 return Optional.empty();
             }
         };

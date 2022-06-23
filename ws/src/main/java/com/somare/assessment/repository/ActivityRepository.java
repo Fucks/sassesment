@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface ActivityRepository extends DefaultRepository<Activity> {
 
-    Page<Activity> findAllByOwner_IdAndPatients_Id(Long ownerId, Long patientId, Pageable page);
+    Page<Activity> findAllByProfessional_IdAndPatients_Id(Long professionalId, Long patientId, Pageable page);
 
     Page<Activity> findAllByPatients_Id(Long patientId, Pageable page);
 

@@ -1,9 +1,6 @@
 package com.somare.assessment.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.somare.assessment.config.DefaultConfigs;
+import com.somare.assessment.config.ws.DefaultConfigs;
 import com.somare.assessment.entity.authentication.Profile;
 import com.somare.assessment.infraestructure.common.entity.DefaultEntity;
 import lombok.*;
@@ -13,17 +10,16 @@ import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 
 @Entity
 @Data
-@ToString(exclude = {"profile", "teams"})
 @Audited
-@Table(schema = DefaultConfigs.DEFAULT_SCHEMA)
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(schema = DefaultConfigs.DEFAULT_SCHEMA)
+@ToString(exclude = {"profile", "teams", "occupation"})
 @EqualsAndHashCode(callSuper = true, exclude = {"profile", "teams", "occupation"})
 public class Professional extends com.somare.assessment.infraestructure.common.entity.Entity implements DefaultEntity<Professional> {
 
@@ -31,7 +27,7 @@ public class Professional extends com.somare.assessment.infraestructure.common.e
     private String name;
 
     @NotBlank
-    @Column(unique = true)
+    @Column(unique = true, updatable = false)
     private String email;
 
     @NotBlank
