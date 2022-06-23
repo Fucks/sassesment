@@ -27,12 +27,12 @@ const AssessmentForm: FunctionComponent<AssessmentFormProps> = ({ assessment, on
     const { state } = usePatientContext();
 
     const { state: auth } = useAuthentication();
-    const loggedUser = auth as AuthenticationInfo;
-    const loggedProfessional = {
-        id: loggedUser.id,
-        name: loggedUser.name,
-        email: loggedUser.email
-    };
+    // const loggedUser = auth as AuthenticationInfo;
+    // const loggedProfessional = {
+    //     id: loggedUser.id,
+    //     name: loggedUser.name,
+    //     email: loggedUser.email
+    // };
 
     const [showActivityExecutionForm, setShowActivityExecutionForm] = useState<boolean>(false);
     const [model, setModel] = useState<Assessment | undefined>();
@@ -49,7 +49,6 @@ const AssessmentForm: FunctionComponent<AssessmentFormProps> = ({ assessment, on
 
         if (!_assesment) {
             _assesment = {
-                professional: loggedProfessional,
                 startDate: new Date(),
                 patient: state?.patient as Patient,
                 assessmentPlan: []
@@ -74,7 +73,7 @@ const AssessmentForm: FunctionComponent<AssessmentFormProps> = ({ assessment, on
         setSubmitting(true);
 
         try {
-            const _model = { ...model, ...{ patient: state?.patient, professional: loggedProfessional } } as Assessment;
+            const _model = { ...model, ...{ patient: state?.patient } } as Assessment;
             const entity = model?.id ? await service.update(_model) : await service.create(_model);
 
             onClose(entity);
@@ -93,7 +92,7 @@ const AssessmentForm: FunctionComponent<AssessmentFormProps> = ({ assessment, on
         setFinishing(true);
 
         try {
-            const entity = await service.finish({ ...model, ...{ patient: state?.patient, professional: loggedProfessional } } as Assessment);
+            const entity = await service.finish({ ...model, ...{ patient: state?.patient } } as Assessment);
             onClose(entity);
         }
         catch (err) {

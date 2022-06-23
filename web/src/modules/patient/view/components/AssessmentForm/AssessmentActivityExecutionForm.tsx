@@ -30,7 +30,6 @@ const AssesmentActivityExecutionForm: FunctionComponent<AssesmentActivityExecuti
             activity: _activity,
             startDate: new Date(),
             patient: assessment.patient,
-            professional: assessment.professional,
             objectives: []
         })
         setObjectivesHistory(_activity.objectives

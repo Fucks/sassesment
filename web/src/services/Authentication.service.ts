@@ -8,54 +8,51 @@ export default class AuthenticationService {
     }
 
     static storeToken = (tokenInfo: any) => {
-        window.localStorage.setItem(TOKENINFO_STORE_KEY, JSON.stringify(tokenInfo));
+        window.localStorage.setItem(TOKENINFO_STORE_KEY, tokenInfo);
     }
 
-    static getToken = () => {
+    static getToken = (): string => {
 
         if (!AuthenticationService.isAuthenticated()) {
-            return null;
+            return "";
         }
 
-        return JSON.parse(window.localStorage.getItem(TOKENINFO_STORE_KEY) as string);
+        return window.localStorage.getItem(TOKENINFO_STORE_KEY) as string;
     }
 
     static clear = () => {
         window.localStorage.removeItem(TOKENINFO_STORE_KEY);
-        window.localStorage.removeItem(USERINFO_STORE_KEY);
     }
 
-    static storeUserInfo = (userInfo: AuthenticationInfo) => {
-        userInfo.loggedIn = new Date();
-        window.localStorage.setItem(USERINFO_STORE_KEY, JSON.stringify(userInfo));
-    }
+    static getUserInfo = (): any => {
 
-    static getUserInfo = (): AuthenticationInfo => {
-
-        if (window.localStorage.getItem(USERINFO_STORE_KEY) == null) {
+        if (window.localStorage.getItem(TOKENINFO_STORE_KEY) == null) {
             throw new Error('Dados do usuário não foram encontrados na store local.')
         }
 
-        return JSON.parse(window.localStorage.getItem(USERINFO_STORE_KEY) as string);
+        return parseJwt(window.localStorage.getItem(TOKENINFO_STORE_KEY) as string);
     }
 }
 
-export interface AuthenticationInfo {
-    password: string;
-    username: string;
-    authorities: Role[];
-    accountNonExpired: boolean;
-    accountNonLocked: boolean;
-    credentialsNonExpired: boolean;
-    enabled: boolean;
-    isDisabled: boolean;
-    name: string;
-    email: string;
-    occupation: string;
-    loggedIn:Date
-    id: number;
-}
+function parseJwt(token: string) {
+    let base64Url = token.split('.')[1];
+    let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    let jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
 
+    return JSON.parse(jsonPayload);
+};
+
+export interface AuthenticationInfo {
+    authorities: string[];
+    ocupation: string;
+    sub: string;
+    name: string;
+    exp: number;
+    iat: number;
+    iss: string;
+}
 export interface Role {
     id: number;
     name: string;

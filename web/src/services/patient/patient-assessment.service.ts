@@ -14,7 +14,7 @@ export interface ActivityObjectiveHistory {
 
 export interface ActivityHistory {
     activity: Activity,
-    professional: Professional,
+    professional?: Professional,
     patient: Patient,
     startDate: Date,
     endDate?: Date,
@@ -24,7 +24,7 @@ export interface ActivityHistory {
 export interface Assessment {
     id?: number;
     patient: Patient,
-    professional: Professional,
+    professional?: Professional,
     startDate: Date,
     endDate?: Date,
     assessmentPlan: ActivityHistory[]

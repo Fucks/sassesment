@@ -25,7 +25,7 @@ const Authenticated: FunctionComponent<AuthenticatedProps> = ({ smallMode }) => 
             {!smallMode &&
                 <HeaderTitle>
                     <h2>{userInfo.name}</h2>
-                    <span>{userInfo.occupation}</span>
+                    <span>{userInfo.ocupation}</span>
                 </HeaderTitle>
             }
         </SideNavHeaderContainer>

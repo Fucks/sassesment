@@ -31,7 +31,7 @@ const Layout: FunctionComponent = (props) => {
             return true;
         }
 
-        return menuOption.role.some((e: string) => auth!.authorities.findIndex(ee => ee.authority === e) >= 0);
+        return menuOption.role.some((e: string) => auth!.authorities.findIndex(ee => ee === e) >= 0);
     }
 
     const theme = generateTheme({

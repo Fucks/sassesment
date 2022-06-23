@@ -25,7 +25,7 @@ const AssessmentPlanRow = ({ activityHistory }: AssessmentPlanRowProps) => {
             <Row className='row'>
                 <div className='col-9'>
                     <h4 className="title text-truncate d-inline-block">{activity.name}</h4>
-                    <Subtitle className='text-truncate'>{dateAndTimeToString(activityHistory.startDate)} - {activity.activityApplicationType.name} ({activity.helpType.name}) - {activityHistory.professional.name}</Subtitle>
+                    <Subtitle className='text-truncate'>{dateAndTimeToString(activityHistory.startDate)} - {activity.activityApplicationType.name} ({activity.helpType.name}) - {activityHistory.professional?.name}</Subtitle>
                 </div>
 
                 <TogglableButton autoFocus={false} type="button" appearance="link" onClick={onExpand} className={isExpanded ? 'expanded' : ''}>

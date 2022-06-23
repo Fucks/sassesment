@@ -7,7 +7,7 @@ const headers = () => {
 
         var token = AuthenticationService.getToken();
 
-        return { 'Authorization': `${token.token_type} ${token.access_token}` }
+        return { 'Authorization': `Bearer ${token}` }
     }
 }
 

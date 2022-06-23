@@ -1,14 +1,11 @@
 import { AvatarItem } from "@atlaskit/avatar";
 import { FunctionComponent, useState } from "react";
-import { Items, ItemsContent, ListItem } from "../../../../components/layout/ListContainerLayout";
+import { ItemsContent, ListItem } from "../../../../components/layout/ListContainerLayout";
 import { Patient } from "../../../../services/patient/patient.service";
 import { Actions, usePatientContext } from "../../context/PatientContext";
-import { AuthenticationInfo } from "../../../../services/Authentication.service";
-import { useAuthentication } from "../../../../context/AutenticationContext";
 import { dateAndTimeToString } from "../../../../services/util/date-helper";
 import { Assessment } from "../../../../services/patient/patient-assessment.service";
 import EmptyState from "../../../../components/empty-state/EmptyState";
-import styled from "styled-components";
 import Initials from "../../../../components/initials/Initials";
 import Button from "@atlaskit/button";
 import AttendaceForm from "../components/AssessmentForm/AssessmentForm";
@@ -24,9 +21,6 @@ const AssessmentsTabComponent: FunctionComponent<AssessmentsTabComponentProps> =
 
     const { state, dispatch } = usePatientContext();
 
-    const { state: auth } = useAuthentication();
-    const userLogged = auth as AuthenticationInfo;
-
     const [showForm, setShowForm] = useState(false);
     const [assessment, setAssessment] = useState<Assessment | undefined>();
 
@@ -35,11 +29,6 @@ const AssessmentsTabComponent: FunctionComponent<AssessmentsTabComponentProps> =
         if (!_assessment) {
             _assessment = {
                 patient: patient,
-                professional: {
-                    id: userLogged.id,
-                    name: userLogged.name,
-                    email: userLogged.email,
-                },
                 startDate: new Date(),
                 assessmentPlan: []
             }
